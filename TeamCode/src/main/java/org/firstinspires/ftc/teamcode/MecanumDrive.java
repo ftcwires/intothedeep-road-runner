@@ -200,8 +200,8 @@ public final class MecanumDrive {
 
         //TODO Step 1 Drive Classes : get basic hardware configured. Update motor names to what is used in robot configuration
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
-        rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
+        leftBack = hardwareMap.get(DcMotorEx.class, "leftRear");
+        rightBack = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
         //TODO End Step 1
 
@@ -221,10 +221,11 @@ public final class MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         imu = hardwareMap.get(IMU.class, "imu");
+        //
         //TODO Step 2 : Update direction of IMU by updating orientation of Driver Hub below
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP, // Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD as in robot
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)); //Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, // Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD as in robot
+                RevHubOrientationOnRobot.UsbFacingDirection.UP)); //Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD
         imu.initialize(parameters);
         //TODO End Step 2
 
