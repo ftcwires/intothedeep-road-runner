@@ -51,7 +51,7 @@ public final class MecanumDrive {
         // drive model parameters
         //TODO Step 5 Set value of inPerTick after running ForwardPushTest
         //TODO Step 14 Make value of inPerTick accurate after running LocalizationTest
-        public double inPerTick = -0.022622811513096;
+        public double inPerTick = 0.022622811513096;
 
         //TODO Step 6 (Only for DriveEncoder Localizer) Set value of lateralInPerTick after running LateralPushTest
         //TODO Step 8 (Only for DeadWheel Localizer) Set value of lateralInPerTick after running LateralRampLogger
@@ -60,16 +60,16 @@ public final class MecanumDrive {
 
         //TODO Step 10 (Only for DriveEncoder Localizer) Set value of trackWidthTicks after running AngularRampLogger
         //TODO Step 11 (Only for DeadWheel Localizer) Set value of trackWidthTicks after running AngularRampLogger
-        public double trackWidthTicks = -1000.143754986;
+        public double trackWidthTicks = 1000.143754986;
 
         // feedforward parameters (in tick units)
         //TODO Step 7 (Only for DeadWheel Localizer) Set value for kS and KV after running ForwardRampLogger
         //TODO Step 9 (Only for DriveEncoder Localizer) Set value for kS and kV after running AngularRampLogger
         public double kS = 1.0182010371577;
-        public double kV = -0.004333430259;
+        public double kV = 0.004333430259;
 
         //TODO Step 12 Set value of kA after running ManualFeedforwardTuner. In this emperical process update value in increments of 0.0001
-        public double kA = 0;
+        public double kA = 0.00025;
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
