@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 // imports
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
+import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 
 @TeleOp
 public class Beginnings extends LinearOpMode {
@@ -32,7 +36,7 @@ public class Beginnings extends LinearOpMode {
 
     // Functions \/
 
-    private void drive_code() {
+    private void og_drive_code() {
 
         double Scale_Factor_of_Drive;
 
@@ -53,6 +57,7 @@ public class Beginnings extends LinearOpMode {
 
     }
 
+
     private void servo_shenanigans() {
        setLiftHeight(0.4);
        sleep(10000);
@@ -72,6 +77,76 @@ public class Beginnings extends LinearOpMode {
 
     }
 
+    private void intakeFunction() {
+        if (gamepad1.right_trigger > 0.5) {
+            // Intake.setPower(-1);
+            telemetry.addData("right trig pressed", "yes");
+        }
+        else {
+            telemetry.addData("right trig not pressed", "yes");
+        }
+    }
+
+    private void driveCode() {
+        double SLOW_DOWN_FACTOR = 0.5;
+        telemetry.addData("Initializing FTC Wires (ftcwires.org) TeleOp adopted for Team:","TEAM NUMBER");
+        telemetry.update();
+
+        if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
+            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+            waitForStart();
+
+            while (opModeIsActive()) {
+                telemetry.addData("Running FTC Wires (ftcwires.org) TeleOp Mode adopted for Team:","TEAM NUMBER");
+                drive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(
+                                -gamepad1.left_stick_y * SLOW_DOWN_FACTOR,
+                                -gamepad1.left_stick_x * SLOW_DOWN_FACTOR
+                        ),
+                        -gamepad1.right_stick_x * SLOW_DOWN_FACTOR
+                ));
+
+                drive.updatePoseEstimate();
+
+                //telemetry.addData("LF Encoder", drive.leftFront.getCurrentPosition());
+                //telemetry.addData("LB Encoder", drive.leftBack.getCurrentPosition());
+                //telemetry.addData("RF Encoder", drive.rightFront.getCurrentPosition());
+                //telemetry.addData("RB Encoder", drive.rightBack.getCurrentPosition());
+
+                telemetry.addLine("Current Pose");
+                telemetry.addData("x", drive.pose.position.x);
+                telemetry.addData("y", drive.pose.position.y);
+                telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
+                telemetry.update();
+            }
+        } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {
+            TankDrive drive = new TankDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+            waitForStart();
+
+            while (opModeIsActive()) {
+                drive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(
+                                -gamepad1.left_stick_y * SLOW_DOWN_FACTOR,
+                                0.0
+                        ),
+                        -gamepad1.right_stick_x * SLOW_DOWN_FACTOR
+                ));
+
+                drive.updatePoseEstimate();
+
+                telemetry.addData("x", drive.pose.position.x);
+                telemetry.addData("y", drive.pose.position.y);
+                telemetry.addData("heading", drive.pose.heading);
+                telemetry.update();
+            }
+        } else {
+            throw new AssertionError();
+        }
+    }
+
+
 
     @Override
     // NOT loop \/ - Or int of vars
@@ -80,10 +155,10 @@ public class Beginnings extends LinearOpMode {
         androidTextToSpeech = new AndroidTextToSpeech();
         androidTextToSpeech.initialize();
 
-        BackLeft = hardwareMap.get(DcMotor.class, "BackLeft");
-        BackRight = hardwareMap.get(DcMotor.class, "BackRight");
-        FrontLeft = hardwareMap.get(DcMotor.class, "FrontLeft");
-        FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
+        BackLeft = hardwareMap.get(DcMotor.class, "leftRear");
+        BackRight = hardwareMap.get(DcMotor.class, "rightRear");
+        FrontLeft = hardwareMap.get(DcMotor.class, "leftFront");
+        FrontRight = hardwareMap.get(DcMotor.class, "rightFront");
         LiftRight = hardwareMap.get(Servo.class, "LiftRight");
         LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
 
@@ -105,7 +180,8 @@ public class Beginnings extends LinearOpMode {
         servo_shenanigans();
         // loop real
         while(opModeIsActive()){
-            //drive_code();
+            driveCode();
+            intakeFunction();
             telemetry.update();
             sleep(100);
         }
