@@ -17,6 +17,8 @@ import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 @TeleOp
 public class Beginnings extends LinearOpMode {
     // Declare vars
+
+    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
     DcMotor BackLeft;
     DcMotor BackRight;
     DcMotor FrontLeft;
@@ -88,62 +90,31 @@ public class Beginnings extends LinearOpMode {
     }
 
     private void driveCode() {
-        double SLOW_DOWN_FACTOR = 0.5;
-        telemetry.addData("Initializing FTC Wires (ftcwires.org) TeleOp adopted for Team:","TEAM NUMBER");
+
+        double SLOW_DOWN_FACTOR;
+        SLOW_DOWN_FACTOR = 0.5;
+        telemetry.addData("Running FTC Wires (ftcwires.org) TeleOp Mode adopted for Team:","TEAM NUMBER");
+        drive.setDrivePowers(new PoseVelocity2d(
+                new Vector2d(
+                        -gamepad1.left_stick_y * SLOW_DOWN_FACTOR,
+                        -gamepad1.left_stick_x * SLOW_DOWN_FACTOR
+                ),
+                -gamepad1.right_stick_x * SLOW_DOWN_FACTOR
+        ));
+
+        drive.updatePoseEstimate();
+
+        //telemetry.addData("LF Encoder", drive.leftFront.getCurrentPosition());
+        //telemetry.addData("LB Encoder", drive.leftBack.getCurrentPosition());
+        //telemetry.addData("RF Encoder", drive.rightFront.getCurrentPosition());
+        //telemetry.addData("RB Encoder", drive.rightBack.getCurrentPosition());
+
+        telemetry.addLine("Current Pose");
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
         telemetry.update();
 
-        if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
-            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-
-            waitForStart();
-
-            while (opModeIsActive()) {
-                telemetry.addData("Running FTC Wires (ftcwires.org) TeleOp Mode adopted for Team:","TEAM NUMBER");
-                drive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(
-                                -gamepad1.left_stick_y * SLOW_DOWN_FACTOR,
-                                -gamepad1.left_stick_x * SLOW_DOWN_FACTOR
-                        ),
-                        -gamepad1.right_stick_x * SLOW_DOWN_FACTOR
-                ));
-
-                drive.updatePoseEstimate();
-
-                //telemetry.addData("LF Encoder", drive.leftFront.getCurrentPosition());
-                //telemetry.addData("LB Encoder", drive.leftBack.getCurrentPosition());
-                //telemetry.addData("RF Encoder", drive.rightFront.getCurrentPosition());
-                //telemetry.addData("RB Encoder", drive.rightBack.getCurrentPosition());
-
-                telemetry.addLine("Current Pose");
-                telemetry.addData("x", drive.pose.position.x);
-                telemetry.addData("y", drive.pose.position.y);
-                telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
-                telemetry.update();
-            }
-        } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {
-            TankDrive drive = new TankDrive(hardwareMap, new Pose2d(0, 0, 0));
-
-            waitForStart();
-
-            while (opModeIsActive()) {
-                drive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(
-                                -gamepad1.left_stick_y * SLOW_DOWN_FACTOR,
-                                0.0
-                        ),
-                        -gamepad1.right_stick_x * SLOW_DOWN_FACTOR
-                ));
-
-                drive.updatePoseEstimate();
-
-                telemetry.addData("x", drive.pose.position.x);
-                telemetry.addData("y", drive.pose.position.y);
-                telemetry.addData("heading", drive.pose.heading);
-                telemetry.update();
-            }
-        } else {
-            throw new AssertionError();
-        }
     }
 
 
@@ -162,7 +133,7 @@ public class Beginnings extends LinearOpMode {
         LiftRight = hardwareMap.get(Servo.class, "LiftRight");
         LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
 
-        LiftRight.setDirection(Servo.Direction.REVERSE);
+        // LiftRight.setDirection(Servo.Direction.REVERSE); only for og drive code
 
 
         // init servo hardware
@@ -173,11 +144,13 @@ public class Beginnings extends LinearOpMode {
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
+        double SLOW_DOWN_FACTOR = 0.5;
+        telemetry.addData("Initializing TeleOp","");
+        telemetry.update();
 
 
         waitForStart();
-        servo_shenanigans();
+       // servo_shenanigans();
         // loop real
         while(opModeIsActive()){
             driveCode();
