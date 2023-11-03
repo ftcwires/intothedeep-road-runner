@@ -4,44 +4,44 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class TheJettCode extends LinearOpMode {
-    private CRServo Tape;
-    double TapePower;
-    private void tapetroll() {
+    private Servo LiftLeft;
+    double LiftHeight;
+    private void ServoNo() {
         if (gamepad1.a) {
-            TapePower = 0.7;
-            Tape.setPower(TapePower);
+            LiftHeight = 0.7;
+            LiftLeft.setPosition(LiftHeight);
             sleep(570);
-            TapePower = 0;
-            Tape.setPower(TapePower);
+            LiftHeight = 0;
+            LiftLeft.setPosition(LiftHeight);
         }
 
     }
 
-    private void taper() {
+    private void ServoYes() {
         if (gamepad1.y) {
-            TapePower = -0.7;
+            LiftHeight = -0.7;
         } else if (gamepad1.x) {
-            TapePower = 0.7;
+            LiftHeight = 0.7;
         } else {
-            TapePower = 0;
+            LiftHeight = 0;
         }
-        Tape.setPower(TapePower);
-        telemetry.addData("TAPE", Tape.getPower());
-        telemetry.addData("TAPE non var", TapePower);
+        LiftLeft.setPosition(LiftHeight);
+        telemetry.addData("TAPE", LiftLeft.getPosition());
+        telemetry.addData("TAPE non var", LiftHeight);
     }
     @Override
     public void runOpMode() throws InterruptedException {
 
 
-        Tape = hardwareMap.get(CRServo.class, "Tape");
-        Tape.setDirection(DcMotorSimple.Direction.REVERSE);
+        LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
         waitForStart();
         while (opModeIsActive()) {
-            taper();
-            tapetroll();
+            ServoYes();
+            ServoNo();
             telemetry.update();
         }
 
