@@ -37,6 +37,7 @@ public class Beginnings extends LinearOpMode {
     double MaxLiftHeight = 0.65;
     double LiftLeftOffset = -0.08;
     double LiftHeight;
+    double LiftOffset = 0;
     private AndroidTextToSpeech androidTextToSpeech;
 
 
@@ -63,6 +64,32 @@ public class Beginnings extends LinearOpMode {
 
     }
 
+    private void airplane() {
+        if (gamepad2.dpad_down = true) {
+            launcher.setPosition(0.3);
+        }
+        else {
+            launcher.setPosition(0);
+        }
+    }
+    private void liftFunction() {
+        if (gamepad2.y) {
+            leftLift.setPosition(0.6 + LiftOffset);
+            rightLift.setPosition(0.6);
+        }
+        else if (gamepad2.x) {
+            leftLift.setPosition(0.4 + LiftOffset);
+            rightLift.setPosition(0.4);
+        }
+        else if (gamepad2.b) {
+            leftLift.setPosition(0.2 + LiftOffset);
+            rightLift.setPosition(0.2);
+        }
+        else if (gamepad2.a) {
+            leftLift.setPosition(0 + LiftOffset);
+            rightLift.setPosition(0);
+        }
+    }
     private void intakeFunction() {
         if (gamepad1.right_trigger > 0.5) {
             frontIntake.setPower(1);
@@ -133,6 +160,8 @@ public class Beginnings extends LinearOpMode {
         wrist = hardwareMap.get(Servo.class, "wrist");
         hopper = hardwareMap.get(Servo.class, "hopper");
 
+        launcher.setDirection(Servo.Direction.REVERSE);
+
         frontIntake = hardwareMap.get(DcMotor.class, "frontIntake");
         rearIntake = hardwareMap.get(DcMotor.class, "rearIntake");
 
@@ -162,8 +191,11 @@ public class Beginnings extends LinearOpMode {
         // loop real
         while(opModeIsActive()){
             driveCode();
+            airplane();
             // ogDrive.og_drive_code(gamepad1, telemetry);
             intakeFunction();
+            liftFunction();
+
             telemetry.update();
             sleep(100);
         }
