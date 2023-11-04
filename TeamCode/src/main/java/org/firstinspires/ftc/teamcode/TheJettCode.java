@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class TheJettCode extends LinearOpMode {
-    private Servo LiftLeft;
+    private Servo Wrist;
     private Servo Hopper;
     double LiftHeight;
     boolean LiftMax;
@@ -19,10 +19,10 @@ public class TheJettCode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
+        Wrist = hardwareMap.get(Servo.class, "Wrist");
         Hopper = hardwareMap.get(Servo.class, "Hopper");
 
-        LiftLeft.getController().pwmEnable();
+        Wrist.getController().pwmEnable();
         Hopper.getController().pwmEnable();
 
         waitForStart();
@@ -36,9 +36,9 @@ public class TheJettCode extends LinearOpMode {
             }
 
 
-            LiftLeft.setPosition(LiftHeight);
+            Wrist.setPosition(LiftHeight);
             Hopper.setPosition(LiftHeight);
-            telemetry.addData("LiftLeft", LiftLeft.getPosition());
+            telemetry.addData("LiftLeft", Wrist.getPosition());
             telemetry.addData("Hopper", Hopper.getPosition());
             telemetry.addData("Lift non var", LiftHeight);
             ServoNo();
