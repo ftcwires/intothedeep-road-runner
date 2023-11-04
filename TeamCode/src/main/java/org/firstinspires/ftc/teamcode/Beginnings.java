@@ -88,16 +88,23 @@ public class Beginnings extends LinearOpMode {
 
     private void intakeFunction() {
         if (gamepad1.right_trigger > 0.5) {
-            frontIntake.setPower(0.5);
-            rearIntake.setPower(0.5);
-            telemetry.addData("Intake", "yes");
+            frontIntake.setPower(1);
+            rearIntake.setPower(1);
+            telemetry.addData("Intake", "in");
+        }
+        else if (gamepad1.right_bumper) {
+            frontIntake.setPower(-1);
+            rearIntake.setPower(-1);
+            telemetry.addData("Intake", "out");
         }
         else {
-            telemetry.addData("Intake", "no");
+            telemetry.addData("Intake", "stopped");
             frontIntake.setPower(0);
             rearIntake.setPower(0);
         }
+
     }
+
 
     private void driveCode() {
 
