@@ -69,7 +69,15 @@ public class Beginnings extends LinearOpMode {
             launcher.setPosition(0.3);
         }
         else {
-            launcher.setPosition(0);
+            launcher.setPosition(0.8);
+        }
+    }
+    private void extralift() {
+        if (gamepad2.right_bumper) {
+            shoulder.setPosition(0.25);
+        }
+        else {
+            shoulder.setPosition(0.1);
         }
     }
     private void liftFunction() {
@@ -160,6 +168,8 @@ public class Beginnings extends LinearOpMode {
         hopper = hardwareMap.get(Servo.class, "hopper");
         shoulder = hardwareMap.get(Servo.class, "shoulder");
 
+        // shoulder.setDirection(Servo.Direction.REVERSE);
+
         launcher.setDirection(Servo.Direction.REVERSE);
 
         frontIntake = hardwareMap.get(DcMotor.class, "frontIntake");
@@ -181,6 +191,7 @@ public class Beginnings extends LinearOpMode {
         hopper.setPosition(0.01);
 
 
+
         double SLOW_DOWN_FACTOR = 0.5;
         telemetry.addData("Initializing TeleOp","");
         telemetry.update();
@@ -192,6 +203,7 @@ public class Beginnings extends LinearOpMode {
         while(opModeIsActive()){
             driveCode();
             airplane();
+            extralift();
             // ogDrive.og_drive_code(gamepad1, telemetry);
             intakeFunction();
             liftFunction();
