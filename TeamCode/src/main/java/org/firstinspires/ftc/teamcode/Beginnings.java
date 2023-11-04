@@ -67,6 +67,7 @@ public class Beginnings extends LinearOpMode {
     private void worm() {
         if(gamepad2.left_bumper) {
             shoulder.setPosition(0.445);
+            wrist.setPosition(0.26);
         }
         if(gamepad2.right_bumper) {
             shoulder.setPosition(0.92);
@@ -246,6 +247,7 @@ public class Beginnings extends LinearOpMode {
             ogDrive.og_drive_code(gamepad1, telemetry);
             intakeFunction();
             liftFunction();
+            worm();
             telemetry.update();
             sleep(100);
         }
