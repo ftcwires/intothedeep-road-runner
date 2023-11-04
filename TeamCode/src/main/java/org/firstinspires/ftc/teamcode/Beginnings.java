@@ -64,22 +64,55 @@ public class Beginnings extends LinearOpMode {
 
     }
 
+    private void worm() {
+        if(gamepad2.left_bumper) {
+            shoulder.setPosition(0.445);
+        }
+        if(gamepad2.right_bumper) {
+            shoulder.setPosition(0.92);
+        }
+    }
+
     private void airplane() {
-        if (gamepad2.dpad_down = true) {
-            launcher.setPosition(0.3);
+        if (gamepad2.dpad_down) {
+            launcher.setPosition(0.1);
         }
         else {
             launcher.setPosition(0.8);
         }
     }
-    private void extralift() {
+    private void tuneshoulder() {
         if (gamepad2.right_bumper) {
-            shoulder.setPosition(0.25);
+            shoulder.setPosition(shoulder.getPosition() + .01);
+        } else if (gamepad2.right_trigger > .5){
+            shoulder.setPosition(shoulder.getPosition() - .01);
+        } else {
+            //shoulder.setPosition(0.1);
         }
-        else {
-            shoulder.setPosition(0.1);
+        telemetry.addData("shoulder", shoulder.getPosition());
+    }
+    /*
+    private void tuneWrist() {
+        if (gamepad2.left_bumper) {
+            wrist.setPosition(wrist.getPosition() + .01);
+        } else if (gamepad2.left_trigger > .5){
+            wrist.setPosition(wrist.getPosition() - .01);
+        } else {
+            //shoulder.setPosition(0.1);
+        }
+        telemetry.addData("wrist", wrist.getPosition());
+    }
+
+    private void jukeBeta() {
+        if (gamepad2.dpad_up) {
+            shoulder.setPosition(.48);
+            wrist.setPosition(.31);
+        } else if (gamepad2.dpad_down) {
+            shoulder.setPosition(.445);
+            wrist.setPosition(.26);
         }
     }
+     */
     private void liftFunction() {
         if (gamepad2.y) {
             leftLift.setPosition(0.9 + LiftOffset);
@@ -168,7 +201,9 @@ public class Beginnings extends LinearOpMode {
         hopper = hardwareMap.get(Servo.class, "hopper");
         shoulder = hardwareMap.get(Servo.class, "shoulder");
 
-        // shoulder.setDirection(Servo.Direction.REVERSE);
+        shoulder.setDirection(Servo.Direction.REVERSE);
+        wrist.setDirection(Servo.Direction.REVERSE);
+
 
         launcher.setDirection(Servo.Direction.REVERSE);
 
@@ -184,12 +219,17 @@ public class Beginnings extends LinearOpMode {
 
         // servos
         launcher.setPosition(0.8);
-        leftLift.setPosition(0.5);
-        rightLift.setPosition(0.5);
-        shoulder.setPosition(0.1);
-        wrist.setPosition(-0.04);
-        hopper.setPosition(0.01);
-
+        leftLift.setPosition(0.42);
+        rightLift.setPosition(0.42);
+        shoulder.setPosition(0.445);
+        wrist.setPosition(0.26);
+        hopper.setPosition(0.0);
+        /*
+        sleep(500);
+        leftLift.setPosition(0.8);
+        rightLift.setPosition(0.8);
+        wrist.setPosition(0.7);
+        */
 
 
         double SLOW_DOWN_FACTOR = 0.5;
@@ -201,13 +241,11 @@ public class Beginnings extends LinearOpMode {
        // servo_shenanigans();
         // loop real
         while(opModeIsActive()){
-            driveCode();
+            //driveCode();
             airplane();
-            extralift();
-            // ogDrive.og_drive_code(gamepad1, telemetry);
+            ogDrive.og_drive_code(gamepad1, telemetry);
             intakeFunction();
             liftFunction();
-
             telemetry.update();
             sleep(100);
         }

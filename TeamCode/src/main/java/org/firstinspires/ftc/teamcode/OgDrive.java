@@ -30,7 +30,8 @@ public class OgDrive {
         BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        FrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void og_drive_code(Gamepad gamepad1, Telemetry telemetry) {
 
