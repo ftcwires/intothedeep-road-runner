@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
@@ -25,10 +26,7 @@ public class Beginnings extends LinearOpMode {
     private Servo wrist;
     private Servo hopper;
     MecanumDrive drive;
-    DcMotor BackLeft;
-    DcMotor BackRight;
-    DcMotor FrontLeft;
-    DcMotor FrontRight;
+    OgDrive ogDrive;
     DcMotor frontIntake;
     DcMotor rearIntake;
 
@@ -44,27 +42,6 @@ public class Beginnings extends LinearOpMode {
 
 
     // Functions \/
-
-    private void og_drive_code() {
-
-        double Scale_Factor_of_Drive;
-
-        if (gamepad1.right_bumper) {
-            Scale_Factor_of_Drive = 1;
-        } else {
-            Scale_Factor_of_Drive = 0.55;
-        }
-        // drive with joysticks
-        BackLeft.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - 0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
-        BackRight.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x - gamepad1.left_stick_y));
-        FrontLeft.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x - gamepad1.left_stick_y));
-        FrontRight.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
-        telemetry.addData("FL Motor", FrontLeft.getPower());
-        telemetry.addData("FR Motor", FrontRight.getPower());
-        telemetry.addData("BL Motor", BackLeft.getPower());
-        telemetry.addData("BR Motor", BackRight.getPower());
-
-    }
 
 
     private void servo_shenanigans() {
@@ -146,6 +123,9 @@ public class Beginnings extends LinearOpMode {
         // for wires driving
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
+        // for Og driving (the best driving)
+        ogDrive = new OgDrive(hardwareMap);
+
         launcher = hardwareMap.get(Servo.class, "launcher");
         rightLift = hardwareMap.get(Servo.class, "rightLift");
         leftLift = hardwareMap.get(Servo.class, "leftLift");
@@ -162,27 +142,6 @@ public class Beginnings extends LinearOpMode {
         rearIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rearIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        /* all for OG driving
-        BackLeft = hardwareMap.get(DcMotor.class, "leftRear");
-        BackRight = hardwareMap.get(DcMotor.class, "rightRear");
-        FrontLeft = hardwareMap.get(DcMotor.class, "leftFront");
-        FrontRight = hardwareMap.get(DcMotor.class, "rightFront");
-        LiftRight = hardwareMap.get(Servo.class, "LiftRight");
-        LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
-
-
-         LiftRight.setDirection(Servo.Direction.REVERSE); only for og drive code
-
-
-        // init servo hardware
-        // init drive hardware and variables
-        BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-         */
 
         // servos
         launcher.setPosition(0.8);
@@ -203,6 +162,7 @@ public class Beginnings extends LinearOpMode {
         // loop real
         while(opModeIsActive()){
             driveCode();
+            // ogDrive.og_drive_code(gamepad1, telemetry);
             intakeFunction();
             telemetry.update();
             sleep(100);
