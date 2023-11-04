@@ -29,6 +29,8 @@ public class Beginnings extends LinearOpMode {
     DcMotor BackRight;
     DcMotor FrontLeft;
     DcMotor FrontRight;
+    DcMotor frontIntake;
+    DcMotor rearIntake;
 
 
     // Servo prep
@@ -86,11 +88,14 @@ public class Beginnings extends LinearOpMode {
 
     private void intakeFunction() {
         if (gamepad1.right_trigger > 0.5) {
-            // Intake.setPower(-1);
-            telemetry.addData("right trig pressed", "yes");
+            frontIntake.setPower(0.5);
+            rearIntake.setPower(0.5);
+            telemetry.addData("Intake", "yes");
         }
         else {
-            telemetry.addData("right trig not pressed", "yes");
+            telemetry.addData("Intake", "no");
+            frontIntake.setPower(0);
+            rearIntake.setPower(0);
         }
     }
 
@@ -118,7 +123,7 @@ public class Beginnings extends LinearOpMode {
         telemetry.addData("x", drive.pose.position.x);
         telemetry.addData("y", drive.pose.position.y);
         telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
-        telemetry.update();
+       // telemetry.update();
 
     }
 
@@ -140,6 +145,17 @@ public class Beginnings extends LinearOpMode {
         shoulder = hardwareMap.get(Servo.class, "shoulder");
         wrist = hardwareMap.get(Servo.class, "wrist");
         hopper = hardwareMap.get(Servo.class, "hopper");
+
+        frontIntake = hardwareMap.get(DcMotor.class, "frontIntake");
+        rearIntake = hardwareMap.get(DcMotor.class, "rearIntake");
+
+        frontIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rearIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rearIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         /* all for OG driving
         BackLeft = hardwareMap.get(DcMotor.class, "leftRear");
         BackRight = hardwareMap.get(DcMotor.class, "rightRear");
