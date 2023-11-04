@@ -9,44 +9,44 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class TheJettCode extends LinearOpMode {
     private Servo LiftLeft;
+    private Servo Hopper;
     double LiftHeight;
+    boolean LiftMax;
+
     private void ServoNo() {
-        if (gamepad1.a) {
-            LiftHeight = 0.7;
-            LiftLeft.setPosition(LiftHeight);
-            sleep(570);
-            LiftHeight = 0;
-            LiftLeft.setPosition(LiftHeight);
-        }
-
     }
 
-    private void ServoYes() {
-        if (gamepad1.y) {
-            LiftHeight = -0.7;
-        } else if (gamepad1.x) {
-            LiftHeight = 0.7;
-        } else {
-            LiftHeight = 0;
-        }
-        LiftLeft.setPosition(LiftHeight);
-        telemetry.addData("TAPE", LiftLeft.getPosition());
-        telemetry.addData("TAPE non var", LiftHeight);
-    }
     @Override
     public void runOpMode() throws InterruptedException {
 
-
         LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
+        Hopper = hardwareMap.get(Servo.class, "Hopper");
+
+        LiftLeft.getController().pwmEnable();
+        Hopper.getController().pwmEnable();
+
         waitForStart();
         while (opModeIsActive()) {
-            ServoYes();
+            if (gamepad1.y) {
+                LiftHeight = 0.1;
+            } else if (gamepad1.x) {
+                LiftHeight = 0.5;
+            } else {
+                LiftHeight = 0;
+            }
+
+
+            LiftLeft.setPosition(LiftHeight);
+            Hopper.setPosition(LiftHeight);
+            telemetry.addData("LiftLeft", LiftLeft.getPosition());
+            telemetry.addData("Hopper", Hopper.getPosition());
+            telemetry.addData("Lift non var", LiftHeight);
             ServoNo();
             telemetry.update();
+            sleep(100);
         }
 
     }
-
 
 
 }
