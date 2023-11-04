@@ -210,7 +210,7 @@ public final class MecanumDrive {
         leftFront.setDirection(DcMotorEx.Direction.REVERSE);
         leftBack.setDirection(DcMotorEx.Direction.REVERSE);
         //rightFront.setDirection(DcMotorEx.Direction.REVERSE);
-        //rightBack.setDirection(DcMotorEx.Direction.REVERSE);
+        rightBack.setDirection(DcMotorEx.Direction.REVERSE);
         //TODO Make the same update in DriveLocalizer() function. Search for Step 4.2
         //TODO End Step 4.1
 
