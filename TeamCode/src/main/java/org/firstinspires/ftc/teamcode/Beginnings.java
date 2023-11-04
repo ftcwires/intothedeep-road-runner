@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 public class Beginnings extends LinearOpMode {
     // Declare vars
 
-    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+    MecanumDrive drive;
     DcMotor BackLeft;
     DcMotor BackRight;
     DcMotor FrontLeft;
@@ -126,6 +126,9 @@ public class Beginnings extends LinearOpMode {
         androidTextToSpeech = new AndroidTextToSpeech();
         androidTextToSpeech.initialize();
 
+        // for wires driving
+        drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        /* all for OG driving
         BackLeft = hardwareMap.get(DcMotor.class, "leftRear");
         BackRight = hardwareMap.get(DcMotor.class, "rightRear");
         FrontLeft = hardwareMap.get(DcMotor.class, "leftFront");
@@ -133,7 +136,8 @@ public class Beginnings extends LinearOpMode {
         LiftRight = hardwareMap.get(Servo.class, "LiftRight");
         LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
 
-        // LiftRight.setDirection(Servo.Direction.REVERSE); only for og drive code
+
+         LiftRight.setDirection(Servo.Direction.REVERSE); only for og drive code
 
 
         // init servo hardware
@@ -143,6 +147,7 @@ public class Beginnings extends LinearOpMode {
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+         */
 
         double SLOW_DOWN_FACTOR = 0.5;
         telemetry.addData("Initializing TeleOp","");
