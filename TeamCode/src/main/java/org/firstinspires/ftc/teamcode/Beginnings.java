@@ -18,13 +18,18 @@ import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 public class Beginnings extends LinearOpMode {
     // Declare vars
 
+    private Servo launcher;
+    private Servo rightLift;
+    private Servo leftLift;
+    private Servo shoulder;
+    private Servo wrist;
+    private Servo hopper;
     MecanumDrive drive;
     DcMotor BackLeft;
     DcMotor BackRight;
     DcMotor FrontLeft;
     DcMotor FrontRight;
-    Servo LiftRight;
-    Servo LiftLeft;
+
 
     // Servo prep
 
@@ -74,8 +79,8 @@ public class Beginnings extends LinearOpMode {
             inputLiftHeight = 0.65;
         }
         LiftHeight = inputLiftHeight;
-        LiftLeft.setPosition(LiftLeftOffset + LiftHeight);
-        LiftRight.setPosition(LiftHeight);
+        leftLift.setPosition(LiftLeftOffset + LiftHeight);
+        rightLift.setPosition(LiftHeight);
 
     }
 
@@ -128,6 +133,13 @@ public class Beginnings extends LinearOpMode {
 
         // for wires driving
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+        launcher = hardwareMap.get(Servo.class, "launcher");
+        rightLift = hardwareMap.get(Servo.class, "rightLift");
+        leftLift = hardwareMap.get(Servo.class, "leftLift");
+        shoulder = hardwareMap.get(Servo.class, "shoulder");
+        wrist = hardwareMap.get(Servo.class, "wrist");
+        hopper = hardwareMap.get(Servo.class, "hopper");
         /* all for OG driving
         BackLeft = hardwareMap.get(DcMotor.class, "leftRear");
         BackRight = hardwareMap.get(DcMotor.class, "rightRear");
@@ -148,6 +160,15 @@ public class Beginnings extends LinearOpMode {
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
          */
+
+        // servos
+        launcher.setPosition(0.8);
+        leftLift.setPosition(0);
+        rightLift.setPosition(0);
+        shoulder.setPosition(0.1);
+        wrist.setPosition(-0.04);
+        hopper.setPosition(0.01);
+
 
         double SLOW_DOWN_FACTOR = 0.5;
         telemetry.addData("Initializing TeleOp","");
