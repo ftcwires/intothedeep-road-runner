@@ -19,8 +19,8 @@ public class TheJettCode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Wrist = hardwareMap.get(Servo.class, "Wrist");
-        Hopper = hardwareMap.get(Servo.class, "Hopper");
+        Wrist = hardwareMap.get(Servo.class, "wrist");
+        Hopper = hardwareMap.get(Servo.class, "hopper");
 
         Wrist.getController().pwmEnable();
         Hopper.getController().pwmEnable();
