@@ -69,25 +69,33 @@ public class Beginnings extends LinearOpMode {
             launcher.setPosition(0.3);
         }
         else {
-            launcher.setPosition(0);
+            launcher.setPosition(0.8);
+        }
+    }
+    private void extralift() {
+        if (gamepad2.right_bumper) {
+            shoulder.setPosition(0.25);
+        }
+        else {
+            shoulder.setPosition(0.1);
         }
     }
     private void liftFunction() {
         if (gamepad2.y) {
-            leftLift.setPosition(0.6 + LiftOffset);
-            rightLift.setPosition(0.6);
+            leftLift.setPosition(0.9 + LiftOffset);
+            rightLift.setPosition(0.9);
         }
         else if (gamepad2.x) {
-            leftLift.setPosition(0.4 + LiftOffset);
-            rightLift.setPosition(0.4);
+            leftLift.setPosition(0.8 + LiftOffset);
+            rightLift.setPosition(0.8);
         }
         else if (gamepad2.b) {
-            leftLift.setPosition(0.2 + LiftOffset);
-            rightLift.setPosition(0.2);
+            leftLift.setPosition(0.7 + LiftOffset);
+            rightLift.setPosition(0.7);
         }
         else if (gamepad2.a) {
-            leftLift.setPosition(0 + LiftOffset);
-            rightLift.setPosition(0);
+            leftLift.setPosition(0.5 + LiftOffset);
+            rightLift.setPosition(0.5);
         }
     }
     private void intakeFunction() {
@@ -156,9 +164,11 @@ public class Beginnings extends LinearOpMode {
         launcher = hardwareMap.get(Servo.class, "launcher");
         rightLift = hardwareMap.get(Servo.class, "rightLift");
         leftLift = hardwareMap.get(Servo.class, "leftLift");
-        shoulder = hardwareMap.get(Servo.class, "shoulder");
         wrist = hardwareMap.get(Servo.class, "wrist");
         hopper = hardwareMap.get(Servo.class, "hopper");
+        shoulder = hardwareMap.get(Servo.class, "shoulder");
+
+        // shoulder.setDirection(Servo.Direction.REVERSE);
 
         launcher.setDirection(Servo.Direction.REVERSE);
 
@@ -174,11 +184,12 @@ public class Beginnings extends LinearOpMode {
 
         // servos
         launcher.setPosition(0.8);
-        leftLift.setPosition(0);
-        rightLift.setPosition(0);
+        leftLift.setPosition(0.5);
+        rightLift.setPosition(0.5);
         shoulder.setPosition(0.1);
         wrist.setPosition(-0.04);
         hopper.setPosition(0.01);
+
 
 
         double SLOW_DOWN_FACTOR = 0.5;
@@ -192,6 +203,7 @@ public class Beginnings extends LinearOpMode {
         while(opModeIsActive()){
             driveCode();
             airplane();
+            extralift();
             // ogDrive.og_drive_code(gamepad1, telemetry);
             intakeFunction();
             liftFunction();

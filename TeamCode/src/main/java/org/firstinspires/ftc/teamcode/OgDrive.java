@@ -15,20 +15,13 @@ public class OgDrive {
     DcMotor BackRight;
     DcMotor FrontLeft;
     DcMotor FrontRight;
-    Servo LiftRight;
-    Servo LiftLeft;
 
     public OgDrive(HardwareMap hardwareMap) {
 
-        BackLeft = hardwareMap.get(DcMotor.class, "leftRear");
-        BackRight = hardwareMap.get(DcMotor.class, "rightRear");
+        BackLeft = hardwareMap.get(DcMotor.class, "leftBack");
+        BackRight = hardwareMap.get(DcMotor.class, "rightBack");
         FrontLeft = hardwareMap.get(DcMotor.class, "leftFront");
         FrontRight = hardwareMap.get(DcMotor.class, "rightFront");
-        LiftRight = hardwareMap.get(Servo.class, "LiftRight");
-        LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
-
-
-        LiftRight.setDirection(Servo.Direction.REVERSE);
 
 
         // init servo hardware
