@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class McTuner2000 extends LinearOpMode {
     Servo wrist;
     Servo hopper;
+    Servo shoulder;
 
     private void wristTuner() {
         if (gamepad1.y) {
@@ -32,10 +33,13 @@ public class McTuner2000 extends LinearOpMode {
 
         wrist = hardwareMap.get(Servo.class, "wrist");
         hopper = hardwareMap.get(Servo.class, "hopper");
-        telemetry.update();
+
+        wrist.setDirection(Servo.Direction.REVERSE);
 
         telemetry.addData("Wrist Position", wrist.getPosition());
         telemetry.addData("Hopper Position", hopper.getPosition());
+
+        telemetry.update();
         waitForStart();
 
         while(opModeIsActive()) {
