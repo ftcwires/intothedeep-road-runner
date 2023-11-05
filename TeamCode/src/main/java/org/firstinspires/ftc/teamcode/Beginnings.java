@@ -84,9 +84,9 @@ public class Beginnings extends LinearOpMode {
     }
     private void tuneshoulder() {
         if (gamepad2.right_bumper) {
-            shoulder.setPosition(shoulder.getPosition() + .01);
-        } else if (gamepad2.right_trigger > .5){
-            shoulder.setPosition(shoulder.getPosition() - .01);
+            shoulder.setPosition(shoulder.getPosition() + 0.01);
+        } else if (gamepad2.right_trigger > 0.5){
+            shoulder.setPosition(shoulder.getPosition() - 0.01);
         } else {
             //shoulder.setPosition(0.1);
         }
@@ -95,9 +95,9 @@ public class Beginnings extends LinearOpMode {
     /*
     private void tuneWrist() {
         if (gamepad2.left_bumper) {
-            wrist.setPosition(wrist.getPosition() + .01);
-        } else if (gamepad2.left_trigger > .5){
-            wrist.setPosition(wrist.getPosition() - .01);
+            wrist.setPosition(wrist.getPosition() + 0.01);
+        } else if (gamepad2.left_trigger > 0.5){
+            wrist.setPosition(wrist.getPosition() - 0.01);
         } else {
             //shoulder.setPosition(0.1);
         }
@@ -106,11 +106,11 @@ public class Beginnings extends LinearOpMode {
 
     private void jukeBeta() {
         if (gamepad2.dpad_up) {
-            shoulder.setPosition(.48);
-            wrist.setPosition(.31);
+            shoulder.setPosition(0.48);
+            wrist.setPosition(0.31);
         } else if (gamepad2.dpad_down) {
-            shoulder.setPosition(.445);
-            wrist.setPosition(.26);
+            shoulder.setPosition(0.445);
+            wrist.setPosition(0.26);
         }
     }
      */
