@@ -43,10 +43,17 @@ public class OgDrive {
             Scale_Factor_of_Drive = 0.55;
         }
         // drive with joysticks
-        BackLeft.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - 0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
-        BackRight.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x - gamepad1.left_stick_y));
+        /*
         FrontLeft.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x - gamepad1.left_stick_y));
         FrontRight.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
+        BackLeft.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - 0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
+        BackRight.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x - gamepad1.left_stick_y));
+        */
+        FrontLeft.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x + 0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
+        FrontRight.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x  + 0.8 * Scale_Factor_of_Drive * (-gamepad1.left_stick_x + gamepad1.left_stick_y));
+        BackLeft.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x + 0.8 * Scale_Factor_of_Drive * (-gamepad1.left_stick_x + gamepad1.left_stick_y));
+        BackRight.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x + 0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
+
         telemetry.addData("FL Motor", FrontLeft.getPower());
         telemetry.addData("FR Motor", FrontRight.getPower());
         telemetry.addData("BL Motor", BackLeft.getPower());
