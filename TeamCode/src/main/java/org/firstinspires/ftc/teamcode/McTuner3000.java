@@ -122,6 +122,14 @@ public class McTuner3000 extends LinearOpMode {
         telemetry.addData("Wrist Position", wrist.getPosition());
         telemetry.addData("Hopper Position", hopper.getPosition());
 
+        wrist.setPosition(0.51);
+        shoulder.setPosition(0.44);
+        hopper.setPosition(0);
+        leftLift.setPosition(0.42);
+        rightLift.setPosition(0.42);
+
+
+
         telemetry.update();
         waitForStart();
 
@@ -133,6 +141,7 @@ public class McTuner3000 extends LinearOpMode {
             telemetry.addData("Selected", which.toString());
             telemetry.addLine("Y = Shoulder - X = Hopper - B = Wrist A = Lift");
             telemetry.update();
+            sleep(100);
         }
     }
 }
