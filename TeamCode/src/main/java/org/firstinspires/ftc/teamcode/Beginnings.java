@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -220,11 +221,11 @@ public class Beginnings extends LinearOpMode {
 
         // servos
         launcher.setPosition(0.8);
+        wrist.setPosition(0.51);
+        shoulder.setPosition(0.44);
+        hopper.setPosition(0);
         leftLift.setPosition(0.42);
         rightLift.setPosition(0.42);
-        shoulder.setPosition(0.445);
-        wrist.setPosition(0.26);
-        hopper.setPosition(0.0);
         /*
         sleep(500);
         leftLift.setPosition(0.8);
@@ -243,11 +244,11 @@ public class Beginnings extends LinearOpMode {
         // loop real
         while(opModeIsActive()){
             //driveCode();
-            airplane();
+            //airplane();
             ogDrive.og_drive_code(gamepad1, telemetry);
             intakeFunction();
-            liftFunction();
-            worm();
+            //liftFunction();
+            //worm();
             telemetry.update();
             sleep(100);
         }
