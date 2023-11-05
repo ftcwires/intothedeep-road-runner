@@ -90,8 +90,13 @@ public class McTuner3000 extends LinearOpMode {
         }
         telemetry.addData("Speed = ", speedAmount);
     }
+
+    //TODO: Step 7, your done! This was written by Goober on 11/5/23 slouching in a chair at 10:35 in the morning.
+    // And as I'm writing this I wonder if anybody will actually use this. Problably not,
+    // but idk what to do while I wait for the robot to be ready for calibration. It's now 10:36 am.
+    // I wonder if future me will use this and or remember doing this. Goober out.
+
     //TODO: Step 6 replace all of the xyz.getPosition()0; with your servos and replace "xyz" with what that servo is
-    //TODO: Step 7, your done! This was written by Goober on 11/5/23 slouching in a chair at 10:35 in the morning. And as I'm writing this I wonder if anybody will actually use this. Problably not, but idk what to do while I wait for the robot to be ready for calibration. It's now 10:36 am. I wonder if future me will use this and or remember doing this. Goober out.
     private void whatServoAt() {
         telemetry.addData("Shoulder = ", shoulder.getPosition());
         telemetry.addData("Hopper = ", hopper.getPosition());
