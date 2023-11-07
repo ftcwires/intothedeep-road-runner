@@ -42,6 +42,7 @@ public class OgDrive {
         } else {
             Scale_Factor_of_Drive = 0.55;
         }
+        //this is a coment to mAKE git update
         // drive with joysticks
 
         FrontLeft.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x - gamepad1.left_stick_y));

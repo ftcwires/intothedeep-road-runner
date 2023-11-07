@@ -108,6 +108,7 @@ public class McTuner3000 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         which = ServoTypes.SHOULDER;
         speedAmount = 0.01;
+        //this is a coment to mAKE git update
 
         //TODO: Step 2, Replace the device names with your 4 (or more if you use two servos for one task)
         wrist = hardwareMap.get(Servo.class, "wrist");
