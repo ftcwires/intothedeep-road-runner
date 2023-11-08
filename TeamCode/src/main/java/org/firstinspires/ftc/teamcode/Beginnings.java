@@ -193,7 +193,10 @@ public class Beginnings extends LinearOpMode {
         wrist.setPosition(0.59);
         }
         if (gamepad2.dpad_up) {
+            hopper.setPosition(0);
             wrist.setPosition(0.51);
+            shoulder.setPosition(0.46);
+            sleep(500);
             shoulder.setPosition(0.44);
         }
     }
