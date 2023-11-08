@@ -173,6 +173,15 @@ public class Beginnings extends LinearOpMode {
         hopper.setPosition(0.4);
         }
     }
+    private void dumpPrep() {
+        if (gamepad2.back) {
+            wrist.setPosition(0.37);
+            shoulder.setPosition(0.91);
+            sleep(2345);
+            hopper.setPosition(0.57);
+            wrist.setPosition(0.93);
+        }
+    }
     private void driveAroundPos() {
         if (gamepad1.a) {
         shoulder.setPosition(0.455);
@@ -365,6 +374,7 @@ public class Beginnings extends LinearOpMode {
             //IsDrive.is_drive_code(gamepad1, telemetry);
             intakeFunction();
             driveAroundPos();
+            dumpPrep();
             //liftFunction();
             //worm();
             stopMotion();
