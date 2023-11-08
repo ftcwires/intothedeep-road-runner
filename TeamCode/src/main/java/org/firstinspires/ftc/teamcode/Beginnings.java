@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 // imports
 
+import static android.os.SystemClock.sleep;
+
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -164,6 +166,49 @@ public class Beginnings extends LinearOpMode {
         }
 
     }
+    private void aroundthetop() {
+        if (gamepad2.start) {
+        shoulder.setPosition(0.56);
+        wrist.setPosition(0.5);
+        hopper.setPosition(0.4);
+        }
+    }
+    private void driveAroundPos() {
+        if (gamepad1.a) {
+        shoulder.setPosition(0.455);
+        sleep(653);
+        shoulder.setPosition(0.47);
+        wrist.setPosition(0.55);
+        sleep(531);
+        shoulder.setPosition(0.49);
+        wrist.setPosition(0.59);
+        }
+        if (gamepad2.dpad_up) {
+            wrist.setPosition(0.51);
+            shoulder.setPosition(0.44);
+        }
+    }
+    private void stopMotion() {
+        if(gamepad1.dpad_left) {
+            wrist.setPosition(0.51);
+            shoulder.setPosition(0.44);
+            hopper.setPosition(0);
+            leftLift.setPosition(0.42);
+            rightLift.setPosition(0.42);
+
+            sleep(2000);
+
+            wrist.setPosition(0.74);
+            shoulder.setPosition(0.7);
+            hopper.setPosition(0);
+
+            sleep(2000);
+
+            wrist.setPosition(0.73);
+            shoulder.setPosition(0.75);
+            hopper.setPosition(0.16);
+        }
+    }
 
 /*
     private void driveCode() {
@@ -319,8 +364,11 @@ public class Beginnings extends LinearOpMode {
             //ogDrive.og_drive_code(gamepad1, telemetry);
             //IsDrive.is_drive_code(gamepad1, telemetry);
             intakeFunction();
+            driveAroundPos();
             //liftFunction();
             //worm();
+            stopMotion();
+            aroundthetop();
             telemetry.update();
             sleep(100);
         }
