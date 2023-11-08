@@ -30,7 +30,9 @@ public class OgDrive {
         BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //FrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //BackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         FrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void og_drive_code(Gamepad gamepad1, Telemetry telemetry) {
@@ -44,17 +46,17 @@ public class OgDrive {
         }
         //this is a coment to mAKE git update
         // drive with joysticks
-
+        /*
         FrontLeft.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x - gamepad1.left_stick_y));
         FrontRight.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
         BackLeft.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - 0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
         BackRight.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x - -0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x - gamepad1.left_stick_y));
-        /*
+         */
         FrontLeft.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x + 0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
         FrontRight.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x  + 0.8 * Scale_Factor_of_Drive * (-gamepad1.left_stick_x + gamepad1.left_stick_y));
         BackLeft.setPower(0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x + 0.8 * Scale_Factor_of_Drive * (-gamepad1.left_stick_x + gamepad1.left_stick_y));
         BackRight.setPower(-0.8 * Scale_Factor_of_Drive * gamepad1.right_stick_x + 0.8 * Scale_Factor_of_Drive * (gamepad1.left_stick_x + gamepad1.left_stick_y));
-*/
+
 
         telemetry.addData("FL Motor", FrontLeft.getPower());
         telemetry.addData("FR Motor", FrontRight.getPower());

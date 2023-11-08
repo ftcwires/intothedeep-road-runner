@@ -5,9 +5,14 @@ import static android.os.SystemClock.sleep;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 
 public class StopMotionTester {
-
+    //sensors
+    private RevTouchSensor rightUpper;
+    private RevTouchSensor leftUpper;
+    private RevTouchSensor rightLower;
+    private RevTouchSensor leftLower;
     static public void Dominator(HardwareMap hardwareMap) {
         Servo wrist;
         Servo hopper;
