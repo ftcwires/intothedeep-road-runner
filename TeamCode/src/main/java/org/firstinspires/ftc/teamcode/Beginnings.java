@@ -168,9 +168,14 @@ public class Beginnings extends LinearOpMode {
     }
     private void aroundthetop() {
         if (gamepad2.start) {
-        shoulder.setPosition(0.56);
-        wrist.setPosition(0.5);
-        hopper.setPosition(0.4);
+        shoulder.setPosition(0.44);
+        sleep(400);
+        wrist.setPosition(0.53);
+        hopper.setPosition(0.33);
+        sleep(500);
+        wrist.setPosition(0.93);
+        hopper.setPosition(0.57);
+
         }
     }
     private void driveAroundPos() {
