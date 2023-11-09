@@ -98,38 +98,6 @@ public class Beginnings extends LinearOpMode {
             launcher.setPosition(0.8);
         }
     }
-    private void tuneshoulder() {
-        if (gamepad2.right_bumper) {
-            shoulder.setPosition(shoulder.getPosition() + 0.01);
-        } else if (gamepad2.right_trigger > 0.5){
-            shoulder.setPosition(shoulder.getPosition() - 0.01);
-        } else {
-            //shoulder.setPosition(0.1);
-        }
-        telemetry.addData("shoulder", shoulder.getPosition());
-    }
-    /*
-    private void tuneWrist() {
-        if (gamepad2.left_bumper) {
-            wrist.setPosition(wrist.getPosition() + 0.01);
-        } else if (gamepad2.left_trigger > 0.5){
-            wrist.setPosition(wrist.getPosition() - 0.01);
-        } else {
-            //shoulder.setPosition(0.1);
-        }
-        telemetry.addData("wrist", wrist.getPosition());
-    }
-
-    private void jukeBeta() {
-        if (gamepad2.dpad_up) {
-            shoulder.setPosition(0.48);
-            wrist.setPosition(0.31);
-        } else if (gamepad2.dpad_down) {
-            shoulder.setPosition(0.445);
-            wrist.setPosition(0.26);
-        }
-    }
-     */
     private void liftFunction() {
         if (gamepad2.y) {
             leftLift.setPosition(0.9 + LiftOffset);
@@ -175,6 +143,8 @@ public class Beginnings extends LinearOpMode {
     }
     private void dumpPrep() {
         if (gamepad2.back) {
+            shoulder.setPosition(0.75);
+            sleep(400);
             hopper.setPosition(0.57);
             wrist.setPosition(0.93);
             shoulder.setPosition(0.91);
@@ -182,13 +152,13 @@ public class Beginnings extends LinearOpMode {
     }
     private void driveAroundPos() {
         if (gamepad1.a) {
-        drivePos();
+            incrementalIntake();
         }
         if (gamepad2.dpad_up) {
-            intakePos();
+            incrementalIntake();
         }
     }
-    private void stopMotion() {
+    /* private void stopMotion() {
         if(gamepad1.dpad_left) {
             wrist.setPosition(0.51);
             shoulder.setPosition(0.44);
@@ -209,22 +179,36 @@ public class Beginnings extends LinearOpMode {
             hopper.setPosition(0.16);
         }
     }
+    */
     private void drivePos() {
         shoulder.setPosition(0.49);
-        wrist.setPosition(0.59);
-        hopper.setPosition(0);
+        wrist.setPosition(0.55);
+        hopper.setPosition(0.01);
         leftLift.setPosition(0.42);
         rightLift.setPosition(0.42);
     }
     private void intakePos() {
-        hopper.setPosition(0);
-        shoulder.setPosition(0.49);
-        wrist.setPosition(0.59);
+        hopper.setPosition(0.01);
+        shoulder.setPosition(0.445);
+        wrist.setPosition(0.5);
         leftLift.setPosition(0.42);
         rightLift.setPosition(0.42);
-        sleep(500);
-        shoulder.setPosition(0.44);
     }
+    private void incrementalIntake() {
+        shoulder.setPosition(0.455);
+        sleep(653);
+        shoulder.setPosition(0.47);
+        wrist.setPosition(0.55);
+        sleep(531);
+        shoulder.setPosition(0.49);
+        wrist.setPosition(0.55);
+    }
+    private void startPos() {
+        launcher.setPosition(0.8);
+        intakePos();
+    }
+
+
 
 /*
     private void driveCode() {
@@ -318,12 +302,7 @@ public class Beginnings extends LinearOpMode {
         frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // servos
-        launcher.setPosition(0.8);
-        wrist.setPosition(0.51);
-        shoulder.setPosition(0.44);
-        hopper.setPosition(0);
-        leftLift.setPosition(0.42);
-        rightLift.setPosition(0.42);
+        startPos();
         /*
         sleep(500);
         leftLift.setPosition(0.8);
@@ -384,7 +363,7 @@ public class Beginnings extends LinearOpMode {
             dumpPrep();
             //liftFunction();
             //worm();
-            stopMotion();
+            //stopMotion();
             aroundthetop();
             telemetry.update();
             sleep(100);
