@@ -175,29 +175,17 @@ public class Beginnings extends LinearOpMode {
     }
     private void dumpPrep() {
         if (gamepad2.back) {
-            wrist.setPosition(0.37);
-            shoulder.setPosition(0.91);
-            sleep(2345);
             hopper.setPosition(0.57);
             wrist.setPosition(0.93);
+            shoulder.setPosition(0.91);
         }
     }
     private void driveAroundPos() {
         if (gamepad1.a) {
-        shoulder.setPosition(0.455);
-        sleep(653);
-        shoulder.setPosition(0.47);
-        wrist.setPosition(0.55);
-        sleep(531);
-        shoulder.setPosition(0.49);
-        wrist.setPosition(0.59);
+        drivePos();
         }
         if (gamepad2.dpad_up) {
-            hopper.setPosition(0);
-            wrist.setPosition(0.51);
-            shoulder.setPosition(0.46);
-            sleep(500);
-            shoulder.setPosition(0.44);
+            intakePos();
         }
     }
     private void stopMotion() {
@@ -220,6 +208,22 @@ public class Beginnings extends LinearOpMode {
             shoulder.setPosition(0.75);
             hopper.setPosition(0.16);
         }
+    }
+    private void drivePos() {
+        shoulder.setPosition(0.49);
+        wrist.setPosition(0.59);
+        hopper.setPosition(0);
+        leftLift.setPosition(0.42);
+        rightLift.setPosition(0.42);
+    }
+    private void intakePos() {
+        hopper.setPosition(0);
+        shoulder.setPosition(0.49);
+        wrist.setPosition(0.59);
+        leftLift.setPosition(0.42);
+        rightLift.setPosition(0.42);
+        sleep(500);
+        shoulder.setPosition(0.44);
     }
 
 /*
