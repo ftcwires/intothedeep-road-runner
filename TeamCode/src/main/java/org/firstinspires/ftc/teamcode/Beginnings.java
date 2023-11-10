@@ -4,9 +4,9 @@ package org.firstinspires.ftc.teamcode;
 
 import static android.os.SystemClock.sleep;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
+//import com.acmerobotics.roadrunner.Pose2d;
+//import com.acmerobotics.roadrunner.PoseVelocity2d;
+//import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -43,6 +43,9 @@ public class Beginnings extends LinearOpMode {
     private DcMotor leftFront; //front left 2
     private DcMotor rightBack; //rear right 1
     private DcMotor leftBack; //rear left 3
+    private DcMotor leftHang;
+    private DcMotor rightHang;
+
     DcMotor frontIntake;
     DcMotor rearIntake;
 
@@ -122,7 +125,7 @@ public class Beginnings extends LinearOpMode {
             rearIntake.setPower(1);
             telemetry.addData("Intake", "in");
         }
-        else if (gamepad1.right_bumper) {
+        else if (gamepad1.left_trigger > 0.5) {
             frontIntake.setPower(-1);
             rearIntake.setPower(-1);
             telemetry.addData("Intake", "out");
@@ -150,13 +153,52 @@ public class Beginnings extends LinearOpMode {
             shoulder.setPosition(0.91);
         }
     }
+    private void dumpPrepTwo() {
+        if (gamepad2.back) {
+            shoulder.setPosition(0.60);
+            wrist.setPosition(0.61);
+            sleep(1100);
+            wrist.setPosition(0.35);
+            shoulder.setPosition(0.79);
+            sleep(1400);
+            hopper.setPosition(0.57);
+            wrist.setPosition(0.93);
+            //shoulder.setPosition(0.91);
+            sleep(1100);
+            shoulder.setPosition(0.91);
+        }
+    }
+
+    private void dumpLeft() {
+        if (gamepad2.dpad_left) {
+            hopper.setPosition(0.23);
+        }
+    }
+    private void homePrep() {
+        if (gamepad1.back) {
+            shoulder.setPosition(0.79);
+            hopper.setPosition(0.01);
+            wrist.setPosition(0.521);
+            sleep(600);
+            shoulder.setPosition(0.60);
+            sleep(600);
+            shoulder.setPosition(0.50);
+            wrist.setPosition(0.521);
+            sleep(600);
+            intakePos();
+        }
+    }
     private void driveAroundPos() {
         if (gamepad1.a) {
             incrementalIntake();
         }
+        if (gamepad1.x) {
+            theJuke();
+        }
         if (gamepad2.dpad_up) {
             incrementalIntake();
         }
+
     }
     /* private void stopMotion() {
         if(gamepad1.dpad_left) {
@@ -193,6 +235,15 @@ public class Beginnings extends LinearOpMode {
         wrist.setPosition(0.5);
         leftLift.setPosition(0.42);
         rightLift.setPosition(0.42);
+    }
+    private void theJuke() {
+        hopper.setPosition(0.01);
+        shoulder.setPosition(0.48);
+        wrist.setPosition(0.521);
+        leftLift.setPosition(0.42);
+        rightLift.setPosition(0.42);
+        sleep(500);
+        intakePos();
     }
     private void incrementalIntake() {
         shoulder.setPosition(0.455);
@@ -261,6 +312,9 @@ public class Beginnings extends LinearOpMode {
         rightBack = hardwareMap.get(DcMotor.class, "rightBack");
         leftBack = hardwareMap.get(DcMotor.class, "leftBack");
 
+        leftHang = hardwareMap.get(DcMotor.class, "leftHang");
+        rightHang = hardwareMap.get(DcMotor.class, "rightHang");
+
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
@@ -300,6 +354,12 @@ public class Beginnings extends LinearOpMode {
         rearIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rearIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // sensors
+        leftUpper = hardwareMap.get(RevTouchSensor.class, "leftUpper");
+        rightUpper = hardwareMap.get(RevTouchSensor.class, "rightUpper");
+        leftLower = hardwareMap.get(RevTouchSensor.class, "leftLower");
+        rightLower = hardwareMap.get(RevTouchSensor.class, "rightLower");
 
         // servos
         startPos();
@@ -351,6 +411,35 @@ public class Beginnings extends LinearOpMode {
             rightBack.setPower(rightBackPower);
             leftBack.setPower(leftBackPower);
 
+            if (gamepad1.left_trigger > 0.1){
+                leftHang.setDirection(DcMotor.Direction.FORWARD);
+                rightHang.setDirection(DcMotor.Direction.FORWARD);
+
+                leftHang.setPower(.9);
+                rightHang.setPower(.9);
+            }
+            if (gamepad1.left_bumper){
+                leftHang.setDirection(DcMotor.Direction.REVERSE);
+                rightHang.setDirection(DcMotor.Direction.REVERSE);
+
+                leftHang.setPower(.9);
+                rightHang.setPower(.9);
+            }
+
+            if (leftUpper.isPressed() || rightUpper.isPressed() || gamepad1.y) {
+                leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftHang.setPower(0);
+                rightHang.setPower(0);
+            }
+
+            if (leftLower.isPressed() || rightLower.isPressed() || gamepad1.y) {
+                leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftHang.setPower(0);
+                rightHang.setPower(0);
+            }
+
             telemetry.addData("Status", "Run " + runtime.toString());
             telemetry.addData("Motors", "forward (%.2f), strafe (%.2f),turn (%.2f)", forward, strafe, turn);
 
@@ -360,7 +449,9 @@ public class Beginnings extends LinearOpMode {
             //IsDrive.is_drive_code(gamepad1, telemetry);
             intakeFunction();
             driveAroundPos();
-            dumpPrep();
+            dumpPrepTwo();
+            homePrep();
+            dumpLeft();
             //liftFunction();
             //worm();
             //stopMotion();
