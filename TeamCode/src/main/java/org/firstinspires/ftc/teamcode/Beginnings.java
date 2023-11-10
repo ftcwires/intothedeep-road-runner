@@ -411,12 +411,17 @@ public class Beginnings extends LinearOpMode {
             rightBack.setPower(rightBackPower);
             leftBack.setPower(leftBackPower);
 
-            if (gamepad1.left_trigger > 0.1){
+            if (gamepad1.right_bumper){
                 leftHang.setDirection(DcMotor.Direction.FORWARD);
                 rightHang.setDirection(DcMotor.Direction.FORWARD);
 
                 leftHang.setPower(.9);
                 rightHang.setPower(.9);
+            } else if (leftUpper.isPressed() || rightUpper.isPressed() || gamepad1.y) {
+                leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftHang.setPower(0);
+                rightHang.setPower(0);
             }
             if (gamepad1.left_bumper){
                 leftHang.setDirection(DcMotor.Direction.REVERSE);
@@ -424,21 +429,15 @@ public class Beginnings extends LinearOpMode {
 
                 leftHang.setPower(.9);
                 rightHang.setPower(.9);
-            }
-
-            if (leftUpper.isPressed() || rightUpper.isPressed() || gamepad1.y) {
+            } else if (leftLower.isPressed() || rightLower.isPressed() || gamepad1.y) {
                 leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 leftHang.setPower(0);
                 rightHang.setPower(0);
             }
 
-            if (leftLower.isPressed() || rightLower.isPressed() || gamepad1.y) {
-                leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                leftHang.setPower(0);
-                rightHang.setPower(0);
-            }
+
+
 
             telemetry.addData("Status", "Run " + runtime.toString());
             telemetry.addData("Motors", "forward (%.2f), strafe (%.2f),turn (%.2f)", forward, strafe, turn);
