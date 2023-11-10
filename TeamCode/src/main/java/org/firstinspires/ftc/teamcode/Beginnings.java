@@ -166,17 +166,28 @@ public class Beginnings extends LinearOpMode {
             //shoulder.setPosition(0.91);
             sleep(1100);
             shoulder.setPosition(0.91);
+            sleep(1150);
+            wrist.setPosition(0.85);
+            shoulder.setPosition(1);
+        }
+    }
+    private void slidez() {
+        if (gamepad2.a) {
+            leftLift.setPosition(0.42);
+            rightLift.setPosition(0.42);
         }
     }
 
     private void dumpLeft() {
         if (gamepad2.dpad_left) {
-            hopper.setPosition(0.23);
+            hopper.setPosition(0.2);
         }
     }
     private void homePrep() {
         if (gamepad1.back) {
             shoulder.setPosition(0.79);
+            leftLift.setPosition(0.42);
+            rightLift.setPosition(0.42);
             hopper.setPosition(0.01);
             wrist.setPosition(0.521);
             sleep(600);
@@ -455,6 +466,7 @@ public class Beginnings extends LinearOpMode {
             //worm();
             //stopMotion();
             aroundthetop();
+            slidez();
             telemetry.update();
             sleep(100);
         }
