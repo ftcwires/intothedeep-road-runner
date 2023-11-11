@@ -4,9 +4,9 @@ package org.firstinspires.ftc.teamcode;
 
 import static android.os.SystemClock.sleep;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
+//import com.acmerobotics.roadrunner.Pose2d;
+//import com.acmerobotics.roadrunner.PoseVelocity2d;
+//import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -43,6 +43,9 @@ public class Beginnings extends LinearOpMode {
     private DcMotor leftFront; //front left 2
     private DcMotor rightBack; //rear right 1
     private DcMotor leftBack; //rear left 3
+    private DcMotor leftHang;
+    private DcMotor rightHang;
+
     DcMotor frontIntake;
     DcMotor rearIntake;
 
@@ -98,38 +101,6 @@ public class Beginnings extends LinearOpMode {
             launcher.setPosition(0.8);
         }
     }
-    private void tuneshoulder() {
-        if (gamepad2.right_bumper) {
-            shoulder.setPosition(shoulder.getPosition() + 0.01);
-        } else if (gamepad2.right_trigger > 0.5){
-            shoulder.setPosition(shoulder.getPosition() - 0.01);
-        } else {
-            //shoulder.setPosition(0.1);
-        }
-        telemetry.addData("shoulder", shoulder.getPosition());
-    }
-    /*
-    private void tuneWrist() {
-        if (gamepad2.left_bumper) {
-            wrist.setPosition(wrist.getPosition() + 0.01);
-        } else if (gamepad2.left_trigger > 0.5){
-            wrist.setPosition(wrist.getPosition() - 0.01);
-        } else {
-            //shoulder.setPosition(0.1);
-        }
-        telemetry.addData("wrist", wrist.getPosition());
-    }
-
-    private void jukeBeta() {
-        if (gamepad2.dpad_up) {
-            shoulder.setPosition(0.48);
-            wrist.setPosition(0.31);
-        } else if (gamepad2.dpad_down) {
-            shoulder.setPosition(0.445);
-            wrist.setPosition(0.26);
-        }
-    }
-     */
     private void liftFunction() {
         if (gamepad2.y) {
             leftLift.setPosition(0.9 + LiftOffset);
@@ -154,7 +125,7 @@ public class Beginnings extends LinearOpMode {
             rearIntake.setPower(1);
             telemetry.addData("Intake", "in");
         }
-        else if (gamepad1.right_bumper) {
+        else if (gamepad1.left_trigger > 0.5) {
             frontIntake.setPower(-1);
             rearIntake.setPower(-1);
             telemetry.addData("Intake", "out");
@@ -178,22 +149,86 @@ public class Beginnings extends LinearOpMode {
 
         }
     }
-    private void driveAroundPos() {
-        if (gamepad1.a) {
-        shoulder.setPosition(0.455);
-        sleep(653);
-        shoulder.setPosition(0.47);
-        wrist.setPosition(0.55);
-        sleep(531);
-        shoulder.setPosition(0.49);
-        wrist.setPosition(0.59);
-        }
-        if (gamepad2.dpad_up) {
-            wrist.setPosition(0.51);
-            shoulder.setPosition(0.44);
+    private void dumpPrep() {
+        if (gamepad2.back) {
+            shoulder.setPosition(0.75);
+            sleep(400);
+            hopper.setPosition(0.57);
+             wrist.setPosition(0.93);
+            shoulder.setPosition(0.91);
         }
     }
-    private void stopMotion() {
+    private void dumpPrepTwo() {
+        if (gamepad2.back) {
+
+        }
+    }
+    private void SlideFunction() {
+        if (gamepad2.a) {
+            shoulder.setPosition(0.60);
+            wrist.setPosition(0.61);
+            sleep(1100);
+            wrist.setPosition(0.35);
+            shoulder.setPosition(0.79);
+            sleep(1400);
+            hopper.setPosition(0.57);
+            wrist.setPosition(0.93);
+            //shoulder.setPosition(0.91);
+            sleep(1100);
+            shoulder.setPosition(0.91);
+            sleep(1150);
+            wrist.setPosition(0.85);
+            shoulder.setPosition(1);
+        }
+    }
+
+    private void dumpLeft() {
+        if (gamepad2.dpad_left) {
+            hopper.setPosition(0.2);
+        }
+    }
+    private void homePrep() {
+        if (gamepad1.back) {
+            shoulder.setPosition(0.79);
+            leftLift.setPosition(0.42);
+            rightLift.setPosition(0.42);
+            hopper.setPosition(0.01);
+            wrist.setPosition(0.521);
+            sleep(600);
+            shoulder.setPosition(0.60);
+            sleep(600);
+            shoulder.setPosition(0.50);
+            wrist.setPosition(0.521);
+            sleep(600);
+            intakePos();
+        }
+    }
+    private void driveAroundPos() {
+        if (gamepad1.a) {
+            incrementalIntake();
+        }
+        if (gamepad1.x) {
+            theJuke();
+        }
+        if (gamepad2.dpad_up) {
+            if (gamepad1.back) {
+                shoulder.setPosition(0.79);
+                leftLift.setPosition(0.42);
+                rightLift.setPosition(0.42);
+                hopper.setPosition(0.01);
+                wrist.setPosition(0.521);
+                sleep(600);
+                shoulder.setPosition(0.60);
+                sleep(600);
+                shoulder.setPosition(0.50);
+                wrist.setPosition(0.521);
+                sleep(600);
+                intakePos();
+            }
+        }
+
+    }
+    /* private void stopMotion() {
         if(gamepad1.dpad_left) {
             wrist.setPosition(0.51);
             shoulder.setPosition(0.44);
@@ -214,6 +249,45 @@ public class Beginnings extends LinearOpMode {
             hopper.setPosition(0.16);
         }
     }
+    */
+    private void drivePos() {
+        shoulder.setPosition(0.49);
+        wrist.setPosition(0.55);
+        hopper.setPosition(0.01);
+        leftLift.setPosition(0.42);
+        rightLift.setPosition(0.42);
+    }
+    private void intakePos() {
+        hopper.setPosition(0.01);
+        shoulder.setPosition(0.445);
+        wrist.setPosition(0.5);
+        leftLift.setPosition(0.42);
+        rightLift.setPosition(0.42);
+    }
+    private void theJuke() {
+        hopper.setPosition(0.01);
+        shoulder.setPosition(0.48);
+        wrist.setPosition(0.521);
+        leftLift.setPosition(0.42);
+        rightLift.setPosition(0.42);
+        sleep(500);
+        intakePos();
+    }
+    private void incrementalIntake() {
+        shoulder.setPosition(0.455);
+        sleep(653);
+        shoulder.setPosition(0.47);
+        wrist.setPosition(0.55);
+        sleep(531);
+        shoulder.setPosition(0.49);
+        wrist.setPosition(0.55);
+    }
+    private void startPos() {
+        launcher.setPosition(0.8);
+        intakePos();
+    }
+
+
 
 /*
     private void driveCode() {
@@ -266,6 +340,9 @@ public class Beginnings extends LinearOpMode {
         rightBack = hardwareMap.get(DcMotor.class, "rightBack");
         leftBack = hardwareMap.get(DcMotor.class, "leftBack");
 
+        leftHang = hardwareMap.get(DcMotor.class, "leftHang");
+        rightHang = hardwareMap.get(DcMotor.class, "rightHang");
+
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
@@ -306,13 +383,14 @@ public class Beginnings extends LinearOpMode {
         rearIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        // sensors
+        leftUpper = hardwareMap.get(RevTouchSensor.class, "leftUpper");
+        rightUpper = hardwareMap.get(RevTouchSensor.class, "rightUpper");
+        leftLower = hardwareMap.get(RevTouchSensor.class, "leftLower");
+        rightLower = hardwareMap.get(RevTouchSensor.class, "rightLower");
+
         // servos
-        launcher.setPosition(0.8);
-        wrist.setPosition(0.51);
-        shoulder.setPosition(0.44);
-        hopper.setPosition(0);
-        leftLift.setPosition(0.42);
-        rightLift.setPosition(0.42);
+        startPos();
         /*
         sleep(500);
         leftLift.setPosition(0.8);
@@ -361,6 +439,34 @@ public class Beginnings extends LinearOpMode {
             rightBack.setPower(rightBackPower);
             leftBack.setPower(leftBackPower);
 
+            if (gamepad1.right_bumper){
+                leftHang.setDirection(DcMotor.Direction.FORWARD);
+                rightHang.setDirection(DcMotor.Direction.FORWARD);
+
+                leftHang.setPower(.9);
+                rightHang.setPower(.9);
+            } else if (leftUpper.isPressed() || rightUpper.isPressed() || gamepad1.y) {
+                leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftHang.setPower(0);
+                rightHang.setPower(0);
+            }
+            if (gamepad1.left_bumper){
+                leftHang.setDirection(DcMotor.Direction.REVERSE);
+                rightHang.setDirection(DcMotor.Direction.REVERSE);
+
+                leftHang.setPower(.9);
+                rightHang.setPower(.9);
+            } else if (leftLower.isPressed() || rightLower.isPressed() || gamepad1.y) {
+                leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftHang.setPower(0);
+                rightHang.setPower(0);
+            }
+
+
+
+
             telemetry.addData("Status", "Run " + runtime.toString());
             telemetry.addData("Motors", "forward (%.2f), strafe (%.2f),turn (%.2f)", forward, strafe, turn);
 
@@ -370,10 +476,14 @@ public class Beginnings extends LinearOpMode {
             //IsDrive.is_drive_code(gamepad1, telemetry);
             intakeFunction();
             driveAroundPos();
+            dumpPrepTwo();
+            homePrep();
+            dumpLeft();
             //liftFunction();
             //worm();
-            stopMotion();
+            //stopMotion();
             aroundthetop();
+            SlideFunction();
             telemetry.update();
             sleep(100);
         }
