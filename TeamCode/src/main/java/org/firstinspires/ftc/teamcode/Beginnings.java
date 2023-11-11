@@ -149,12 +149,17 @@ public class Beginnings extends LinearOpMode {
             shoulder.setPosition(0.75);
             sleep(400);
             hopper.setPosition(0.57);
-            wrist.setPosition(0.93);
+             wrist.setPosition(0.93);
             shoulder.setPosition(0.91);
         }
     }
     private void dumpPrepTwo() {
         if (gamepad2.back) {
+
+        }
+    }
+    private void SlideFunction() {
+        if (gamepad2.a) {
             shoulder.setPosition(0.60);
             wrist.setPosition(0.61);
             sleep(1100);
@@ -169,12 +174,6 @@ public class Beginnings extends LinearOpMode {
             sleep(1150);
             wrist.setPosition(0.85);
             shoulder.setPosition(1);
-        }
-    }
-    private void slidez() {
-        if (gamepad2.a) {
-            leftLift.setPosition(0.42);
-            rightLift.setPosition(0.42);
         }
     }
 
@@ -207,7 +206,20 @@ public class Beginnings extends LinearOpMode {
             theJuke();
         }
         if (gamepad2.dpad_up) {
-            incrementalIntake();
+            if (gamepad1.back) {
+                shoulder.setPosition(0.79);
+                leftLift.setPosition(0.42);
+                rightLift.setPosition(0.42);
+                hopper.setPosition(0.01);
+                wrist.setPosition(0.521);
+                sleep(600);
+                shoulder.setPosition(0.60);
+                sleep(600);
+                shoulder.setPosition(0.50);
+                wrist.setPosition(0.521);
+                sleep(600);
+                intakePos();
+            }
         }
 
     }
@@ -466,7 +478,7 @@ public class Beginnings extends LinearOpMode {
             //worm();
             //stopMotion();
             aroundthetop();
-            slidez();
+            SlideFunction();
             telemetry.update();
             sleep(100);
         }
