@@ -258,9 +258,9 @@ public class Beginnings extends LinearOpMode {
         rightLift.setPosition(0.42);
     }
     private void intakePos() {
-        hopper.setPosition(0.01);
+        hopper.setPosition(0.02);
         shoulder.setPosition(0.445);
-        wrist.setPosition(0.5);
+        wrist.setPosition(0.2);
         leftLift.setPosition(0.42);
         rightLift.setPosition(0.42);
     }
