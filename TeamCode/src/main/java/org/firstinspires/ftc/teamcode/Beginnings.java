@@ -232,12 +232,12 @@ public class Beginnings extends LinearOpMode {
     }
     private void intakeFunction() {
         if (gamepad1.right_trigger > 0.5) {
-            frontIntake.setPower(1);
+            frontIntake.setPower(0.8);
             rearIntake.setPower(1);
             telemetry.addData("Intake", "in");
         }
         else if (gamepad1.left_trigger > 0.5) {
-            frontIntake.setPower(-1);
+            frontIntake.setPower(-0.8);
             rearIntake.setPower(-1);
             telemetry.addData("Intake", "out");
         }
