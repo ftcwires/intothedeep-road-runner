@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.vision.apriltag.AprilTagCanvasAnnotator;
@@ -14,6 +16,9 @@ public class McTuner3000 extends LinearOpMode {
     Servo shoulder;
     Servo leftLift;
     Servo rightLift;
+
+    DcMotor frontIntake;
+    DcMotor rearIntake;
 
     double speedAmount;
 
@@ -104,6 +109,24 @@ public class McTuner3000 extends LinearOpMode {
         telemetry.addData("Lift Left = ",leftLift.getPosition());
         telemetry.addData("Lift Right = ",rightLift.getPosition());
     }
+    private void slurp() {
+        if (gamepad1.right_trigger > 0.5) {
+            frontIntake.setPower(0.8);
+            rearIntake.setPower(1);
+            //leftLift.setPosition(.49);
+            //rightLift.setPosition(.45);
+            telemetry.addData("Intake", "in");
+        } else if (gamepad1.left_trigger > 0.5) {
+            frontIntake.setPower(-0.8);
+            rearIntake.setPower(-1);
+
+            telemetry.addData("Intake", "out");
+        } else {
+            telemetry.addData("Intake", "stopped");
+            frontIntake.setPower(0);
+            rearIntake.setPower(0);
+        }
+    }
     @Override
     public void runOpMode() throws InterruptedException {
         which = ServoTypes.SHOULDER;
@@ -130,12 +153,24 @@ public class McTuner3000 extends LinearOpMode {
         rightLift.setPosition(0.42);
 
 
+       // this is a comment
+        frontIntake = hardwareMap.get(DcMotor.class, "frontIntake");
+        rearIntake = hardwareMap.get(DcMotor.class, "rearIntake");
+
+        frontIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rearIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rearIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         telemetry.update();
         waitForStart();
 
         while(opModeIsActive()) {
             setServo();
+            slurp();
             masterTuner();
             setSpeed();
             whatServoAt();
