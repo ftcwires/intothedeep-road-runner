@@ -12,10 +12,7 @@ public class TheJettCode extends LinearOpMode {
     double LiftHeight;
     boolean LiftMax;
 
-    private void ServoNo() {
-    }
 
-    }
 
     private void ServoYes() {
         if (gamepad1.y) {
@@ -37,7 +34,7 @@ public class TheJettCode extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             ServoYes();
-            ServoNo();
+
             telemetry.update();
             sleep(100);
         }
