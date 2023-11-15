@@ -263,7 +263,7 @@ public class Beginnings extends LinearOpMode {
         }
     }
     private void driveAroundPos() {
-        if (gamepad1.x) {
+        if (gamepad2.dpad_down || gamepad1.x) {
             intakePos();
         }
     }
@@ -282,7 +282,7 @@ public class Beginnings extends LinearOpMode {
         currentArmPos = ArmPosition.INTAKE;
     }
     private void theJuke() {
-        if (gamepad1.a && (currentArmPos == ArmPosition.INTAKE)) {
+        if ((gamepad2.dpad_up || gamepad1.a) && (currentArmPos == ArmPosition.INTAKE)) {
             shoulder.setPosition(0.46);
             sleep(100);
             shoulder.setPosition(0.5);
