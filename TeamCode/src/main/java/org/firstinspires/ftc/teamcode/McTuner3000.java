@@ -21,6 +21,8 @@ public class McTuner3000 extends LinearOpMode {
     DcMotor rearIntake;
 
     double speedAmount;
+    //TODO: Add offset if needed w/ eg double lift
+    double LiftLeftOffset = -.05;
 
     //TODO: Step 3, set all of your servo names below
     enum ServoTypes{
@@ -44,7 +46,7 @@ public class McTuner3000 extends LinearOpMode {
                 wrist.setPosition(wrist.getPosition() - speedAmount);
             }
             else if (which == ServoTypes.LIFT) {
-                leftLift.setPosition(leftLift.getPosition() - speedAmount);
+                leftLift.setPosition((rightLift.getPosition() +  LiftLeftOffset) - speedAmount);
                 rightLift.setPosition(rightLift.getPosition() - speedAmount);
             }
         }
@@ -59,7 +61,7 @@ public class McTuner3000 extends LinearOpMode {
                 wrist.setPosition(wrist.getPosition() + speedAmount);
             }
             else if (which == ServoTypes.LIFT) {
-                leftLift.setPosition(leftLift.getPosition() + speedAmount);
+                leftLift.setPosition((rightLift.getPosition() + LiftLeftOffset) + speedAmount);
                 rightLift.setPosition(rightLift.getPosition() + speedAmount);
             }
         }
@@ -85,13 +87,13 @@ public class McTuner3000 extends LinearOpMode {
             speedAmount = 0;
         }
         else if (gamepad1.dpad_left) {
-            speedAmount = 0.01;
+            speedAmount = 0.005;
         }
         else if (gamepad1.dpad_right) {
-            speedAmount = 0.02;
+            speedAmount = 0.01;
         }
         else if (gamepad1.dpad_up) {
-            speedAmount = 0.05;
+            speedAmount = 0.03;
         }
         telemetry.addData("Speed = ", speedAmount);
     }
@@ -149,7 +151,7 @@ public class McTuner3000 extends LinearOpMode {
         wrist.setPosition(0.51);
         shoulder.setPosition(0.44);
         hopper.setPosition(0);
-        leftLift.setPosition(0.42);
+        leftLift.setPosition(0.42 + LiftLeftOffset);
         rightLift.setPosition(0.42);
 
 
