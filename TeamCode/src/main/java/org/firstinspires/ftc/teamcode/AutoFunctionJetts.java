@@ -24,20 +24,16 @@ public void FirstTest() {
     leftBack.setPower(0.2);
     leftFront.setPower(0.2);
     sleep(300);
-    rightFront.setPower(0);
-    rightBack.setPower(0);
-    leftBack.setPower(0);
-    leftFront.setPower(0);
-    sleep(300);
+    rightFront.setPower(-0.25);
+    rightBack.setPower(-0.25);
+    leftBack.setPower(0.25);
+    leftFront.setPower(0.25);
+    sleep(500);
     rightFront.setPower(0.2);
     rightBack.setPower(0.2);
     leftBack.setPower(0.2);
     leftFront.setPower(0.2);
-    sleep(100);
-    rightFront.setPower(0);
-    rightBack.setPower(0);
-    leftBack.setPower(0);
-    sleep(500);
+    sleep(300);
     frontIntake.setPower(-0.3);
     rearIntake.setPower(-0.3);
 
