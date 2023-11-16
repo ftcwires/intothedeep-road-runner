@@ -215,7 +215,7 @@ public class Beginnings extends LinearOpMode {
         if (gamepad1.right_trigger > 0.5) {
             frontIntake.setPower(0.8);
             rearIntake.setPower(1);
-            setLiftHeight(0.45);
+            //setLiftHeight(0.45);
             telemetry.addData("Intake", "in");
         }
         else if (gamepad1.left_trigger > 0.5) {
@@ -228,7 +228,7 @@ public class Beginnings extends LinearOpMode {
             telemetry.addData("Intake", "stopped");
             frontIntake.setPower(0);
             rearIntake.setPower(0);
-            setLiftHeight(0.42);
+            //setLiftHeight(0.42);
         }
 
     }
@@ -263,7 +263,7 @@ public class Beginnings extends LinearOpMode {
         }
     }
     private void driveAroundPos() {
-        if (gamepad2.dpad_down || gamepad1.x) {
+        if (gamepad2.dpad_down) {
             intakePos();
         }
     }
@@ -275,18 +275,20 @@ public class Beginnings extends LinearOpMode {
         currentArmPos = ArmPosition.DRIVE;
     }
     private void intakePos() {
+        //hopper.setPosition(0.02);
+        //shoulder.setPosition(0.44);
+        //wrist.setPosition(0.26);
+        wrist.setPosition(0.265);
+        shoulder.setPosition(0.455);
         hopper.setPosition(0.02);
-        shoulder.setPosition(0.44);
-        wrist.setPosition(0.26);
         setLiftHeight(0.42);
         currentArmPos = ArmPosition.INTAKE;
     }
     private void theJuke() {
-        if ((gamepad2.dpad_up || gamepad1.a) && (currentArmPos == ArmPosition.INTAKE)) {
+        if ((gamepad2.dpad_up) && (currentArmPos == ArmPosition.INTAKE)) {
             shoulder.setPosition(0.46);
             sleep(100);
-            shoulder.setPosition(0.5);
-            wrist.setPosition(0.3);
+            intakePos();
         }
     }
     private void incrementalIntake() {

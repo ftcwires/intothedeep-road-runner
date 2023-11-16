@@ -148,9 +148,9 @@ public class McTuner3000 extends LinearOpMode {
         telemetry.addData("Wrist Position", wrist.getPosition());
         telemetry.addData("Hopper Position", hopper.getPosition());
 
-        wrist.setPosition(0.51);
-        shoulder.setPosition(0.44);
-        hopper.setPosition(0);
+        wrist.setPosition(0.265);
+        shoulder.setPosition(0.455);
+        hopper.setPosition(0.02);
         leftLift.setPosition(0.42 + LiftLeftOffset);
         rightLift.setPosition(0.42);
 
