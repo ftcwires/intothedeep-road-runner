@@ -286,8 +286,8 @@ public class Beginnings extends LinearOpMode {
     }
     private void theJuke() {
         if ((gamepad2.dpad_up) && (currentArmPos == ArmPosition.INTAKE)) {
-            shoulder.setPosition(0.46);
-            sleep(100);
+            shoulder.setPosition(0.48);
+            sleep(200);
             intakePos();
         }
     }
