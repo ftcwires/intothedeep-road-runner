@@ -8,40 +8,33 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class TheJettCode extends LinearOpMode {
-    private Servo Wrist;
-    private Servo Hopper;
+    private Servo LiftLeft;
     double LiftHeight;
     boolean LiftMax;
 
-    private void ServoNo() {
-    }
 
+
+    private void ServoYes() {
+        if (gamepad1.y) {
+            LiftHeight = -0.7;
+        } else if (gamepad1.x) {
+            LiftHeight = 0.7;
+        } else {
+            LiftHeight = 0;
+        }
+        LiftLeft.setPosition(LiftHeight);
+        telemetry.addData("TAPE", LiftLeft.getPosition());
+        telemetry.addData("TAPE non var", LiftHeight);
+    }
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Wrist = hardwareMap.get(Servo.class, "wrist");
-        Hopper = hardwareMap.get(Servo.class, "hopper");
 
-        Wrist.getController().pwmEnable();
-        Hopper.getController().pwmEnable();
-
+        LiftLeft = hardwareMap.get(Servo.class, "LiftLeft");
         waitForStart();
         while (opModeIsActive()) {
-            if (gamepad1.y) {
-                LiftHeight = 0.1;
-            } else if (gamepad1.x) {
-                LiftHeight = 0.5;
-            } else {
-                LiftHeight = 0;
-            }
+            ServoYes();
 
-
-            Wrist.setPosition(LiftHeight);
-            Hopper.setPosition(LiftHeight);
-            telemetry.addData("LiftLeft", Wrist.getPosition());
-            telemetry.addData("Hopper", Hopper.getPosition());
-            telemetry.addData("Lift non var", LiftHeight);
-            ServoNo();
             telemetry.update();
             sleep(100);
         }

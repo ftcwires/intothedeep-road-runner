@@ -51,23 +51,23 @@ public final class MecanumDrive {
         // drive model parameters
         //TODO Step 5 Set value of inPerTick after running ForwardPushTest
         //TODO Step 14 Make value of inPerTick accurate after running LocalizationTest
-        public double inPerTick = (123.5 / 20870);  // 123.5 in 20870 ticks
+        public double inPerTick = 0;
 
         //TODO Step 6 (Only for DriveEncoder Localizer) Set value of lateralInPerTick after running LateralPushTest
         //TODO Step 8 (Only for DeadWheel Localizer) Set value of lateralInPerTick after running LateralRampLogger
         //TODO Step 14 Make value of lateralInPerTick accurate after running LocalizationTest
-        public double lateralInPerTick = (124 / 10473);
+        public double lateralInPerTick = 1;
 
         //TODO Step 10 (Only for DriveEncoder Localizer) Set value of trackWidthTicks after running AngularRampLogger
         //TODO Step 11 (Only for DeadWheel Localizer) Set value of trackWidthTicks after running AngularRampLogger
         //      Go to Step 11.1 in Three or Two DeadWheelLocalizer and updated  values of par0YTicks, part1YTicks, perpXTicks
-        public double trackWidthTicks =  -3712.5656183161345;
+        public double trackWidthTicks = 0;
 
         // feedforward parameters (in tick units)
         //TODO Step 7 (Only for DeadWheel Localizer) Set value for kS and KV after running ForwardRampLogger
         //TODO Step 9 (Only for DriveEncoder Localizer) Set value for kS and kV after running AngularRampLogger
-        public double kS =  1.042042743032133;
-        public double kV =  -0.0011165000242287573;
+        public double kS = 0;
+        public double kV = 0;
 
         //TODO Step 12 Set value of kA after running ManualFeedforwardTuner. In this emperical process update value in increments of 0.0001
         public double kA = 0;
@@ -133,10 +133,10 @@ public final class MecanumDrive {
 
             //TODO Step 4.2 Run MecanumDirectionDebugger Tuning OpMode to set motor direction correctly
             //Uncomment the lines for which the motorDirection need to be reversed to ensure all motors run forward in test
-            leftFront.setDirection(DcMotorEx.Direction.REVERSE);
-            leftBack.setDirection(DcMotorEx.Direction.REVERSE);
-            //rightBack.setDirection(DcMotorEx.Direction.REVERSE);
-            //rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+            //leftFront.setDirection(DcMotorEx.Direction.REVERSE);
+            //leftBack.setDirection(DcMotorEx.Direction.REVERSE);
+            rightBack.setDirection(DcMotorEx.Direction.REVERSE);
+            rightFront.setDirection(DcMotorEx.Direction.REVERSE);
             //TODO End Step 4.2
 
             lastLeftFrontPos = leftFront.getPositionAndVelocity().position;
@@ -208,10 +208,10 @@ public final class MecanumDrive {
 
         //TODO Step 4.1 Run MecanumDirectionDebugger Tuning OpMode to set motor direction correctly
         //Uncomment the lines for which the motorDirection need to be reversed to ensure all motors run forward in test
-        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
-        leftBack.setDirection(DcMotorEx.Direction.REVERSE);
-        //rightFront.setDirection(DcMotorEx.Direction.REVERSE);
-        //rightBack.setDirection(DcMotorEx.Direction.REVERSE);
+        //leftFront.setDirection(DcMotorEx.Direction.REVERSE);
+        //leftBack.setDirection(DcMotorEx.Direction.REVERSE);
+        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+        rightBack.setDirection(DcMotorEx.Direction.REVERSE);
         //TODO Make the same update in DriveLocalizer() function. Search for Step 4.2
         //TODO End Step 4.1
 
@@ -233,12 +233,12 @@ public final class MecanumDrive {
 
         //TODO Step 3: Specify how the robot should track its position
         //Comment this line if NOT using Drive Encoder localization
-        localizer = new DriveLocalizer();
+        // localizer = new DriveLocalizer();
         //Uncomment next line if using Two Dead Wheel Localizer and also check TwoDeadWheelLocalizer.java for Step 3.1
         //localizer = new TwoDeadWheelLocalizer(hardwareMap, imu, PARAMS.inPerTick)
 
         //Uncomment next line if using Three Dead Wheel Localizer and also check ThreeDeadWheelLocalizer.java for Step 3.1
-        //localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick)
+        localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick);
         //TODO End Step 3
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
