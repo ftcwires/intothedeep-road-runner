@@ -67,7 +67,6 @@ public class EggAuto extends LinearOpMode {
     private RevTouchSensor leftUpper;
     private RevTouchSensor rightLower;
     private RevTouchSensor leftLower;
-    private Servo launcher;
     private Servo rightLift;
     private Servo leftLift;
     private Servo shoulder;
@@ -99,16 +98,12 @@ public class EggAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        launcher = hardwareMap.get(Servo.class, "launcher");
-        rightLift = hardwareMap.get(Servo.class, "rightLift");
-        leftLift = hardwareMap.get(Servo.class, "leftLift");
         wrist = hardwareMap.get(Servo.class, "wrist");
         hopper = hardwareMap.get(Servo.class, "hopper");
         shoulder = hardwareMap.get(Servo.class, "shoulder");
 
         shoulder.setDirection(Servo.Direction.REVERSE);
         wrist.setDirection(Servo.Direction.REVERSE);
-        launcher.setDirection(Servo.Direction.REVERSE);
 
         frontIntake = hardwareMap.get(DcMotor.class, "frontIntake");
         rearIntake = hardwareMap.get(DcMotor.class, "rearIntake");
@@ -282,7 +277,13 @@ public class EggAuto extends LinearOpMode {
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
-
+        frontIntake.setPower(-1);
+        rearIntake.setPower(-1);
+        sleep(1500);
+        frontIntake.setPower(0);
+        rearIntake.setPower(0);
+        //drive pos \/
+        shoulder.setPosition(0.48);
         //Move robot to midwayPose1
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -429,7 +430,6 @@ public class EggAuto extends LinearOpMode {
 
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         telemetry.addData("# Objects Detected", currentRecognitions.size());
-
         //Camera placed between Left and Right Spike Mark on RED_LEFT and BLUE_LEFT If pixel not visible, assume Right spike Mark
         if (startPosition == START_POSITION.RED_LEFT || startPosition == START_POSITION.BLUE_LEFT) {
             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
