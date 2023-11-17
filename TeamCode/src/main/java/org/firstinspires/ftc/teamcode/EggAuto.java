@@ -101,6 +101,8 @@ public class EggAuto extends LinearOpMode {
         wrist = hardwareMap.get(Servo.class, "wrist");
         hopper = hardwareMap.get(Servo.class, "hopper");
         shoulder = hardwareMap.get(Servo.class, "shoulder");
+        rightLift = hardwareMap.get(Servo.class, "rightLift");
+        leftLift = hardwareMap.get(Servo.class, "leftLift");
 
         shoulder.setDirection(Servo.Direction.REVERSE);
         wrist.setDirection(Servo.Direction.REVERSE);
