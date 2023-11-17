@@ -95,6 +95,11 @@ public class EnigmaAuto extends LinearOpMode {
         RIGHT
     }
     public static IDENTIFIED_SPIKE_MARK_LOCATION identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+    public static double leftavgfinoutput = 0;
+    public static double centeravgfinoutput = 0;
+    public static double rightavgfinoutput = 0;
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -141,6 +146,9 @@ public class EnigmaAuto extends LinearOpMode {
             //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
            // runTfodTensorFlow();
             telemetry.addData("Vision identified Parking Location", identifiedSpikeMarkLocation);
+            telemetry.addData("leftavfin", leftavgfinoutput);
+            telemetry.addData("centeravfin", centeravgfinoutput);
+            telemetry.addData("rightavfin", rightavgfinoutput);
             telemetry.update();
         }
 
@@ -379,9 +387,9 @@ class teamElementPipeline extends OpenCvPipeline{
             Rect centerRect = new Rect(213,1,212, 479);
             Rect rightRect = new Rect(426,1,213, 479);
             */
-            Rect leftRect = new Rect(1,1,1280/3, 719);
-            Rect centerRect = new Rect((1280/3+1),1,1280/3, 719);
-            Rect rightRect = new Rect((1280/3*2)+1,1,1280/3, 719);
+            Rect leftRect = new Rect(1,300,200, 400);
+            Rect centerRect = new Rect(400,300,500, 200);
+            Rect rightRect = new Rect(1000,300,260, 400);
             input.copyTo(outPut);
 
 
@@ -393,9 +401,9 @@ class teamElementPipeline extends OpenCvPipeline{
             centerCrop = YCbCr.submat(centerRect);
             rightCrop = YCbCr.submat(rightRect);
 
-            Core.extractChannel(leftCrop, leftCrop, 2);
-            Core.extractChannel(centerCrop, centerCrop, 2);
-            Core.extractChannel(rightCrop, rightCrop, 2);
+            Core.extractChannel(leftCrop, leftCrop, 0);
+            Core.extractChannel(centerCrop, centerCrop, 0);
+            Core.extractChannel(rightCrop, rightCrop, 0);  // blue is 0, green is 1, red is 2
 
             Scalar leftavg = Core.mean(leftCrop);
             Scalar centeravg = Core.mean(centerCrop);
@@ -404,6 +412,10 @@ class teamElementPipeline extends OpenCvPipeline{
             leftavgfin = leftavg.val[0];
             centeravgfin = centeravg.val[0];
             rightavgfin = rightavg.val[0];
+
+            leftavgfinoutput = leftavgfin;
+            centeravgfinoutput = centeravgfin;
+            rightavgfinoutput = rightavgfin;
 
             if (leftavgfin > centeravgfin && leftavgfin > rightavgfin) {
                 telemetry.addLine("Left");
