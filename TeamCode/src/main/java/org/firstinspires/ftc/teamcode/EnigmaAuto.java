@@ -221,16 +221,19 @@ public class EnigmaAuto extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(23, 36, Math.toRadians(-90));
+                        dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
+                        dropPurplePixelPose = new Pose2d(23, 11, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(27, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(30, 3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(30, 36,  Math.toRadians(-90));
+                        dropPurplePixelPosePush = new Pose2d(30.5, 0, Math.toRadians(0)); // change up
+                        dropPurplePixelPose = new Pose2d(26.5, -3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(27, 36,  Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(30, -9, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(37, 36, Math.toRadians(-90));
+                        dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
+                        dropPurplePixelPose = new Pose2d(23.5, -7, Math.toRadians(-35));
+                        dropYellowPixelPose = new Pose2d(27, 36, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
@@ -242,16 +245,19 @@ public class EnigmaAuto extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(30, 9, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(21, -36, Math.toRadians(90));
+                        dropPurplePixelPosePush = new Pose2d(27, 9, Math.toRadians(45));
+                        dropPurplePixelPose = new Pose2d(23.5, 7, Math.toRadians(35));
+                        dropYellowPixelPose = new Pose2d(27, -36, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(30, -3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(29, -36,  Math.toRadians(90));
+                        dropPurplePixelPosePush = new Pose2d(30.5, 0, Math.toRadians(0)); // change up
+                        dropPurplePixelPose = new Pose2d(26.5, -3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(27, -36,  Math.toRadians(90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(26, -8, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(37, -36, Math.toRadians(90));
+                        dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
+                        dropPurplePixelPose = new Pose2d(23, -11, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(27, -36, Math.toRadians(90));
                         break;
                 }
                 midwayPose1 = new Pose2d(14, -13, Math.toRadians(45));
@@ -270,12 +276,12 @@ public class EnigmaAuto extends LinearOpMode {
                     case MIDDLE:
                         dropPurplePixelPosePush = new Pose2d(30.5, 0, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(26.5, -3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(34, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(27, 86, Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -8, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(23, -11, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(43, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(27, 86, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(8, -8, Math.toRadians(0));
@@ -290,20 +296,23 @@ public class EnigmaAuto extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(37, -86, Math.toRadians(90));
+                        dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
+                        dropPurplePixelPose = new Pose2d(23, 11, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(27, -86, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(30, -3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(29, -86, Math.toRadians(90));
+                        dropPurplePixelPosePush = new Pose2d(30.5, 0, Math.toRadians(0)); // change up
+                        dropPurplePixelPose = new Pose2d(26.5, -3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(27, -86, Math.toRadians(90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(27, -9, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(21, -86, Math.toRadians(90));
+                        dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
+                        dropPurplePixelPose = new Pose2d(23.5, -7, Math.toRadians(-35));
+                        dropYellowPixelPose = new Pose2d(27, -86, Math.toRadians(90));
                         break;
                 }
                 midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
-                midwayPose1a = new Pose2d(18, 18, Math.toRadians(90));
+                midwayPose1a = new Pose2d(18, 21, Math.toRadians(90));
                 intakeStack = new Pose2d(52, 19,Math.toRadians(90));
                 midwayPose2 = new Pose2d(52, -62, Math.toRadians(90));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
@@ -366,6 +375,57 @@ public class EnigmaAuto extends LinearOpMode {
 
         //TODO : Code to drop Pixel on Backdrop
         safeWaitSeconds(1);
+        shoulder.setPosition(0.60);
+        hopper.setPosition(0.02);
+        wrist.setPosition(0.22);
+        setLiftHeight(0.42);
+        sleep(500);
+        wrist.setPosition(0.22);
+        shoulder.setPosition(0.79);
+        hopper.setPosition(0.02);
+        setLiftHeight(0.42);
+        sleep(500);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(0.79);
+        setLiftHeight(0.42);
+        sleep(500);
+        shoulder.setPosition(0.91);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        setLiftHeight(0.42);
+        sleep(500);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(1);
+        hopper.setPosition(0.58);
+        setLiftHeight(0.42);
+        sleep(500);
+        //dump
+        hopper.setPosition(0.2);
+        sleep(1000);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(1);
+        hopper.setPosition(0.58);
+        setLiftHeight(0.42);
+        sleep(200);
+        shoulder.setPosition(0.91);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        setLiftHeight(0.42);
+        sleep(200);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(0.79);
+        sleep(350);
+        wrist.setPosition(0.22);
+        shoulder.setPosition(0.79);
+        hopper.setPosition(0.02);
+        setLiftHeight(0.42);
+        sleep(500);
+        shoulder.setPosition(0.60);
+        hopper.setPosition(0.02);
+        wrist.setPosition(0.22);
+        setLiftHeight(0.42);
 
         //Move robot to park in Backstage
         Actions.runBlocking(
@@ -437,17 +497,17 @@ class teamElementPipeline extends OpenCvPipeline{
             Rect leftRect = new Rect(1,1,212, 479);
             Rect centerRect = new Rect(213,1,212, 479);
             Rect rightRect = new Rect(426,1,213, 479);
-            */
+
             Rect leftRect = new Rect(1,300,200, 400);
             Rect centerRect = new Rect(400,300,500, 200);
             Rect rightRect = new Rect(1000,300,260, 400);
-
+*/
             // testing tighter frames
-            /*
-            Rect leftRect = new Rect(1,350,125, 200);
+
+            Rect leftRect = new Rect(1,380,125, 200);
             Rect centerRect = new Rect(500,300,200, 200);
-            Rect rightRect = new Rect(1000,350,150, 200);
-            */
+            Rect rightRect = new Rect(1100,380,150, 200);
+
 
 
 
@@ -471,9 +531,9 @@ class teamElementPipeline extends OpenCvPipeline{
                 Core.extractChannel(centerCrop, centerCrop, 2);
                 Core.extractChannel(rightCrop, rightCrop, 2);  // blue is 0, green is 1, red is 2
             } else {
-                Core.extractChannel(leftCrop, leftCrop, 2);
-                Core.extractChannel(centerCrop, centerCrop, 2);
-                Core.extractChannel(rightCrop, rightCrop, 2);  // blue is 0, green is 1, red is 2
+                Core.extractChannel(leftCrop, leftCrop, 0);
+                Core.extractChannel(centerCrop, centerCrop, 0);
+                Core.extractChannel(rightCrop, rightCrop, 0);  // blue is 0, green is 1, red is 2
             }
 
             Scalar leftavg = Core.mean(leftCrop);
