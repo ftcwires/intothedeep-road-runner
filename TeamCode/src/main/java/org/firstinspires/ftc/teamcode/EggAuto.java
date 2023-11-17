@@ -350,7 +350,30 @@ public class EggAuto extends LinearOpMode {
         sleep(500);
         //dump
         hopper.setPosition(0.2);
-
+        sleep(1000);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(1);
+        hopper.setPosition(0.58);
+        setLiftHeight(0.42);
+        sleep(200);
+        shoulder.setPosition(0.91);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        setLiftHeight(0.42);
+        sleep(200);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(0.79);
+        sleep(350);
+        wrist.setPosition(0.22);
+        shoulder.setPosition(0.79);
+        hopper.setPosition(0.02);
+        setLiftHeight(0.42);
+        sleep(500);
+        shoulder.setPosition(0.60);
+        hopper.setPosition(0.02);
+        wrist.setPosition(0.22);
+        setLiftHeight(0.42);
         //Move robot to park in Backstage
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
