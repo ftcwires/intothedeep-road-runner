@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="TeleMec")
+//@TeleOp(name="TeleMec")
 
 public class OdoMec extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();

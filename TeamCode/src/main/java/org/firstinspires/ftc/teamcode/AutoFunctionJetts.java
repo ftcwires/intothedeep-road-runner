@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous
+//@Autonomous
 public class AutoFunctionJetts extends LinearOpMode {
     private DcMotor rightFront; //front right 0
     private DcMotor leftFront; //front left 2

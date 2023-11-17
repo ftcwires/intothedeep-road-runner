@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp
+//@TeleOp
 public class TheJettCode extends LinearOpMode {
     private Servo LiftLeft;
     double LiftHeight;

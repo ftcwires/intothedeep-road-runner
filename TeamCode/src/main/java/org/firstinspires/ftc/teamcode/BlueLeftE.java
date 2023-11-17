@@ -43,7 +43,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.ArrayList;
 
-@Autonomous(name= "Left Auto")
+//@Autonomous(name= "Left Auto")
 public class BlueLeftE extends LinearOpMode
 {
     // Declare vars

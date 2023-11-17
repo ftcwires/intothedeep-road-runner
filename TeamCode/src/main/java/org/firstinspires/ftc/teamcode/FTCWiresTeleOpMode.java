@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
  *
  */
 
-@TeleOp(name = "FTC Wires TeleOp", group = "00-Teleop")
+//@TeleOp(name = "FTC Wires TeleOp", group = "00-Teleop")
 public class FTCWiresTeleOpMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
