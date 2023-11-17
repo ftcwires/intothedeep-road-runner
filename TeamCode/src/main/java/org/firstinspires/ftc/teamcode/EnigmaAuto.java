@@ -37,18 +37,33 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvPipeline;
+/*
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-
+*/
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.List;
 
 /**
- * FTC WIRES Autonomous Example for only vision detection using tensorflow and park
+ * ENIGMA Autonomous Example for only vision detection using openCv and park
  */
-@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "ENIGMA TeleOp")
+@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "Beginnings")
 public class EnigmaAuto extends LinearOpMode {
 
     public static String TEAM_NAME = "ENIGMA"; //TODO: Enter team Name
@@ -57,8 +72,8 @@ public class EnigmaAuto extends LinearOpMode {
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     //Vision parameters
-    private TfodProcessor tfod;
-    private VisionPortal visionPortal;
+    //private TfodProcessor tfod;
+    //private VisionPortal visionPortal;
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -68,6 +83,11 @@ public class EnigmaAuto extends LinearOpMode {
         RED_RIGHT
     }
     public static START_POSITION startPosition;
+
+    /*
+    OpenCV / Color Detection
+     */
+    OpenCvCamera webcam1 = null;
 
     public enum IDENTIFIED_SPIKE_MARK_LOCATION {
         LEFT,
@@ -79,12 +99,35 @@ public class EnigmaAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        // Vision OpenCV / Color Detection
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam1 = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        //webcam1 = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+
+        webcam1.setPipeline(new teamElementPipeline());
+
+        webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam1.startStreaming(1280, 720, OpenCvCameraRotation.SENSOR_NATIVE);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+
+
+        telemetry.setMsTransmissionInterval(50);
+
         //Key Pay inputs to selecting Starting Position of robot
         selectStartingPosition();
         telemetry.addData("Selected Starting Position", startPosition);
 
         //Activate Camera Vision that uses TensorFlow for pixel detection
-        initTfod();
+        //initTfod();
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -96,7 +139,7 @@ public class EnigmaAuto extends LinearOpMode {
             telemetry.addData("Selected Starting Position", startPosition);
 
             //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
-            runTfodTensorFlow();
+           // runTfodTensorFlow();
             telemetry.addData("Vision identified Parking Location", identifiedSpikeMarkLocation);
             telemetry.update();
         }
@@ -280,7 +323,7 @@ public class EnigmaAuto extends LinearOpMode {
         telemetry.clearAll();
         //******select start pose*****
         while(!isStopRequested()){
-            telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous adopted for Team:",
+            telemetry.addData("Initializing ENIGMA Autonomous Team# a",
                     TEAM_NAME, " ", TEAM_NUMBER);
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
@@ -317,73 +360,65 @@ public class EnigmaAuto extends LinearOpMode {
         }
     }
 
-    /**
-     * Initialize the TensorFlow Object Detection processor.
-     */
-    private void initTfod() {
+class teamElementPipeline extends OpenCvPipeline{
+        Mat YCbCr = new Mat();
+        Mat leftCrop;
+        Mat centerCrop;
+        Mat rightCrop;
+        double leftavgfin;
+        double centeravgfin;
+        double rightavgfin;
+        Mat outPut = new Mat();
+        Scalar rectColor = new Scalar(255.0, 0.0, 0.0);
 
-        // Create the TensorFlow processor the easy way.
-        tfod = TfodProcessor.easyCreateWithDefaults();
+        public Mat processFrame(Mat input){
+            Imgproc.cvtColor(input,YCbCr,Imgproc.COLOR_RGB2YCrCb);
+            telemetry.addLine("pipeline running");
+            /*
+            Rect leftRect = new Rect(1,1,212, 479);
+            Rect centerRect = new Rect(213,1,212, 479);
+            Rect rightRect = new Rect(426,1,213, 479);
+            */
+            Rect leftRect = new Rect(1,1,1280/3, 719);
+            Rect centerRect = new Rect((1280/3+1),1,1280/3, 719);
+            Rect rightRect = new Rect((1280/3*2)+1,1,1280/3, 719);
+            input.copyTo(outPut);
 
-        // Create the vision portal the easy way.
-        if (USE_WEBCAM) {
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
-        } else {
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                    BuiltinCameraDirection.BACK, tfod);
-        }
 
-        // Set confidence threshold for TFOD recognitions, at any time.
-        tfod.setMinResultConfidence(0.095f);
+            Imgproc.rectangle(outPut, leftRect, rectColor, 2);
+            Imgproc.rectangle(outPut, centerRect, rectColor, 2);
+            Imgproc.rectangle(outPut, rightRect, rectColor, 2);
 
-    }   // end method initTfod()
+            leftCrop = YCbCr.submat(leftRect);
+            centerCrop = YCbCr.submat(centerRect);
+            rightCrop = YCbCr.submat(rightRect);
 
-    /**
-     * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
-     */
-    private void runTfodTensorFlow() {
+            Core.extractChannel(leftCrop, leftCrop, 2);
+            Core.extractChannel(centerCrop, centerCrop, 2);
+            Core.extractChannel(rightCrop, rightCrop, 2);
 
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
+            Scalar leftavg = Core.mean(leftCrop);
+            Scalar centeravg = Core.mean(centerCrop);
+            Scalar rightavg = Core.mean(rightCrop);
 
-        //Camera placed between Left and Right Spike Mark on RED_LEFT and BLUE_LEFT If pixel not visible, assume Right spike Mark
-        if (startPosition == START_POSITION.RED_LEFT || startPosition == START_POSITION.BLUE_LEFT) {
-            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
-        } else { //RED_RIGHT or BLUE_RIGHT
-            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
-        }
+            leftavgfin = leftavg.val[0];
+            centeravgfin = centeravg.val[0];
+            rightavgfin = rightavg.val[0];
 
-        // Step through the list of recognitions and display info for each one.
-        for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-
-            telemetry.addData(""," ");
-            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", x, y);
-            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-
-            if (startPosition == START_POSITION.RED_LEFT || startPosition == START_POSITION.BLUE_LEFT) {
-                if (recognition.getLabel() == "Pixel") {
-                    if (x < 200) {
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
-                    } else {
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
-                    }
-                }
-            } else { //RED_RIGHT or BLUE_RIGHT
-                if (recognition.getLabel() == "Pixel") {
-                    if (x < 200) {
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
-                    } else {
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
-                    }
-                }
+            if (leftavgfin > centeravgfin && leftavgfin > rightavgfin) {
+                telemetry.addLine("Left");
+                identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+            } else if (centeravgfin > leftavgfin && centeravgfin > rightavgfin) {
+                telemetry.addLine("Center");
+                identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+            } else if (rightavgfin > leftavgfin && rightavgfin > centeravgfin) {
+                telemetry.addLine("Right");
+                identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+            } else {
+                telemetry.addLine("Failed to detect position");
+                identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
             }
-
-        }   // end for() loop
-
-    }   // end method runTfodTensorFlow()
-
+            return (outPut);
+        }
+}
 }   // end class

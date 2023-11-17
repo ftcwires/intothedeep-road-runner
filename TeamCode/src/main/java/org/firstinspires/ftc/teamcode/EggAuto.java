@@ -52,7 +52,7 @@ import java.util.List;
 /**
  * FTC WIRES Autonomous Example for only vision detection using tensorflow and park
  */
-@Autonomous(name = "FTC Wires Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
+@Autonomous(name = "EggAuto", group = "00-Autonomous", preselectTeleOp = "Beginnings")
 public class EggAuto extends LinearOpMode {
 
     public static String TEAM_NAME = "Enigma"; //TODO: Enter team Name
