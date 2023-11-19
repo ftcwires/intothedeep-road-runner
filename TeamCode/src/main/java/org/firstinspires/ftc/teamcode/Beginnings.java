@@ -155,9 +155,9 @@ public class Beginnings extends LinearOpMode {
                 intakePos();
                 break;
             case UPGO1:
-                shoulder.setPosition(0.60);
+                shoulder.setPosition(0.55);
                 hopper.setPosition(0.02);
-                wrist.setPosition(0.22);
+                wrist.setPosition(0.28);
                 //setLiftHeight(0.42);
                 break;
             case UPGO2:
@@ -258,8 +258,11 @@ public class Beginnings extends LinearOpMode {
     }
 
     private void dumpLeft() {
-        if (gamepad2.right_bumper) {
+        if (gamepad2.left_bumper) {
             hopper.setPosition(0.2);
+        }
+        if (gamepad2.right_bumper) {
+            hopper.setPosition(1);
         }
     }
     private void driveAroundPos() {
@@ -268,7 +271,7 @@ public class Beginnings extends LinearOpMode {
         }
     }
     private void drivePos() {
-        if ((gamepad1.dpad_up) && (currentArmPos == ArmPosition.INTAKE)) {
+        if ((gamepad1.a) && (currentArmPos == ArmPosition.INTAKE)) {
             shoulder.setPosition(0.49);
             wrist.setPosition(0.55);
             hopper.setPosition(0.01);
@@ -287,7 +290,7 @@ public class Beginnings extends LinearOpMode {
         currentArmPos = ArmPosition.INTAKE;
     }
     private void theJuke() {
-        if ((gamepad2.dpad_up) && (currentArmPos == ArmPosition.INTAKE)) {
+        if ((gamepad2.dpad_up || gamepad1.x) && (currentArmPos == ArmPosition.INTAKE)) {
             shoulder.setPosition(0.48);
             sleep(200);
             intakePos();
