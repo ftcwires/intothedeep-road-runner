@@ -103,15 +103,6 @@ public class McMuffin extends LinearOpMode {
         else if (gamepad1.dpad_right) {
             which = ServoTypes.RIGHT_FINGER;
         }
-        /*
-        else if (gamepad1.dpad_right) {
-            speedAmount = 0.01;
-        }
-        else if (gamepad1.dpad_up) {
-            speedAmount = 0.03;
-        }
-        telemetry.addData("Speed = ", speedAmount);
-         */
     }
 
     //TODO: Step 7, your done! This was written by Goober on 11/5/23 slouching in a chair at 10:35 in the morning.
@@ -179,8 +170,8 @@ public class McMuffin extends LinearOpMode {
             masterTuner();
             setExtra();
             whatServoAt();
-            telemetry.addData("Selected", which.toString());
-            telemetry.addLine("Y = Shoulder - X = Hopper - B = Wrist A = Lift");
+            //telemetry.addData("Selected", which.toString());
+            //telemetry.addLine("Y = Shoulder - X = Hopper - B = Wrist A = Lift");
             telemetry.update();
             sleep(100);
         }
