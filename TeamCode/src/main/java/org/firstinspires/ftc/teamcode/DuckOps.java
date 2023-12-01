@@ -18,6 +18,17 @@ import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 
 @TeleOp
 public class DuckOps extends LinearOpMode {
+    class ScorePosition {
+        double shoulderPosition;
+        double wristPosition;
+        double elbowPosition;
+
+        public ScorePosition(double shoulderPos, double wristPos, double elbowPos) {
+            this.shoulderPosition = shoulderPos;
+            this.wristPosition = wristPos;
+            this.elbowPosition = elbowPos;
+        }
+    }
     // Declare vars
     private RevTouchSensor rightUpper;
     private RevTouchSensor leftUpper;
@@ -45,9 +56,66 @@ public class DuckOps extends LinearOpMode {
     private static final double RIGHT_FINGER_GRIP = .27;
     private static final double RIGHT_FINGER_DROP = .5;
     private static final double RIGHT_FINGER_INTAKE = 0.64;
+    // Define a threshold for trigger activation
+    private static final double TRIGGER_THRESHOLD = 0.5;
+    private static final double LAUNCHER_START_POS = 0.8;
 
-    //MecanumDrive drive;
-    //OgDrive ogDrive;
+    private static final double SERVO_TOLERANCE = 0.01;
+
+    private enum intakeState {
+        IDLE,
+        MOVING_SHOULDER,
+        MOVING_ELBOW,
+        MOVING_WRIST,
+        MOVING_CLAWS,
+        COMPLETED
+    }
+
+    private intakeState currentintakeState = intakeState.IDLE;
+
+    // for picking up the top two off the stack of 5
+    private enum intakeStackTopTwoState {
+        IDLE,
+        MOVING_SHOULDER,
+        MOVING_ELBOW,
+        MOVING_WRIST,
+        MOVING_CLAWS,
+        COMPLETED
+    }
+    // for picking up the second two off the stack of 3
+    private intakeStackTopTwoState currentintakeStackTopTwoState = intakeStackTopTwoState.IDLE;
+
+    private enum intakeStackSecondTwoState {
+        IDLE,
+        MOVING_SHOULDER,
+        MOVING_ELBOW,
+        MOVING_WRIST,
+        MOVING_CLAWS,
+        COMPLETED
+    }
+
+    private intakeStackSecondTwoState currentintakeStackSecondTwoState = intakeStackSecondTwoState.IDLE;
+
+    private enum driveState {
+        IDLE,
+        MOVING_ELBOW,
+        MOVING_WRIST,
+        MOVING_SHOULDER,
+        COMPLETED
+    }
+
+    private driveState currentdriveState = driveState.IDLE;
+
+    private enum scoreState {
+        IDLE,
+        MOVING_SHOULDER,
+        MOVING_WRIST,
+        MOVING_ELBOW,
+        COMPLETED
+    }
+
+    private scoreState currentscoreState = scoreState.IDLE;
+
     private ElapsedTime runtime = new ElapsedTime();
     //Motors
     //Drivetrain
@@ -57,20 +125,6 @@ public class DuckOps extends LinearOpMode {
     private DcMotor leftBack; //rear left 3
     private DcMotor leftHang;
     private DcMotor rightHang;
-
-
-    // Servo prep
-    private static enum ArmPosition {
-        INTAKE,
-        DRIVE,
-        UPGO1,
-        UPGO2,
-        UPGO3,
-        UPGO4,
-        UPGO5;
-    }
-
-    private ArmPosition currentArmPos;
     double LiftLeftOffset = .04;
     double LiftHeight;
     private AndroidTextToSpeech androidTextToSpeech;
@@ -78,12 +132,238 @@ public class DuckOps extends LinearOpMode {
 
     // Functions \/
 
+    private void handleIntakeSequence() {
+        switch (currentintakeState) {
+            case IDLE:
+                // Start the sequence
+                currentintakeState = intakeState.MOVING_SHOULDER;
+                break;
 
-    private void servo_shenanigans() {
-        setLiftHeight(0.4);
-       // sleep(10000);
-        setLiftHeight(0.05);
+            case MOVING_SHOULDER:
+                // Move the shoulder to intake position
+                shoulder.setPosition(SHOULDER_INT);
+                if (isServoAtPosition(shoulder, SHOULDER_INT)) {
+                    currentintakeState = intakeState.MOVING_ELBOW;
+                }
+                break;
+
+            case MOVING_ELBOW:
+                // Move the elbow to intake position
+                elbow.setPosition(ELBOW_INTAKE);
+                if (isServoAtPosition(elbow, ELBOW_INTAKE)) {
+                    currentintakeState = intakeState.MOVING_WRIST;
+                }
+                break;
+
+            case MOVING_WRIST:
+                // Move the wrist to intake position
+                wrist.setPosition(WRIST_INTAKE);
+                if (isServoAtPosition(wrist, WRIST_INTAKE)) {
+                    currentintakeState = intakeState.MOVING_CLAWS;
+                }
+                break;
+
+            case MOVING_CLAWS:
+                // Move the claws to intake position
+                leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+                if (isServoAtPosition(leftFinger, LEFT_FINGER_INTAKE) && isServoAtPosition(rightFinger, RIGHT_FINGER_INTAKE)) {
+                    currentintakeState = intakeState.COMPLETED;
+                }
+                break;
+
+            case COMPLETED:
+                // Sequence complete, reset the state or perform additional actions
+                break;
+        }
+        if (currentintakeState == intakeState.COMPLETED) {
+            currentintakeState = intakeState.IDLE;
+        }
     }
+// TODO Assign Buttons to this
+// intaking the top two off a stack of 5
+    private void handleIntakeStackTopTwoSequence() {
+        switch (currentintakeStackTopTwoState) {
+            case IDLE:
+                // Start the sequence
+                currentintakeStackTopTwoState = intakeStackTopTwoState.MOVING_SHOULDER;
+                break;
+
+            case MOVING_SHOULDER:
+                // Move the shoulder to intake position
+                shoulder.setPosition(0); // TODO set position with McTuner
+                if (isServoAtPosition(shoulder, 0)) { // TODO same position as above
+                    currentintakeStackTopTwoState = intakeStackTopTwoState.MOVING_ELBOW;
+                }
+                break;
+
+            case MOVING_ELBOW:
+                // Move the elbow to intake position
+                elbow.setPosition(ELBOW_INTAKE); // TODO set position with McTuner
+                if (isServoAtPosition(elbow, ELBOW_INTAKE)) { // TODO same position as above
+                    currentintakeStackTopTwoState = intakeStackTopTwoState.MOVING_WRIST;
+                }
+                break;
+
+            case MOVING_WRIST:
+                // Move the wrist to intake position
+                wrist.setPosition(WRIST_INTAKE); // TODO set position with McTuner
+                if (isServoAtPosition(wrist, WRIST_INTAKE)) { // TODO same position as above
+                    currentintakeStackTopTwoState = intakeStackTopTwoState.MOVING_CLAWS;
+                }
+                break;
+
+            case MOVING_CLAWS:
+                // Move the claws to intake position
+                leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+                if (isServoAtPosition(leftFinger, LEFT_FINGER_INTAKE) && isServoAtPosition(rightFinger, RIGHT_FINGER_INTAKE)) {
+                    currentintakeStackTopTwoState = intakeStackTopTwoState.COMPLETED;
+                }
+                break;
+
+            case COMPLETED:
+                // Sequence complete, reset the state or perform additional actions
+                break;
+        }
+        if (currentintakeStackTopTwoState == intakeStackTopTwoState.COMPLETED) {
+            currentintakeStackTopTwoState = intakeStackTopTwoState.IDLE;
+        }
+    }
+// TODO Assign Buttons to this
+// intaking the second two off a stack of 3
+    private void handleIntakeStackSecondTwoSequence() {
+        switch (currentintakeStackSecondTwoState) {
+            case IDLE:
+                // Start the sequence
+                currentintakeStackSecondTwoState = intakeStackSecondTwoState.MOVING_SHOULDER;
+                break;
+
+            case MOVING_SHOULDER:
+                // Move the shoulder to intake position
+                shoulder.setPosition(0); // TODO set position with McTuner
+                if (isServoAtPosition(shoulder, 0)) { // TODO same position as above
+                    currentintakeStackSecondTwoState = intakeStackSecondTwoState.MOVING_ELBOW;
+                }
+                break;
+
+            case MOVING_ELBOW:
+                // Move the elbow to intake position
+                elbow.setPosition(ELBOW_INTAKE); // TODO set position with McTuner
+                if (isServoAtPosition(elbow, ELBOW_INTAKE)) { // TODO same position as above
+                    currentintakeStackSecondTwoState = intakeStackSecondTwoState.MOVING_WRIST;
+                }
+                break;
+
+            case MOVING_WRIST:
+                // Move the wrist to intake position
+                wrist.setPosition(WRIST_INTAKE); // TODO set position with McTuner
+                if (isServoAtPosition(wrist, WRIST_INTAKE)) { // TODO same position as above
+                    currentintakeStackSecondTwoState = intakeStackSecondTwoState.MOVING_CLAWS;
+                }
+                break;
+
+            case MOVING_CLAWS:
+                // Move the claws to intake position
+                leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+                if (isServoAtPosition(leftFinger, LEFT_FINGER_INTAKE) && isServoAtPosition(rightFinger, RIGHT_FINGER_INTAKE)) {
+                    currentintakeStackSecondTwoState = intakeStackSecondTwoState.COMPLETED;
+                }
+                break;
+
+            case COMPLETED:
+                // Sequence complete, reset the state or perform additional actions
+                break;
+        }
+        if (currentintakeStackSecondTwoState == intakeStackSecondTwoState.COMPLETED) {
+            currentintakeStackSecondTwoState = intakeStackSecondTwoState.IDLE;
+        }
+    }
+    private void handleDriveSequence() {
+        switch (currentdriveState) {
+            case MOVING_ELBOW:
+                // Move the elbow to drive position
+                leftFinger.setPosition(LEFT_FINGER_GRIP);
+                rightFinger.setPosition(RIGHT_FINGER_GRIP);
+                elbow.setPosition(ELBOW_INT);
+                if (isServoAtPosition(elbow, ELBOW_INT)) {
+                    currentdriveState = driveState.MOVING_WRIST;
+                }
+                break;
+
+            case MOVING_WRIST:
+                // Move the wrist to drive position
+                wrist.setPosition(WRIST_DRIVE);
+                if (isServoAtPosition(wrist, WRIST_DRIVE)) {
+                    currentdriveState = driveState.MOVING_SHOULDER;
+                }
+                break;
+
+            case MOVING_SHOULDER:
+                // Move the shoulder to drive position
+                shoulder.setPosition(SHOULDER_INT);
+                if (isServoAtPosition(shoulder, SHOULDER_INT)) {
+                    currentdriveState = driveState.COMPLETED;
+                }
+                break;
+
+            case COMPLETED:
+                // Sequence complete, reset the state or perform additional actions
+                break;
+        }
+        // Check to reset the state to IDLE outside the switch
+        if (currentdriveState == driveState.COMPLETED) {
+            currentdriveState = driveState.IDLE;
+        }
+    }
+
+    private void handleScorePosSequence(ScorePosition scorePos) {
+        switch (currentscoreState) {
+            case IDLE:
+                // Start the sequence
+                currentscoreState = scoreState.MOVING_SHOULDER;
+                break;
+
+            case MOVING_SHOULDER:
+                // Move the shoulder to the specified position
+                shoulder.setPosition(scorePos.shoulderPosition);
+                if (isServoAtPosition(shoulder, scorePos.shoulderPosition)) {
+                    currentscoreState = scoreState.MOVING_WRIST;
+                }
+                break;
+
+            case MOVING_WRIST:
+                // Move the wrist to the specified position
+                wrist.setPosition(scorePos.wristPosition);
+                if (isServoAtPosition(wrist, scorePos.wristPosition)) {
+                    currentscoreState = scoreState.MOVING_ELBOW;
+                }
+                break;
+
+            case MOVING_ELBOW:
+                // Move the elbow to the specified position
+                elbow.setPosition(scorePos.elbowPosition);
+                if (isServoAtPosition(elbow, scorePos.elbowPosition)) {
+                    currentscoreState = scoreState.COMPLETED;
+                }
+                break;
+
+            case COMPLETED:
+                // Sequence complete, reset the state or perform additional actions
+                break;
+        }
+
+        if (currentscoreState == scoreState.COMPLETED) {
+            currentscoreState = scoreState.IDLE;
+        }
+    }
+
+
+    private boolean isServoAtPosition(Servo servo, double position) {
+        return Math.abs(servo.getPosition() - position) < SERVO_TOLERANCE;
+    }
+
 
     private void setLiftHeight(double inputLiftHeight) {
         if (inputLiftHeight < 0.42) {
@@ -98,16 +378,6 @@ public class DuckOps extends LinearOpMode {
 
     }
 
-    private void worm() {
-        if (gamepad2.left_bumper) {
-            shoulder.setPosition(0.445);
-            wrist.setPosition(0.26);
-        }
-        if (gamepad2.right_bumper) {
-            shoulder.setPosition(0.92);
-        }
-    }
-
     private void airplane() {
         if (gamepad2.back) {
             launcher.setPosition(0.1);
@@ -116,230 +386,9 @@ public class DuckOps extends LinearOpMode {
         }
     }
 
-    private void liftFunction() {
-        if (gamepad2.y) {
-            shoulder.setPosition(0.79);
-            setLiftHeight(0.42);
-
-            wrist.setPosition(0.2);
-            //sleep(600);
-            shoulder.setPosition(0.60);
-           // sleep(600);
-            shoulder.setPosition(0.50);
-            //sleep(600);
-            intakePos();
-        } else if (gamepad2.x) {
-            setLiftHeight(0.71);
-        } else if (gamepad2.b) {
-            setLiftHeight(0.56);
-        }
-    }
-    private void armmDown() {
-        if (gamepad2.y) {
-            switch (currentArmPos) {
-                case UPGO1:
-                    currentArmPos = ArmPosition.INTAKE;
-                    break;
-                case UPGO2:
-                    currentArmPos = ArmPosition.UPGO1;
-                    break;
-                case UPGO3:
-                    currentArmPos = ArmPosition.UPGO2;
-                    break;
-                case UPGO4:
-                    currentArmPos = ArmPosition.UPGO3;
-                    break;
-                case UPGO5:
-                    currentArmPos = ArmPosition.UPGO4;
-                    break;
-            }
-            doArmm();
-            telemetry.addLine();
-            telemetry.addData("armpostion", currentArmPos.toString());
-            //(100);
-        }
-    }
-    private void doArmm() {
-        switch (currentArmPos) {
-            case INTAKE:
-                intakePos();
-                break;
-            case UPGO1:
-                shoulder.setPosition(0.55);
-
-                wrist.setPosition(0.28);
-                //setLiftHeight(0.42);
-                break;
-            case UPGO2:
-                wrist.setPosition(0.22);
-                shoulder.setPosition(0.79);
-
-                //setLiftHeight(0.42);
-                break;
-            case UPGO3:
-
-                wrist.setPosition(0.6);
-                shoulder.setPosition(0.79);
-                //setLiftHeight(0.42);
-                break;
-            case UPGO4:
-                shoulder.setPosition(0.91);
-
-                wrist.setPosition(0.6);
-                //setLiftHeight(0.42);
-                break;
-            case UPGO5:
-                wrist.setPosition(0.6);
-                shoulder.setPosition(1);
-
-                //setLiftHeight(0.42);
-                break;
-        }
-    }
-    private void armmUp(){
-        if (gamepad2.a) {
-            switch (currentArmPos) {
-                case INTAKE:
-                    currentArmPos = ArmPosition.UPGO1;
-                    break;
-                case UPGO1:
-                    currentArmPos = ArmPosition.UPGO2;
-                    break;
-                case UPGO2:
-                    currentArmPos = ArmPosition.UPGO3;
-                    break;
-                case UPGO3:
-                    currentArmPos = ArmPosition.UPGO4;
-                    break;
-                case UPGO4:
-                    currentArmPos = ArmPosition.UPGO5;
-                    break;
-            }
-            doArmm();
-            telemetry.addLine();
-            telemetry.addData("armpostion", currentArmPos.toString());
-            //sleep(100);
-        }
-    }
-    private void aroundthetop() {
-        if (gamepad2.start) {
-            shoulder.setPosition(0.56);
-            wrist.setPosition(0.5);
-
-        }
-    }
-    private void dumpPrep() {
-        if (gamepad2.back) {
-            shoulder.setPosition(0.75);
-           // sleep(400);
-
-            wrist.setPosition(0.93);
-            shoulder.setPosition(0.91);
-        }
-    }
-    private void dumpPrepTwo() {
-        if (gamepad2.back) {
-
-        }
-    }
-    private void SlideFunction() {
-
-    }
-
-    private void dumpLeft() {
-        if (gamepad2.left_bumper) {
-
-        }
-        if (gamepad2.right_bumper) {
-
-        }
-    }
-    private void driveAroundPos() {
-        if (gamepad2.dpad_down) {
-            intakePos();
-        }
-    }
-    private void drivePos() {
-        if ((gamepad1.a) && (currentArmPos == ArmPosition.INTAKE)) {
-            shoulder.setPosition(0.49);
-            wrist.setPosition(0.55);
-
-            //setLiftHeight(0.42);
-            currentArmPos = ArmPosition.DRIVE;
-        }
-    }
-    private void intakePos() {
-        //hopper.setPosition(0.02);
-        //shoulder.setPosition(0.44);
-        //wrist.setPosition(0.26);
-        wrist.setPosition(0.265);
-        shoulder.setPosition(0.455);
-        leftFinger.setPosition(0.5);
-        rightFinger.setPosition(0.5);
-        elbow.setPosition(0.5);
-
-        //setLiftHeight(0.42);
-        currentArmPos = ArmPosition.INTAKE;
-    }
-    private void initPos() {
-        wrist.setPosition(WRIST_INT);
-        elbow.setPosition(ELBOW_INT);
-        shoulder.setPosition(SHOULDER_INT);
-        leftFinger.setPosition(LEFT_FINGER_GRIP);
-        rightFinger.setPosition(RIGHT_FINGER_GRIP);
-    }
-
-    private void theJuke() {
-        if ((gamepad2.dpad_up || gamepad1.x) && (currentArmPos == ArmPosition.INTAKE)) {
-            shoulder.setPosition(0.48);
-           // sleep(200);
-            intakePos();
-        }
-    }
-    private void incrementalIntake() {
-        shoulder.setPosition(0.455);
-       // sleep(653);
-        shoulder.setPosition(0.47);
-        wrist.setPosition(0.55);
-       // sleep(531);
-        shoulder.setPosition(0.49);
-        wrist.setPosition(0.55);
-    }
     private void launcherstartPos() {
-        launcher.setPosition(0.8);
+        launcher.setPosition(LAUNCHER_START_POS);
     }
-
-
-
-/*
-    private void driveCode() {
-
-        double SLOW_DOWN_FACTOR;
-        SLOW_DOWN_FACTOR = 0.5;
-        telemetry.addData("Running FTC Wires (ftcwires.org) TeleOp Mode adopted for Team:","TEAM NUMBER");
-        drive.setDrivePowers(new PoseVelocity2d(
-                new Vector2d(
-                        -gamepad1.left_stick_y * SLOW_DOWN_FACTOR,
-                        -gamepad1.left_stick_x * SLOW_DOWN_FACTOR
-                ),
-                -gamepad1.right_stick_x * SLOW_DOWN_FACTOR
-        ));
-
-        drive.updatePoseEstimate();
-
-        //telemetry.addData("LF Encoder", drive.leftFront.getCurrentPosition());
-        //telemetry.addData("LB Encoder", drive.leftBack.getCurrentPosition());
-        //telemetry.addData("RF Encoder", drive.rightFront.getCurrentPosition());
-        //telemetry.addData("RB Encoder", drive.rightBack.getCurrentPosition());
-
-        telemetry.addData("x", drive.pose.position.x);
-        telemetry.addLine("Current Pose");
-        telemetry.addData("y", drive.pose.position.y);
-        telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
-       // telemetry.update();
-
-    }
-*/
 
 
     @Override
@@ -349,11 +398,6 @@ public class DuckOps extends LinearOpMode {
         androidTextToSpeech = new AndroidTextToSpeech();
         androidTextToSpeech.initialize();
 
-        // for wires driving
-        //drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-
-        // for Og driving (the best driving)
-        //ogDrive = new OgDrive(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -376,12 +420,6 @@ public class DuckOps extends LinearOpMode {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
-        telemetry.addData("Status", "OdoMec2 is ready to run!");
-        telemetry.update();
-
-
-
         launcher = hardwareMap.get(Servo.class, "launcher");
         rightLift = hardwareMap.get(Servo.class, "rightLift");
         leftLift = hardwareMap.get(Servo.class, "leftLift");
@@ -396,30 +434,33 @@ public class DuckOps extends LinearOpMode {
         wrist.setDirection(Servo.Direction.REVERSE);
         launcher.setDirection(Servo.Direction.REVERSE);
 
-
-
         // sensors
         leftUpper = hardwareMap.get(RevTouchSensor.class, "leftUpper");
         rightUpper = hardwareMap.get(RevTouchSensor.class, "rightUpper");
         leftLower = hardwareMap.get(RevTouchSensor.class, "leftLower");
         rightLower = hardwareMap.get(RevTouchSensor.class, "rightLower");
 
-        // servos
-        //launcherstartPos();
-        //intakePos();
+        // servos init
+        wrist.setPosition(WRIST_INT);
+        elbow.setPosition(ELBOW_INT);
+        shoulder.setPosition(SHOULDER_INT);
+        leftFinger.setPosition(LEFT_FINGER_GRIP);
+        rightFinger.setPosition(RIGHT_FINGER_GRIP);
 
-        //this is a coment to mAKE git update
-        double SLOW_DOWN_FACTOR = 0.5;
+        telemetry.addData("Status", "DuckOps is ready to run!");
+        telemetry.update();
+
         telemetry.addData("Initializing TeleOp","");
         telemetry.update();
 
 
         waitForStart();
         runtime.reset();
-        // servo_shenanigans();
+
         // loop real
         while(opModeIsActive()){
-            //Drivetrain
+
+// Mecanum Drive
             double forward = gamepad1.left_stick_y;
             double strafe = -gamepad1.left_stick_x;
             double turn = -gamepad1.right_stick_x;
@@ -443,13 +484,13 @@ public class DuckOps extends LinearOpMode {
                 leftBackPower = Range.clip(leftBackPower, -0.8, 0.8);
             }
 
-
             rightFront.setPower(rightFrontPower);
             leftFront.setPower(leftFrontPower);
             rightBack.setPower(rightBackPower);
             leftBack.setPower(leftBackPower);
 
-            if (gamepad1.right_bumper){
+// Hanging
+            if (gamepad1.right_trigger > TRIGGER_THRESHOLD){
                 leftHang.setDirection(DcMotor.Direction.FORWARD);
                 rightHang.setDirection(DcMotor.Direction.FORWARD);
 
@@ -461,7 +502,8 @@ public class DuckOps extends LinearOpMode {
                 leftHang.setPower(0);
                 rightHang.setPower(0);
             }
-            if (gamepad1.left_bumper){
+
+            if (gamepad1.left_trigger > TRIGGER_THRESHOLD){
                 leftHang.setDirection(DcMotor.Direction.REVERSE);
                 rightHang.setDirection(DcMotor.Direction.REVERSE);
 
@@ -473,33 +515,70 @@ public class DuckOps extends LinearOpMode {
                 leftHang.setPower(0);
                 rightHang.setPower(0);
             }
+// Intaking from the floor
+
+            if (gamepad1.left_bumper && currentintakeState == intakeState.IDLE) {
+                currentintakeState = intakeState.MOVING_SHOULDER;
+            }
+
+            handleIntakeSequence();
+
+// Go to drive around position
+            // Check if the right bumper is pressed to start the drive sequence
+            if (gamepad1.right_bumper && (currentdriveState == driveState.IDLE || currentscoreState == scoreState.IDLE)) {
+                currentdriveState = driveState.MOVING_ELBOW;
+            }
+
+            handleDriveSequence();
+
+// Go to score position one
+            ScorePosition positionOne = null;
+
+            if (gamepad2.left_bumper && gamepad2.y && currentdriveState == driveState.IDLE) {
+                // Assign a new ScorePosition to positionOne inside the if block
+                positionOne = new ScorePosition(SHOULDER_INT, WRIST_INT, ELBOW_INTAKE);
+            }
+
+            if (positionOne != null) {
+                handleScorePosSequence(positionOne);
+            }
 
 
+// Dropping on the backboard for scoring
+            // operate that claw dropping style
+            if (gamepad2.dpad_up  && currentintakeState == intakeState.IDLE) {
+                leftFinger.setPosition(LEFT_FINGER_DROP);
+                rightFinger.setPosition(RIGHT_FINGER_DROP);
+            } else if (gamepad2.dpad_left  && currentintakeState == intakeState.IDLE) {
+                leftFinger.setPosition(LEFT_FINGER_DROP);
+            } else if (gamepad2.dpad_right  && currentintakeState == intakeState.IDLE) {
+                rightFinger.setPosition(RIGHT_FINGER_DROP);
+            } else if (gamepad2.dpad_down  && currentintakeState == intakeState.IDLE) {
+                leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+            }
 
+// Grabbing off the floor or stack
+            // operate that claw gripping style
+            if (gamepad2.right_bumper && gamepad2.dpad_up && (currentscoreState == scoreState.IDLE)) {
+                leftFinger.setPosition(LEFT_FINGER_GRIP);
+                rightFinger.setPosition(RIGHT_FINGER_GRIP);
+            } else if (gamepad2.right_bumper && gamepad2.dpad_left && (currentscoreState == scoreState.IDLE)) {
+                leftFinger.setPosition(LEFT_FINGER_GRIP);
+            } else if (gamepad2.right_bumper && gamepad2.dpad_right && (currentscoreState == scoreState.IDLE)) {
+                rightFinger.setPosition(RIGHT_FINGER_GRIP);
+            } else if (gamepad2.right_bumper && gamepad2.dpad_down && (currentscoreState == scoreState.IDLE)) {
+                leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+            }
 
+// Telemetry
             telemetry.addData("Status", "Run " + runtime.toString());
             telemetry.addData("Motors", "forward (%.2f), strafe (%.2f),turn (%.2f)", forward, strafe, turn);
 
-            //Code();
-            initPos();
-            //airplane();
-            //ogDrive.og_drive_code(gamepad1, telemetry);
-            //IsDrive.is_drive_code(gamepad1, telemetry);
-            //driveAroundPos();
-            //dumpPrepTwo();
-            //homePrep();
-           // drivePos();
-           // dumpLeft();
-            //theJuke();
-            //liftFunction();
-            //worm();
-            //stopMotion();
-            //aroundthetop();
-            //armmUp();
-            //armmDown();
-            //SlideFunction();
+
+            airplane();
             telemetry.update();
-           // sleep(100);
         }
     }
 }
