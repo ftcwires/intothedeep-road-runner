@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 
-@TeleOp
+//@TeleOp
 public class Beginnings extends LinearOpMode {
     // Declare vars
     private RevTouchSensor rightUpper;

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.vision.apriltag.AprilTagCanvasAnnotator;
 
-@TeleOp
+//@TeleOp
 public class McTuner3000 extends LinearOpMode {
     //TODO: Step 1, Replace all "wrist","hopper", etc with your servos
     Servo wrist;

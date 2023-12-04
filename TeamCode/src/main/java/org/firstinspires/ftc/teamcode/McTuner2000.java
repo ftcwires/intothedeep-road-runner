@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp
+//@TeleOp
 public class McTuner2000 extends LinearOpMode {
     Servo wrist;
     Servo hopper;

@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 
-@TeleOp
+//@TeleOp
 public class DuckOps extends LinearOpMode {
     class ScorePosition {
         double shoulderPosition;
@@ -43,7 +43,7 @@ public class DuckOps extends LinearOpMode {
     private Servo leftFinger;
     private Servo rightFinger;
 
-    //Servo init values
+    //Servo values
     private static final double SHOULDER_INT = 0.425;
     private static final double ELBOW_INT = 0.5;
     private static final double ELBOW_INTAKE = 0.8;
@@ -59,7 +59,6 @@ public class DuckOps extends LinearOpMode {
     // Define a threshold for trigger activation
     private static final double TRIGGER_THRESHOLD = 0.5;
     private static final double LAUNCHER_START_POS = 0.8;
-
     private static final double SERVO_TOLERANCE = 0.01;
 
     private enum intakeState {
