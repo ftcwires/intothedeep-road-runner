@@ -400,6 +400,11 @@ public class DuckOps extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        telemetry.addData("Intake State", currentintakeState);
+// ... other telemetry data ...
+        telemetry.update();
+
+
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         rightBack = hardwareMap.get(DcMotor.class, "rightBack");
