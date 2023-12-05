@@ -22,7 +22,7 @@ public class McMuffin extends LinearOpMode {
 
     double speedAmount;
     //TODO: Add offset if needed w/ eg double lift
-    double LiftLeftOffset = -.05;
+    //double LiftLeftOffset = -.05;
 
     //TODO: Step 3, set all of your servo names below
     enum ServoTypes{
@@ -54,7 +54,7 @@ public class McMuffin extends LinearOpMode {
                 wrist.setPosition(wrist.getPosition() - speedAmount);
             }
             else if (which == ServoTypes.LIFT) {
-                leftLift.setPosition((rightLift.getPosition() +  LiftLeftOffset) - speedAmount);
+                leftLift.setPosition(leftLift.getPosition() - speedAmount);
                 rightLift.setPosition(rightLift.getPosition() - speedAmount);
             }
         }
@@ -75,7 +75,7 @@ public class McMuffin extends LinearOpMode {
                 wrist.setPosition(wrist.getPosition() + speedAmount);
             }
             else if (which == ServoTypes.LIFT) {
-                leftLift.setPosition((rightLift.getPosition() + LiftLeftOffset) + speedAmount);
+                leftLift.setPosition(rightLift.getPosition() + speedAmount);
                 rightLift.setPosition(rightLift.getPosition() + speedAmount);
             }
         }
@@ -141,12 +141,12 @@ public class McMuffin extends LinearOpMode {
 
 
         wrist.setPosition(0.265);
-        shoulder.setPosition(0.455);
+        shoulder.setPosition(0.425);
         elbow.setPosition(0.5);
         rightFinger.setPosition(0.5);
         leftFinger.setPosition(0.5);
-        leftLift.setPosition(0.42 + LiftLeftOffset);
-        rightLift.setPosition(0.42);
+        leftLift.setPosition(0.37);
+        rightLift.setPosition(0.37);
 
 
        // does intake exist?????????????
