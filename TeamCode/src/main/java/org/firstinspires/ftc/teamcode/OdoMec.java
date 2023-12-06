@@ -72,64 +72,65 @@ public class OdoMec extends LinearOpMode {
     private static final double SHOULDER_NEXT_TWO = SHOULDER_DRIVE;
     private static final double WRIST_NEXT_TWO = 0.44;
     private static final double ELBOW_NEXT_TWO = 0.7;
-    
+
+    //=^-^=
     // score positions (11 rows on the board)
     // TODO find positions with McMuffin (currently all set to drive) change to the actual double values like above from McMuffin
     // score position one button map (gamepad2.y)
-    private static final double SCORE_ONE_SHOULDER = 0.99;
-    private static final double SCORE_ONE_WRIST = 0.717;
-    private static final double SCORE_ONE_ELBOW = 0.62;
+    private static final double SCORE_ONE_SHOULDER = 0.936;
+    private static final double SCORE_ONE_WRIST = 0.685;
+    private static final double SCORE_ONE_ELBOW = 0.52;
     private static final double SCORE_ONE_LIFT = LIFT_DRIVE;
     // score position two button map (gamepad2.b)
-    private static final double SCORE_TWO_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_TWO_WRIST = WRIST_DRIVE;
-    private static final double SCORE_TWO_ELBOW = ELBOW_DRIVE;
+    private static final double SCORE_TWO_SHOULDER = 0.9;
+    private static final double SCORE_TWO_WRIST = 0.745;
+    private static final double SCORE_TWO_ELBOW = 0.55;
     private static final double SCORE_TWO_LIFT = LIFT_DRIVE;
     // score position three button map (gamepad2.a)
-    private static final double SCORE_THREE_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_THREE_WRIST = WRIST_DRIVE;
-    private static final double SCORE_THREE_ELBOW = ELBOW_DRIVE;
+    private static final double SCORE_THREE_SHOULDER = 0.92;
+    private static final double SCORE_THREE_WRIST = 0.85;
+    private static final double SCORE_THREE_ELBOW = 0.67;
     private static final double SCORE_THREE_LIFT = LIFT_DRIVE;
     // score position four button map (gamepad2.x)
-    private static final double SCORE_FOUR_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_FOUR_WRIST = WRIST_DRIVE;
-    private static final double SCORE_FOUR_ELBOW = ELBOW_DRIVE;
+    private static final double SCORE_FOUR_SHOULDER = 0.91;
+    private static final double SCORE_FOUR_WRIST =0.89;
+    private static final double SCORE_FOUR_ELBOW = 0.72;
     private static final double SCORE_FOUR_LIFT = LIFT_DRIVE;
     // score position five button map (gamepad2.left_bumper && gamepad2.y)
-    private static final double SCORE_FIVE_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_FIVE_WRIST = WRIST_DRIVE;
-    private static final double SCORE_FIVE_ELBOW = ELBOW_DRIVE;
+    private static final double SCORE_FIVE_SHOULDER = 0.93;
+    private static final double SCORE_FIVE_WRIST = 0.98;
+    private static final double SCORE_FIVE_ELBOW = 0.82;
     private static final double SCORE_FIVE_LIFT = LIFT_DRIVE;
     // score position six button map (gamepad2.left_bumper && gamepad2.b)
-    private static final double SCORE_SIX_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_SIX_WRIST = WRIST_DRIVE;
-    private static final double SCORE_SIX_ELBOW = ELBOW_DRIVE;
+    private static final double SCORE_SIX_SHOULDER = 0.92;
+    private static final double SCORE_SIX_WRIST = 1;
+    private static final double SCORE_SIX_ELBOW = 0.85;
     private static final double SCORE_SIX_LIFT = LIFT_DRIVE;
     // score position seven button map (gamepad2.left_bumper && gamepad2.a)
-    private static final double SCORE_SEVEN_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_SEVEN_WRIST = WRIST_DRIVE;
-    private static final double SCORE_SEVEN_ELBOW = ELBOW_DRIVE;
-    private static final double SCORE_SEVEN_LIFT = LIFT_DRIVE;
+    private static final double SCORE_SEVEN_SHOULDER = 0.9;
+    private static final double SCORE_SEVEN_WRIST = 1;
+    private static final double SCORE_SEVEN_ELBOW = 0.81;
+    private static final double SCORE_SEVEN_LIFT = 0.51;
     // score position eight button map (gamepad2.left_bumper && gamepad2.x)
-    private static final double SCORE_EIGHT_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_EIGHT_WRIST = WRIST_DRIVE;
-    private static final double SCORE_EIGHT_ELBOW = ELBOW_DRIVE;
-    private static final double SCORE_EIGHT_LIFT = LIFT_DRIVE;
+    private static final double SCORE_EIGHT_SHOULDER = 0.94;
+    private static final double SCORE_EIGHT_WRIST = 0.93;
+    private static final double SCORE_EIGHT_ELBOW = 0.8;
+    private static final double SCORE_EIGHT_LIFT = 0.8;
     // score position nine button map (gamepad2.left_trigger && gamepad2.y)
-    private static final double SCORE_NINE_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_NINE_WRIST = WRIST_DRIVE;
-    private static final double SCORE_NINE_ELBOW = ELBOW_DRIVE;
-    private static final double SCORE_NINE_LIFT = LIFT_DRIVE;
+    private static final double SCORE_NINE_SHOULDER = 0.93;
+    private static final double SCORE_NINE_WRIST = 0.93;
+    private static final double SCORE_NINE_ELBOW = 0.79;
+    private static final double SCORE_NINE_LIFT = 0.86;
     // score position ten button map (gamepad2.left_trigger && gamepad2.b)
-    private static final double SCORE_TEN_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_TEN_WRIST = WRIST_DRIVE;
-    private static final double SCORE_TEN_ELBOW = ELBOW_DRIVE;
-    private static final double SCORE_TEN_LIFT = LIFT_DRIVE;
+    private static final double SCORE_TEN_SHOULDER = 0.9;
+    private static final double SCORE_TEN_WRIST = 0.93;
+    private static final double SCORE_TEN_ELBOW = 0.76;
+    private static final double SCORE_TEN_LIFT = 0.98;
     // score position eleven button map (gamepad2.left_trigger && gamepad2.a)
-    private static final double SCORE_ELEVEN_SHOULDER = SHOULDER_DRIVE;
-    private static final double SCORE_ELEVEN_WRIST = WRIST_DRIVE;
-    private static final double SCORE_ELEVEN_ELBOW = ELBOW_DRIVE;
-    private static final double SCORE_ELEVEN_LIFT = LIFT_DRIVE;
+    private static final double SCORE_ELEVEN_SHOULDER = 0.9;
+    private static final double SCORE_ELEVEN_WRIST = 0.93;
+    private static final double SCORE_ELEVEN_ELBOW = 0.76;
+    private static final double SCORE_ELEVEN_LIFT = 0.98;
     
     // sensors
     private RevTouchSensor rightUpper;
@@ -499,6 +500,7 @@ public class OdoMec extends LinearOpMode {
             }
 
             // claw drive position
+            //TODO: add safety, this is drive around pos
             if (gamepad1.right_bumper && currentDriveState == OdoMec.driveState.IDLE) {
                 currentDriveState = OdoMec.driveState.MOVING_SHOULDER;
             }
@@ -506,6 +508,7 @@ public class OdoMec extends LinearOpMode {
 
             // intake
             // claw intake from floor
+            //TODO: add saftey, this is intake from stuff
             if (gamepad1.left_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
                 activeIntakePosition = new OdoMec.IntakePosition(SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE);
                 currentIntakeState = OdoMec.intakeState.MOVING_SHOULDER;
@@ -548,6 +551,7 @@ public class OdoMec extends LinearOpMode {
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
             }
             // score position four
+            //TODO: gotta put !gamepad2.x above
             if (gamepad2.x && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_FOUR_SHOULDER, SCORE_FOUR_WRIST, SCORE_FOUR_ELBOW, SCORE_FOUR_LIFT);
