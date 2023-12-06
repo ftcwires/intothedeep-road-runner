@@ -422,7 +422,7 @@ public class OdoMec extends LinearOpMode {
         setLiftPosition(LIFT_DRIVE);
         shoulder.setPosition(SHOULDER_INT);
         elbow.setPosition(ELBOW_DRIVE);
-        wrist.setPosition(WRIST_DRIVE);
+        wrist.setPosition(WRIST_INTAKE);
         launcherstartPos();
 
         telemetry.addData("Status", "OdoMec is ready to run!");
@@ -604,14 +604,14 @@ public class OdoMec extends LinearOpMode {
             }
 
             // dropping on the backboard for scoring
-            if (gamepad2.dpad_up  && currentIntakeState == OdoMec.intakeState.IDLE) {
+            if (gamepad2.dpad_up  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
                 leftFinger.setPosition(LEFT_FINGER_DROP);
                 rightFinger.setPosition(RIGHT_FINGER_DROP);
-            } else if (gamepad2.dpad_left  && currentIntakeState == OdoMec.intakeState.IDLE) {
+            } else if (gamepad2.dpad_left && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
                 leftFinger.setPosition(LEFT_FINGER_DROP);
-            } else if (gamepad2.dpad_right  && currentIntakeState == OdoMec.intakeState.IDLE) {
+            } else if (gamepad2.dpad_right  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
                 rightFinger.setPosition(RIGHT_FINGER_DROP);
-            } else if (gamepad2.dpad_down  && currentIntakeState == OdoMec.intakeState.IDLE) {
+            } else if (gamepad2.dpad_down  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
                 leftFinger.setPosition(LEFT_FINGER_INTAKE);
                 rightFinger.setPosition(RIGHT_FINGER_INTAKE);
             }

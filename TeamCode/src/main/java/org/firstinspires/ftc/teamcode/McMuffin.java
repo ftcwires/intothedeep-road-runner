@@ -140,7 +140,7 @@ public class McMuffin extends LinearOpMode {
         wrist.setDirection(Servo.Direction.REVERSE);
 
 
-        wrist.setPosition(0.265);
+        wrist.setPosition(0.575);
         shoulder.setPosition(0.425);
         elbow.setPosition(0.5);
         rightFinger.setPosition(0.5);
