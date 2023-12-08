@@ -533,50 +533,50 @@ public class OdoMec extends LinearOpMode {
 
             // scoring
             // score position one
-            if (gamepad2.y && (currentScoreState == OdoMec.scoreState.IDLE)) {
+            if (gamepad2.y && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_ONE_SHOULDER, SCORE_ONE_WRIST, SCORE_ONE_ELBOW, SCORE_ONE_LIFT);
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
             }
             // score position two
-            if (gamepad2.b && (currentScoreState == OdoMec.scoreState.IDLE)) {
+            if (gamepad2.b && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_TWO_SHOULDER, SCORE_TWO_WRIST, SCORE_TWO_ELBOW, SCORE_TWO_LIFT);
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
             }
             // score position three
-            if (gamepad2.a && (currentScoreState == OdoMec.scoreState.IDLE)) {
+            if (gamepad2.a && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_THREE_SHOULDER, SCORE_THREE_WRIST, SCORE_THREE_ELBOW, SCORE_THREE_LIFT);
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
             }
             // score position four
-            //TODO: gotta put !gamepad2.x above
-            if (gamepad2.x && (currentScoreState == OdoMec.scoreState.IDLE)) {
+            //TODO: gotta put !gamepad2.left_bumper above
+            if (gamepad2.x && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_FOUR_SHOULDER, SCORE_FOUR_WRIST, SCORE_FOUR_ELBOW, SCORE_FOUR_LIFT);
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
             }
             // score position five
-            if ((gamepad2.left_bumper && gamepad2.y) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+            if ((gamepad2.left_bumper && gamepad2.y) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_FIVE_SHOULDER, SCORE_FIVE_WRIST, SCORE_FIVE_ELBOW, SCORE_FIVE_LIFT);
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
             }
             // score position six
-            if ((gamepad2.left_bumper && gamepad2.b) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+            if ((gamepad2.left_bumper && gamepad2.b) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_SIX_SHOULDER, SCORE_SIX_WRIST, SCORE_SIX_ELBOW, SCORE_SIX_LIFT);
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
             }
             // score position seven
-            if ((gamepad2.left_bumper && gamepad2.a) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+            if ((gamepad2.left_bumper && gamepad2.a) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_SEVEN_SHOULDER, SCORE_SEVEN_WRIST, SCORE_SEVEN_ELBOW, SCORE_SEVEN_LIFT);
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
             }
             // score position eight
-            if ((gamepad2.left_bumper && gamepad2.x) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+            if ((gamepad2.left_bumper && gamepad2.x) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
                 // Assign a new ScorePosition inside the if block
                 activeScorePosition = new OdoMec.ScorePosition(SCORE_EIGHT_SHOULDER, SCORE_EIGHT_WRIST, SCORE_EIGHT_ELBOW, SCORE_EIGHT_LIFT);
                 currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;

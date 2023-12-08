@@ -63,7 +63,7 @@ import java.util.List;
 /**
  * ENIGMA Autonomous Example for only vision detection using openCv and park
  */
-@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "Beginnings")
+@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "OdoMec")
 public class EnigmaAuto extends LinearOpMode {
 
     public static String TEAM_NAME = "ENIGMA"; //TODO: Enter team Name
@@ -71,20 +71,30 @@ public class EnigmaAuto extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
+    private DcMotor rightFront; //front right 0
+    private DcMotor leftFront; //front left 2
+    private DcMotor rightBack; //rear right 1
+    private DcMotor leftBack; //rear left 3
+    private DcMotor leftHang;
+    private DcMotor rightHang;
+
+    // servos
+    private Servo launcher;
+    private Servo shoulder;
+    private Servo wrist;
+    private Servo elbow;
+    private Servo leftFinger;
+    private Servo rightFinger;
+    private Servo rightLift;
+    private Servo leftLift;
+    double LiftLeftOffset = .04;
+    double LiftHeight;
+
+    // sensors
     private RevTouchSensor rightUpper;
     private RevTouchSensor leftUpper;
     private RevTouchSensor rightLower;
     private RevTouchSensor leftLower;
-    private Servo rightLift;
-    private Servo leftLift;
-    private Servo shoulder;
-    private Servo wrist;
-    private Servo hopper;
-    DcMotor frontIntake;
-    DcMotor rearIntake;
-
-    double LiftLeftOffset = .04;
-    double LiftHeight;
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -114,24 +124,47 @@ public class EnigmaAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        wrist = hardwareMap.get(Servo.class, "wrist");
-        hopper = hardwareMap.get(Servo.class, "hopper");
+        // motors
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
+        rightBack = hardwareMap.get(DcMotor.class, "rightBack");
+        leftBack = hardwareMap.get(DcMotor.class, "leftBack");
+
+        leftHang = hardwareMap.get(DcMotor.class, "leftHang");
+        rightHang = hardwareMap.get(DcMotor.class, "rightHang");
+
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
+
+        // motor modes
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // servos
         shoulder = hardwareMap.get(Servo.class, "shoulder");
+        wrist = hardwareMap.get(Servo.class, "wrist");
+        elbow = hardwareMap.get(Servo.class, "elbow");
+        leftFinger = hardwareMap.get(Servo.class, "lFinger");
+        rightFinger = hardwareMap.get(Servo.class, "rFinger");
+        launcher = hardwareMap.get(Servo.class, "launcher");
         rightLift = hardwareMap.get(Servo.class, "rightLift");
         leftLift = hardwareMap.get(Servo.class, "leftLift");
 
+        // servo modes
         shoulder.setDirection(Servo.Direction.REVERSE);
         wrist.setDirection(Servo.Direction.REVERSE);
+        launcher.setDirection(Servo.Direction.REVERSE);
 
-        frontIntake = hardwareMap.get(DcMotor.class, "frontIntake");
-        rearIntake = hardwareMap.get(DcMotor.class, "rearIntake");
+        // sensors
+        leftUpper = hardwareMap.get(RevTouchSensor.class, "leftUpper");
+        rightUpper = hardwareMap.get(RevTouchSensor.class, "rightUpper");
+        leftLower = hardwareMap.get(RevTouchSensor.class, "leftLower");
+        rightLower = hardwareMap.get(RevTouchSensor.class, "rightLower");
 
-        frontIntake.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rearIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rearIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Vision OpenCV / Color Detection
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -331,13 +364,8 @@ public class EnigmaAuto extends LinearOpMode {
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
-        frontIntake.setPower(.5);
-        //rearIntake.setPower(-1);
-        sleep(37);
-        frontIntake.setPower(0);
-        //rearIntake.setPower(0);
-        //drive pos \/
-        shoulder.setPosition(0.48);
+
+
         //Move robot to midwayPose1
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -375,59 +403,13 @@ public class EnigmaAuto extends LinearOpMode {
 
         //TODO : Code to drop Pixel on Backdrop
         safeWaitSeconds(1);
-        shoulder.setPosition(0.60);
-        hopper.setPosition(0.02);
-        wrist.setPosition(0.22);
-        setLiftHeight(0.42);
-        sleep(500);
-        wrist.setPosition(0.22);
-        shoulder.setPosition(0.79);
-        hopper.setPosition(0.02);
-        setLiftHeight(0.42);
-        sleep(500);
-        hopper.setPosition(0.58);
-        wrist.setPosition(0.6);
-        shoulder.setPosition(0.79);
-        setLiftHeight(0.42);
-        sleep(500);
-        shoulder.setPosition(0.91);
-        hopper.setPosition(0.58);
-        wrist.setPosition(0.6);
-        setLiftHeight(0.42);
-        sleep(500);
-        wrist.setPosition(0.6);
-        shoulder.setPosition(1);
-        hopper.setPosition(0.58);
-        setLiftHeight(0.42);
-        sleep(500);
-        //dump
-        hopper.setPosition(0.2);
-        sleep(1000);
-        wrist.setPosition(0.6);
-        shoulder.setPosition(1);
-        hopper.setPosition(0.58);
-        setLiftHeight(0.42);
-        sleep(200);
-        shoulder.setPosition(0.91);
-        hopper.setPosition(0.58);
-        wrist.setPosition(0.6);
-        setLiftHeight(0.42);
-        sleep(200);
-        hopper.setPosition(0.58);
-        wrist.setPosition(0.6);
-        shoulder.setPosition(0.79);
-        sleep(350);
-        wrist.setPosition(0.22);
-        shoulder.setPosition(0.79);
-        hopper.setPosition(0.02);
-        setLiftHeight(0.42);
-        sleep(500);
-        shoulder.setPosition(0.60);
-        hopper.setPosition(0.02);
-        wrist.setPosition(0.22);
-        setLiftHeight(0.42);
+
+
+
 
         //Move robot to park in Backstage
+
+
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
