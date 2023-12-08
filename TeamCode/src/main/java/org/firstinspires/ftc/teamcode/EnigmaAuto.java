@@ -165,6 +165,17 @@ public class EnigmaAuto extends LinearOpMode {
         leftLower = hardwareMap.get(RevTouchSensor.class, "leftLower");
         rightLower = hardwareMap.get(RevTouchSensor.class, "rightLower");
 
+        //int pos
+        leftFinger.setPosition(0.74);
+        rightFinger.setPosition(0.27);
+        leftLift.setPosition(0.37);
+        rightLift.setPosition(0.37);
+        shoulder.setPosition(0.43);
+        elbow.setPosition(0.5);
+        wrist.setPosition(0.575);
+        launcher.setPosition(0.8);
+
+
         // Vision OpenCV / Color Detection
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -364,6 +375,7 @@ public class EnigmaAuto extends LinearOpMode {
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
+
 
 
         //Move robot to midwayPose1

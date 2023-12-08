@@ -88,17 +88,17 @@ public class OdoMec extends LinearOpMode {
     private static final double SCORE_TWO_LIFT = LIFT_DRIVE;
     // score position three button map (gamepad2.a)
     private static final double SCORE_THREE_SHOULDER = 0.92;
-    private static final double SCORE_THREE_WRIST = 0.85;
+    private static final double SCORE_THREE_WRIST = 0.91;
     private static final double SCORE_THREE_ELBOW = 0.67;
     private static final double SCORE_THREE_LIFT = LIFT_DRIVE;
     // score position four button map (gamepad2.x)
     private static final double SCORE_FOUR_SHOULDER = 0.91;
-    private static final double SCORE_FOUR_WRIST =0.89;
+    private static final double SCORE_FOUR_WRIST =0.985;
     private static final double SCORE_FOUR_ELBOW = 0.72;
     private static final double SCORE_FOUR_LIFT = LIFT_DRIVE;
     // score position five button map (gamepad2.left_bumper && gamepad2.y)
     private static final double SCORE_FIVE_SHOULDER = 0.93;
-    private static final double SCORE_FIVE_WRIST = 0.98;
+    private static final double SCORE_FIVE_WRIST = 1;
     private static final double SCORE_FIVE_ELBOW = 0.82;
     private static final double SCORE_FIVE_LIFT = LIFT_DRIVE;
     // score position six button map (gamepad2.left_bumper && gamepad2.b)
@@ -453,10 +453,10 @@ public class OdoMec extends LinearOpMode {
                 rightBackPower = Range.clip(rightBackPower, -0.4, 0.4);
                 leftBackPower = Range.clip(leftBackPower, -0.4, 0.4);
             } else {
-                rightFrontPower = Range.clip(rightFrontPower, -0.8, 0.8);
-                leftFrontPower = Range.clip(leftFrontPower, -0.8, 0.8);
-                rightBackPower = Range.clip(rightBackPower, -0.8, 0.8);
-                leftBackPower = Range.clip(leftBackPower, -0.8, 0.8);
+                rightFrontPower = Range.clip(rightFrontPower, -1, 1);
+                leftFrontPower = Range.clip(leftFrontPower, -1, 1);
+                rightBackPower = Range.clip(rightBackPower, -1, 1);
+                leftBackPower = Range.clip(leftBackPower, -1, 1);
             }
 
             rightFront.setPower(rightFrontPower);
