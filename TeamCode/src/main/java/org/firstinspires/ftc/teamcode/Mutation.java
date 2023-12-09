@@ -63,14 +63,15 @@ public class Mutation extends LinearOpMode {
     // stack positions (top 2 o 5 and next 2 of 3 )
     // TODO find positions with McMuffin (currently all set to drive) change to the actual double values like above from McMuffin
     // intake two off a stack of five
-    private static final double SHOULDER_TOP_TWO = SHOULDER_DRIVE;
-    private static final double WRIST_TOP_TWO = 0.55;
-    private static final double ELBOW_TOP_TWO = 0.6;
+    private static final double SHOULDER_TOP_TWO = 0.909;
+    private static final double WRIST_TOP_TWO = 0.1;
+    private static final double ELBOW_TOP_TWO = 0.72;
 
     // intake two off a stack of three
-    private static final double SHOULDER_NEXT_TWO = SHOULDER_DRIVE;
-    private static final double WRIST_NEXT_TWO = 0.44;
-    private static final double ELBOW_NEXT_TWO = 0.7;
+    private static final double SHOULDER_NEXT_TWO = 0.425;
+    private static final double WRIST_NEXT_TWO = 0.565;
+    private static final double ELBOW_NEXT_TWO = 0.76;
+
 
     //=^-^=
     // score positions (11 rows on the board)
@@ -96,27 +97,27 @@ public class Mutation extends LinearOpMode {
     private static final double SCORE_FOUR_ELBOW = 0.72;
     private static final double SCORE_FOUR_LIFT = LIFT_DRIVE;
     // score position five button map (gamepad2.left_bumper && gamepad2.y)
-    private static final double SCORE_FIVE_SHOULDER = 0.93;
+    private static final double SCORE_FIVE_SHOULDER = 0.92611111;
     private static final double SCORE_FIVE_WRIST = 1;
-    private static final double SCORE_FIVE_ELBOW = 0.82;
-    private static final double SCORE_FIVE_LIFT = LIFT_DRIVE;
+    private static final double SCORE_FIVE_ELBOW = 0.73;
+    private static final double SCORE_FIVE_LIFT = 0.59;
     // score position six button map (gamepad2.left_bumper && gamepad2.b)
-    private static final double SCORE_SIX_SHOULDER = 0.92;
+    private static final double SCORE_SIX_SHOULDER = 0.925;
     private static final double SCORE_SIX_WRIST = 1;
-    private static final double SCORE_SIX_ELBOW = 0.85;
-    private static final double SCORE_SIX_LIFT = LIFT_DRIVE;
+    private static final double SCORE_SIX_ELBOW = 0.75;
+    private static final double SCORE_SIX_LIFT = .71;
     // score position seven button map (gamepad2.left_bumper && gamepad2.a)
-    private static final double SCORE_SEVEN_SHOULDER = 0.9;
+    private static final double SCORE_SEVEN_SHOULDER = 0.91;
     private static final double SCORE_SEVEN_WRIST = 1;
-    private static final double SCORE_SEVEN_ELBOW = 0.81;
-    private static final double SCORE_SEVEN_LIFT = 0.51;
+    private static final double SCORE_SEVEN_ELBOW = 0.72;
+    private static final double SCORE_SEVEN_LIFT = 0.8;
     // score position eight button map (gamepad2.left_bumper && gamepad2.x)
     private static final double SCORE_EIGHT_SHOULDER = 0.94;
     private static final double SCORE_EIGHT_WRIST = 0.93;
     private static final double SCORE_EIGHT_ELBOW = 0.8;
     private static final double SCORE_EIGHT_LIFT = 0.8;
     // score position nine button map (gamepad2.left_trigger && gamepad2.y)
-    private static final double SCORE_NINE_SHOULDER = 0.93;
+    private static final double SCORE_NINE_SHOULDER = 0.93  ;
     private static final double SCORE_NINE_WRIST = 0.93;
     private static final double SCORE_NINE_ELBOW = 0.79;
     private static final double SCORE_NINE_LIFT = 0.86;
