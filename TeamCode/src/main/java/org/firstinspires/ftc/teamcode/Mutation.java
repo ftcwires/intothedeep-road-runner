@@ -258,11 +258,11 @@ public class Mutation extends LinearOpMode {
         //hopper.setPosition(0.02);
         //shoulder.setPosition(0.44);
         //wrist.setPosition(0.26);
-        wrist.setPosition(0.265);
-        shoulder.setPosition(0.455);
+        wrist.setPosition(0.625);
+        shoulder.setPosition(0.425);
         leftFinger.setPosition(0.5);
         rightFinger.setPosition(0.5);
-        elbow.setPosition(0.5);
+        elbow.setPosition(0.83);
 
         //setLiftHeight(0.42);
         currentArmPos = ArmPosition.INTAKE;
