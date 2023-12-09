@@ -63,9 +63,9 @@ public class Mutation extends LinearOpMode {
     // stack positions (top 2 o 5 and next 2 of 3 )
     // TODO find positions with McMuffin (currently all set to drive) change to the actual double values like above from McMuffin
     // intake two off a stack of five
-    private static final double SHOULDER_TOP_TWO = 0.909;
-    private static final double WRIST_TOP_TWO = 0.1;
-    private static final double ELBOW_TOP_TWO = 0.72;
+    private static final double SHOULDER_TOP_TWO = 0.425;
+    private static final double WRIST_TOP_TWO = 0.606;
+    private static final double ELBOW_TOP_TWO = 0.74;
 
     // intake two off a stack of three
     private static final double SHOULDER_NEXT_TWO = 0.425;
