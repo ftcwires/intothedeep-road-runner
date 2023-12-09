@@ -66,8 +66,8 @@ import java.util.List;
 @Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "OdoMec")
 public class EnigmaAuto extends LinearOpMode {
 
-    public static String TEAM_NAME = "ENIGMA"; //TODO: Enter team Name
-    public static int TEAM_NUMBER = 16265; //TODO: Enter team Number
+    public static String TEAM_NAME = "ENIGMA";
+    public static int TEAM_NUMBER = 16265;
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
@@ -89,6 +89,10 @@ public class EnigmaAuto extends LinearOpMode {
     private Servo leftLift;
     double LiftLeftOffset = .04;
     double LiftHeight;
+    private static final double ELBOW_DRIVE= 0.5;
+    private static final double ELBOW_INTAKE = 0.8;
+    private static final double WRIST_INTAKE = 0.575;
+    private static final double SHOULDER_DRIVE = 0.425; // 0.425
 
     // sensors
     private RevTouchSensor rightUpper;
@@ -375,6 +379,13 @@ public class EnigmaAuto extends LinearOpMode {
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
+        shoulder.setPosition(SHOULDER_DRIVE);
+        elbow.setPosition(ELBOW_INTAKE);
+        wrist.setPosition(WRIST_INTAKE);
+        sleep(1000);
+        rightFinger.setPosition(0.64);
+        sleep(500);
+
 
 
 
@@ -440,10 +451,10 @@ public class EnigmaAuto extends LinearOpMode {
                     TEAM_NAME, " ", TEAM_NUMBER);
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
-            telemetry.addData("    Blue Left   ", "(X / ▢)");
-            telemetry.addData("    Blue Right ", "(Y / Δ)");
-            telemetry.addData("    Red Left    ", "(B / O)");
-            telemetry.addData("    Red Right  ", "(A / X)");
+            telemetry.addData("    Blue Left   ", "(X)");
+            telemetry.addData("    Blue Right ", "(Y)");
+            telemetry.addData("    Red Left    ", "(B)");
+            telemetry.addData("    Red Right  ", "(A)");
             if(gamepad1.x){
                 startPosition = START_POSITION.BLUE_LEFT;
                 break;
