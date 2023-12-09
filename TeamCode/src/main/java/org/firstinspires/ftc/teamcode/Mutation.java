@@ -44,10 +44,10 @@ public class Mutation extends LinearOpMode {
     private static final double SHOULDER_DRIVE = 0.425; // 0.425
     private static final double SHOULDER_INT = 0.43; // 0.455
     private static final double ELBOW_DRIVE= 0.5;
-    private static final double ELBOW_INTAKE = 0.8;
+    private static final double ELBOW_INTAKE = 0.83;
     private static final double WRIST_INT = 0.55; // int for auto & testing 0.55; // int for DRIVE 0.265
     private static final double WRIST_DRIVE = 0.265; // int for auto & testing 0.55; // int for DRIVE 0.265
-    private static final double WRIST_INTAKE = 0.575;
+    private static final double WRIST_INTAKE = 0.625;
     private static final double LEFT_FINGER_GRIP = 0.74;
     private static final double LEFT_FINGER_DROP = 0.5;
     private static final double LEFT_FINGER_INTAKE = 0.34;
