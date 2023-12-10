@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+//do he auto and get a 2+2
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -63,42 +64,40 @@ import java.util.List;
 /**
  * ENIGMA Autonomous Example for only vision detection using openCv and park
  */
-@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "OdoMec")
+@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "Beginnings")
 public class EnigmaAuto extends LinearOpMode {
 
-    public static String TEAM_NAME = "ENIGMA";
-    public static int TEAM_NUMBER = 16265;
+    public static String TEAM_NAME = "ENIGMA"; //TODO: Enter team Name
+    public static int TEAM_NUMBER = 16265; //TODO: Enter team Number
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
-    private DcMotor rightFront; //front right 0
-    private DcMotor leftFront; //front left 2
-    private DcMotor rightBack; //rear right 1
-    private DcMotor leftBack; //rear left 3
-    private DcMotor leftHang;
-    private DcMotor rightHang;
+    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime servoTimer = new ElapsedTime();
 
-    // servos
-    private Servo launcher;
+    private RevTouchSensor rightUpper;
+    private RevTouchSensor leftUpper;
+    private RevTouchSensor rightLower;
+    private RevTouchSensor leftLower;
+    private Servo rightLift;
+    private Servo leftLift;
     private Servo shoulder;
     private Servo wrist;
     private Servo elbow;
     private Servo leftFinger;
     private Servo rightFinger;
-    private Servo rightLift;
-    private Servo leftLift;
+
     double LiftLeftOffset = .04;
     double LiftHeight;
+
     private static final double ELBOW_DRIVE= 0.5;
     private static final double ELBOW_INTAKE = 0.8;
     private static final double WRIST_INTAKE = 0.575;
     private static final double SHOULDER_DRIVE = 0.425; // 0.425
+    private static final double SCORE_ONE_SHOULDER = 0.936;
+    private static final double SCORE_ONE_WRIST = 0.685;
+    private static final double SCORE_ONE_ELBOW = 0.52;
 
-    // sensors
-    private RevTouchSensor rightUpper;
-    private RevTouchSensor leftUpper;
-    private RevTouchSensor rightLower;
-    private RevTouchSensor leftLower;
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -124,61 +123,53 @@ public class EnigmaAuto extends LinearOpMode {
     public static double centeravgfinoutput = 0;
     public static double rightavgfinoutput = 0;
 
+    private double servoposition = 0.0;
+    private double servodelta = 0.02;
+    private double servodelaytime = 0.03;
 
+    private void moveServoGradually(Servo servo, double targetPosition) {
+        double currentPosition = servo.getPosition();
+
+        // Check if enough time has passed since the last update
+        if (servoTimer.seconds() > servodelaytime) {
+            // Determine the direction of movement
+            double direction = targetPosition > currentPosition ? servodelta : -servodelta;
+
+            // Calculate the new position
+            servoposition = currentPosition + direction;
+            servoposition = Range.clip(servoposition, 0, 1); // Ensure the position is within valid range
+
+            // Update the servo position
+            servo.setPosition(servoposition);
+
+            // Reset the timer
+            servoTimer.reset();
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // motors
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
-        rightBack = hardwareMap.get(DcMotor.class, "rightBack");
-        leftBack = hardwareMap.get(DcMotor.class, "leftBack");
-
-        leftHang = hardwareMap.get(DcMotor.class, "leftHang");
-        rightHang = hardwareMap.get(DcMotor.class, "rightHang");
-
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
-
-        // motor modes
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // servos
-        shoulder = hardwareMap.get(Servo.class, "shoulder");
         wrist = hardwareMap.get(Servo.class, "wrist");
+
+        shoulder = hardwareMap.get(Servo.class, "shoulder");
+        rightLift = hardwareMap.get(Servo.class, "rightLift");
+        leftLift = hardwareMap.get(Servo.class, "leftLift");
         elbow = hardwareMap.get(Servo.class, "elbow");
         leftFinger = hardwareMap.get(Servo.class, "lFinger");
         rightFinger = hardwareMap.get(Servo.class, "rFinger");
-        launcher = hardwareMap.get(Servo.class, "launcher");
-        rightLift = hardwareMap.get(Servo.class, "rightLift");
-        leftLift = hardwareMap.get(Servo.class, "leftLift");
 
-        // servo modes
         shoulder.setDirection(Servo.Direction.REVERSE);
         wrist.setDirection(Servo.Direction.REVERSE);
-        launcher.setDirection(Servo.Direction.REVERSE);
 
-        // sensors
-        leftUpper = hardwareMap.get(RevTouchSensor.class, "leftUpper");
-        rightUpper = hardwareMap.get(RevTouchSensor.class, "rightUpper");
-        leftLower = hardwareMap.get(RevTouchSensor.class, "leftLower");
-        rightLower = hardwareMap.get(RevTouchSensor.class, "rightLower");
-
-        //int pos
-        leftFinger.setPosition(0.74);
-        rightFinger.setPosition(0.27);
+        //init pos
         leftLift.setPosition(0.37);
         rightLift.setPosition(0.37);
         shoulder.setPosition(0.43);
-        elbow.setPosition(0.5);
         wrist.setPosition(0.575);
-        launcher.setPosition(0.8);
-
+        elbow.setPosition(0.5);
+        sleep(1000);
+        leftFinger.setPosition(0.74);
+        rightFinger.setPosition(0.27);
 
         // Vision OpenCV / Color Detection
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -264,23 +255,27 @@ public class EnigmaAuto extends LinearOpMode {
         initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
         moveBeyondTrussPose = new Pose2d(15,0,0);
 
+        //TODO: edit crap here
         switch (startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
                         dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
-                        dropPurplePixelPose = new Pose2d(23, 11, Math.toRadians(0));
+                        //dropPurplePixelPose = new Pose2d(23, 11, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(70));
                         dropYellowPixelPose = new Pose2d(27, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPosePush = new Pose2d(30.5, 0, Math.toRadians(0)); // change up
-                        dropPurplePixelPose = new Pose2d(26.5, -3, Math.toRadians(0));
+                        dropPurplePixelPosePush = new Pose2d(32, 0, Math.toRadians(0)); // change up
+                        //dropPurplePixelPose = new Pose2d(26.5, -3, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(23.25, 0, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(27, 36,  Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
-                        dropPurplePixelPose = new Pose2d(23.5, -7, Math.toRadians(-35));
+                        //dropPurplePixelPose = new Pose2d(23.5, -7, Math.toRadians(-35));
+                        dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(-35));
                         dropYellowPixelPose = new Pose2d(27, 36, Math.toRadians(-90));
                         break;
                 }
@@ -380,14 +375,16 @@ public class EnigmaAuto extends LinearOpMode {
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
         shoulder.setPosition(SHOULDER_DRIVE);
-        elbow.setPosition(ELBOW_INTAKE);
         wrist.setPosition(WRIST_INTAKE);
+        for(int c = 0; c<40; c++) {
+            moveServoGradually(elbow, ELBOW_INTAKE);
+            sleep(10);
+        }
         sleep(1000);
         rightFinger.setPosition(0.64);
         sleep(500);
-
-
-
+        elbow.setPosition(ELBOW_DRIVE);
+        sleep(500);
 
         //Move robot to midwayPose1
         Actions.runBlocking(
@@ -426,13 +423,37 @@ public class EnigmaAuto extends LinearOpMode {
 
         //TODO : Code to drop Pixel on Backdrop
         safeWaitSeconds(1);
-
+        for(int s = 0; s<200; s++) {
+            moveServoGradually(shoulder, SCORE_ONE_SHOULDER);
+            sleep(7);
+        }
+        for(int w = 0; w<40; w++) {
+            moveServoGradually(wrist, SCORE_ONE_WRIST);
+            sleep(10);
+        }
+        for(int e = 0; e<20; e++) {
+            moveServoGradually(elbow, SCORE_ONE_ELBOW);
+            sleep(10);
+        }
+        sleep(300);
+        leftFinger.setPosition(0.5);
+        sleep(300);
+        for(int s = 0; s<200; s++) {
+            moveServoGradually(shoulder, SHOULDER_DRIVE);
+            sleep(7);
+        }
+        for(int w = 0; w<40; w++) {
+            moveServoGradually(wrist, WRIST_INTAKE);
+            sleep(10);
+        }
+        for(int e = 0; e<20; e++) {
+            moveServoGradually(elbow, ELBOW_DRIVE);
+            sleep(10);
+        }
 
 
 
         //Move robot to park in Backstage
-
-
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
@@ -451,10 +472,10 @@ public class EnigmaAuto extends LinearOpMode {
                     TEAM_NAME, " ", TEAM_NUMBER);
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
-            telemetry.addData("    Blue Left   ", "(X)");
-            telemetry.addData("    Blue Right ", "(Y)");
-            telemetry.addData("    Red Left    ", "(B)");
-            telemetry.addData("    Red Right  ", "(A)");
+            telemetry.addData("    Blue Left   ", "(X / ▢)");
+            telemetry.addData("    Blue Right ", "(Y / Δ)");
+            telemetry.addData("    Red Left    ", "(B / O)");
+            telemetry.addData("    Red Right  ", "(A / X)");
             if(gamepad1.x){
                 startPosition = START_POSITION.BLUE_LEFT;
                 break;
