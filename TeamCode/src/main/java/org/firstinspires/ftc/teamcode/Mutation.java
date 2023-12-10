@@ -41,66 +41,66 @@ public class Mutation extends LinearOpMode {
 
 
     // servo values
-    private static final double SHOULDER_DRIVE = 0.425; // 0.425
-    private static final double SHOULDER_INT = 0.43; // 0.455
-    private static final double ELBOW_DRIVE= 0.5;
-    private static final double ELBOW_INTAKE = 0.83;
-    private static final double WRIST_INT = 0.55; // int for auto & testing 0.55; // int for DRIVE 0.265
-    private static final double WRIST_DRIVE = 0.265; // int for auto & testing 0.55; // int for DRIVE 0.265
-    private static final double WRIST_INTAKE = 0.625;
-    private static final double LEFT_FINGER_GRIP = 0.74;
-    private static final double LEFT_FINGER_DROP = 0.5;
-    private static final double LEFT_FINGER_INTAKE = 0.34;
-    private static final double RIGHT_FINGER_GRIP = .27;
-    private static final double RIGHT_FINGER_DROP = .5;
-    private static final double RIGHT_FINGER_INTAKE = 0.64;
-    private static final double TRIGGER_THRESHOLD = 0.5;
-    private static final double LAUNCHER_START_POS = 0.8;
-    private static final double SERVO_TOLERANCE = 0.01;
-    private static final double LIFT_DRIVE = 0.37;
+    public static final double SHOULDER_DRIVE = 0.425; // 0.425
+    public static final double SHOULDER_INT = 0.43; // 0.455
+    public static final double ELBOW_DRIVE= 0.5;
+    public static final double ELBOW_INTAKE = 0.83;
+    public static final double WRIST_INT = 0.55; // int for auto & testing 0.55; // int for DRIVE 0.265
+    public static final double WRIST_DRIVE = 0.265; // int for auto & testing 0.55; // int for DRIVE 0.265
+    public static final double WRIST_INTAKE = 0.625;
+    public static final double LEFT_FINGER_GRIP = 0.74;
+    public static final double LEFT_FINGER_DROP = 0.5;
+    public static final double LEFT_FINGER_INTAKE = 0.34;
+    public static final double RIGHT_FINGER_GRIP = .27;
+    public static final double RIGHT_FINGER_DROP = .5;
+    public static final double RIGHT_FINGER_INTAKE = 0.64;
+    public static final double TRIGGER_THRESHOLD = 0.5;
+    public static final double LAUNCHER_START_POS = 0.8;
+    public static final double SERVO_TOLERANCE = 0.01;
+    public static final double LIFT_DRIVE = 0.37;
     private double liftTargetPosition = LIFT_DRIVE;
 
     // stack positions (top 2 o 5 and next 2 of 3 )
     // TODO find positions with McMuffin (currently all set to drive) change to the actual double values like above from McMuffin
     // intake two off a stack of five
-    private static final double SHOULDER_TOP_TWO = 0.425;
-    private static final double WRIST_TOP_TWO = 0.606;
-    private static final double ELBOW_TOP_TWO = 0.74;
+    public static final double SHOULDER_TOP_TWO = 0.425;
+    public static final double WRIST_TOP_TWO = 0.606;
+    public static final double ELBOW_TOP_TWO = 0.74;
 
     // intake two off a stack of three
-    private static final double SHOULDER_NEXT_TWO = 0.425;
-    private static final double WRIST_NEXT_TWO = 0.565;
-    private static final double ELBOW_NEXT_TWO = 0.76;
+    public static final double SHOULDER_NEXT_TWO = 0.425;
+    public static final double WRIST_NEXT_TWO = 0.565;
+    public static final double ELBOW_NEXT_TWO = 0.76;
 
 
     //=^-^=
     // score positions (11 rows on the board)
     // TODO find positions with McMuffin (currently all set to drive) change to the actual double values like above from McMuffin
     // score position one button map (gamepad2.y)
-    private static final double SCORE_ONE_SHOULDER = 0.936;
-    private static final double SCORE_ONE_WRIST = 0.685;
-    private static final double SCORE_ONE_ELBOW = 0.52;
-    private static final double SCORE_ONE_LIFT = LIFT_DRIVE;
+    public static final double SCORE_ONE_SHOULDER = 0.936;
+    public static final double SCORE_ONE_WRIST = 0.685;
+    public static final double SCORE_ONE_ELBOW = 0.52;
+    public static final double SCORE_ONE_LIFT = LIFT_DRIVE;
     // score position two button map (gamepad2.b)
-    private static final double SCORE_TWO_SHOULDER = 0.9;
-    private static final double SCORE_TWO_WRIST = 0.745;
-    private static final double SCORE_TWO_ELBOW = 0.55;
-    private static final double SCORE_TWO_LIFT = LIFT_DRIVE;
+    public static final double SCORE_TWO_SHOULDER = 0.9;
+    public static final double SCORE_TWO_WRIST = 0.745;
+    public static final double SCORE_TWO_ELBOW = 0.55;
+    public static final double SCORE_TWO_LIFT = LIFT_DRIVE;
     // score position three button map (gamepad2.a)
-    private static final double SCORE_THREE_SHOULDER = 0.92;
-    private static final double SCORE_THREE_WRIST = 0.91;
-    private static final double SCORE_THREE_ELBOW = 0.67;
-    private static final double SCORE_THREE_LIFT = LIFT_DRIVE;
+    public static final double SCORE_THREE_SHOULDER = 0.92;
+    public static final double SCORE_THREE_WRIST = 0.91;
+    public static final double SCORE_THREE_ELBOW = 0.67;
+    public static final double SCORE_THREE_LIFT = LIFT_DRIVE;
     // score position four button map (gamepad2.x)
-    private static final double SCORE_FOUR_SHOULDER = 0.91;
-    private static final double SCORE_FOUR_WRIST =0.985;
-    private static final double SCORE_FOUR_ELBOW = 0.72;
-    private static final double SCORE_FOUR_LIFT = LIFT_DRIVE;
+    public static final double SCORE_FOUR_SHOULDER = 0.91;
+    public static final double SCORE_FOUR_WRIST =0.985;
+    public static final double SCORE_FOUR_ELBOW = 0.72;
+    public static final double SCORE_FOUR_LIFT = LIFT_DRIVE;
     // score position five button map (gamepad2.left_bumper && gamepad2.y)
-    private static final double SCORE_FIVE_SHOULDER = 0.92611111;
-    private static final double SCORE_FIVE_WRIST = 1;
-    private static final double SCORE_FIVE_ELBOW = 0.73;
-    private static final double SCORE_FIVE_LIFT = 0.59;
+    public static final double SCORE_FIVE_SHOULDER = 0.92611111;
+    public static final double SCORE_FIVE_WRIST = 1;
+    public static final double SCORE_FIVE_ELBOW = 0.73;
+    public static final double SCORE_FIVE_LIFT = 0.59;
     // score position six button map (gamepad2.left_bumper && gamepad2.b)
     private static final double SCORE_SIX_SHOULDER = 0.925;
     private static final double SCORE_SIX_WRIST = 1;
@@ -153,6 +153,7 @@ public class Mutation extends LinearOpMode {
     // drive
     private enum driveState {
         IDLE,
+        MOVING_LIFT,
         MOVING_SHOULDER,
         MOVING_ELBOW,
         MOVING_WRIST,
@@ -216,12 +217,21 @@ public class Mutation extends LinearOpMode {
         switch (currentDriveState) {
             case MOVING_SHOULDER:
                 // Move the shoulder to drive position
-                moveServoGradually(shoulder, SHOULDER_DRIVE + .05);
-                shoulder.setPosition(SHOULDER_DRIVE);
+                //moveServoGradually(shoulder, SHOULDER_DRIVE + .05);
+                //shoulder.setPosition(SHOULDER_DRIVE);
+                moveServoGradually(shoulder, SHOULDER_DRIVE);
                 if (isServoAtPosition(shoulder, SHOULDER_DRIVE)) {
-                    currentDriveState = Mutation.driveState.MOVING_ELBOW;
+                    currentDriveState = driveState.MOVING_LIFT;
                 }
                 break;
+            case MOVING_LIFT:
+                rightLift.setPosition(LIFT_DRIVE);
+                leftLift.setPosition(LIFT_DRIVE);
+                if (isServoAtPosition(rightLift, LIFT_DRIVE) && isServoAtPosition(leftLift, LIFT_DRIVE)) {
+                    currentDriveState = driveState.MOVING_ELBOW;
+                }
+                break;
+
             case MOVING_ELBOW:
                 // Move the elbow to drive position
                 leftFinger.setPosition(LEFT_FINGER_GRIP);
@@ -407,19 +417,19 @@ public class Mutation extends LinearOpMode {
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position nine
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
             activeScorePosition = new Mutation.ScorePosition(SCORE_NINE_SHOULDER, SCORE_NINE_WRIST, SCORE_NINE_ELBOW, SCORE_NINE_LIFT);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position ten
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
             activeScorePosition = new Mutation.ScorePosition(SCORE_TEN_SHOULDER, SCORE_TEN_WRIST, SCORE_TEN_ELBOW, SCORE_TEN_LIFT);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position eleven
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
             activeScorePosition = new Mutation.ScorePosition(SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_ELBOW, SCORE_ELEVEN_LIFT);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
@@ -636,7 +646,7 @@ public class Mutation extends LinearOpMode {
             // claw drive position
             //TODO: add safety, this is drive around pos
             if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
-                currentDriveState = Mutation.driveState.MOVING_SHOULDER;
+                currentDriveState = driveState.MOVING_SHOULDER;
             }
             handleDriveSequence();
 

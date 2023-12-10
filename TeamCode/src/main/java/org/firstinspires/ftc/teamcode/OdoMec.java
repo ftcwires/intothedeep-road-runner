@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -130,7 +131,7 @@ public class OdoMec extends LinearOpMode {
     private static final double SCORE_ELEVEN_WRIST = 0.93;
     private static final double SCORE_ELEVEN_ELBOW = 0.76;
     private static final double SCORE_ELEVEN_LIFT = 0.98;
-    
+
     // sensors
     private RevTouchSensor rightUpper;
     private RevTouchSensor leftUpper;
@@ -246,36 +247,6 @@ public class OdoMec extends LinearOpMode {
             currentDriveState = OdoMec.driveState.IDLE;
         }
     }
-    private void driveCode() {
-        // mecanum drive
-        double forward = gamepad1.left_stick_y;
-        double strafe = -gamepad1.left_stick_x;
-        double turn = -gamepad1.right_stick_x;
-
-        double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1);
-
-        double rightFrontPower = (forward - strafe - turn) / denominator;
-        double leftFrontPower = (forward + strafe + turn) / denominator;
-        double rightBackPower = (forward + strafe - turn) / denominator;
-        double leftBackPower = (forward - strafe + turn) / denominator;
-
-        if (gamepad1.left_bumper) {
-            rightFrontPower = Range.clip(rightFrontPower, -0.4, 0.4);
-            leftFrontPower = Range.clip(leftFrontPower, -0.4, 0.4);
-            rightBackPower = Range.clip(rightBackPower, -0.4, 0.4);
-            leftBackPower = Range.clip(leftBackPower, -0.4, 0.4);
-        } else {
-            rightFrontPower = Range.clip(rightFrontPower, -1, 1);
-            leftFrontPower = Range.clip(leftFrontPower, -1, 1);
-            rightBackPower = Range.clip(rightBackPower, -1, 1);
-            leftBackPower = Range.clip(leftBackPower, -1, 1);
-        }
-
-        rightFront.setPower(rightFrontPower);
-        leftFront.setPower(leftFrontPower);
-        rightBack.setPower(rightBackPower);
-        leftBack.setPower(leftBackPower);
-    }
 
     // score
     private void handleScorePosSequence(OdoMec.ScorePosition scorePos) {
@@ -354,84 +325,6 @@ public class OdoMec extends LinearOpMode {
         return Math.abs(servo.getPosition() - position) < SERVO_TOLERANCE;
     }
 
-    private void scoringFunction() {
-        // scoring
-        // score position one
-        if (gamepad2.y && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_ONE_SHOULDER, SCORE_ONE_WRIST, SCORE_ONE_ELBOW, SCORE_ONE_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position two
-        if (gamepad2.b && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_TWO_SHOULDER, SCORE_TWO_WRIST, SCORE_TWO_ELBOW, SCORE_TWO_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position three
-        if (gamepad2.a && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_THREE_SHOULDER, SCORE_THREE_WRIST, SCORE_THREE_ELBOW, SCORE_THREE_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position four
-        //TODO: gotta put !gamepad2.left_bumper above
-        if (gamepad2.x && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_FOUR_SHOULDER, SCORE_FOUR_WRIST, SCORE_FOUR_ELBOW, SCORE_FOUR_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position five
-        if ((gamepad2.left_bumper && gamepad2.y) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_FIVE_SHOULDER, SCORE_FIVE_WRIST, SCORE_FIVE_ELBOW, SCORE_FIVE_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position six
-        if ((gamepad2.left_bumper && gamepad2.b) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_SIX_SHOULDER, SCORE_SIX_WRIST, SCORE_SIX_ELBOW, SCORE_SIX_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position seven
-        if ((gamepad2.left_bumper && gamepad2.a) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_SEVEN_SHOULDER, SCORE_SEVEN_WRIST, SCORE_SEVEN_ELBOW, SCORE_SEVEN_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position eight
-        if ((gamepad2.left_bumper && gamepad2.x) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_EIGHT_SHOULDER, SCORE_EIGHT_WRIST, SCORE_EIGHT_ELBOW, SCORE_EIGHT_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position nine
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_NINE_SHOULDER, SCORE_NINE_WRIST, SCORE_NINE_ELBOW, SCORE_NINE_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position ten
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_TEN_SHOULDER, SCORE_TEN_WRIST, SCORE_TEN_ELBOW, SCORE_TEN_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        // score position eleven
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new OdoMec.ScorePosition(SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_ELBOW, SCORE_ELEVEN_LIFT);
-            currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
-        }
-        if (activeScorePosition != null) {
-            handleScorePosSequence(activeScorePosition);
-        }
-        if (currentScoreState == OdoMec.scoreState.COMPLETED) {
-            currentScoreState = OdoMec.scoreState.IDLE;
-            activeScorePosition = null; // Reset the active position
-        }
-    }
-
     private void moveServoGradually(Servo servo, double targetPosition) {
         double currentPosition = servo.getPosition();
 
@@ -449,96 +342,6 @@ public class OdoMec extends LinearOpMode {
 
             // Reset the timer
             servoTimer.reset();
-        }
-    }
-
-    private void hangCode() {
-        // hanging
-        if (gamepad1.right_trigger > TRIGGER_THRESHOLD){
-            if (!leftUpper.isPressed()) {
-                leftHang.setDirection(DcMotor.Direction.FORWARD);
-                leftHang.setPower(.9);
-            }
-            if (!rightUpper.isPressed()) {
-                rightHang.setDirection(DcMotor.Direction.FORWARD);
-                rightHang.setPower(.9);
-            }
-        } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD){
-            if (!leftLower.isPressed()) {
-                leftHang.setDirection(DcMotor.Direction.REVERSE);
-                leftHang.setPower(.9);
-            }
-            if (!rightLower.isPressed()) {
-                rightHang.setDirection(DcMotor.Direction.REVERSE);
-                rightHang.setPower(.9);
-            }
-        } else {
-            leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            leftHang.setPower(0);
-            rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            rightHang.setPower(0);
-        }
-    }
-
-    private void intakeFunction() {
-        // intake
-        // claw intake from floor
-        //TODO: add saftey
-        if (gamepad1.left_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
-            activeIntakePosition = new OdoMec.IntakePosition(SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE);
-            currentIntakeState = OdoMec.intakeState.MOVING_SHOULDER;
-        }
-        // claw intake the top 2 from a stack of 5
-        if (gamepad1.b && currentIntakeState == OdoMec.intakeState.IDLE) {
-            activeIntakePosition = new OdoMec.IntakePosition(SHOULDER_TOP_TWO, WRIST_TOP_TWO, ELBOW_TOP_TWO);
-            currentIntakeState = OdoMec.intakeState.MOVING_SHOULDER;
-        }
-        // claw intake the next 2 from a stack of 3
-        if (gamepad1.a && currentIntakeState == OdoMec.intakeState.IDLE) {
-            activeIntakePosition = new OdoMec.IntakePosition(SHOULDER_NEXT_TWO, WRIST_NEXT_TWO, ELBOW_NEXT_TWO);
-            currentIntakeState = OdoMec.intakeState.MOVING_SHOULDER;
-        }
-        if (activeIntakePosition != null) {
-            handleIntakeSequence(activeIntakePosition);
-        }
-        if (currentIntakeState == OdoMec.intakeState.COMPLETED) {
-            currentIntakeState = OdoMec.intakeState.IDLE;
-            activeIntakePosition = null; // Reset the active position
-        }
-
-
-        // dropping on the backboard for scoring
-        if (gamepad2.dpad_up  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
-            leftFinger.setPosition(LEFT_FINGER_DROP);
-            rightFinger.setPosition(RIGHT_FINGER_DROP);
-        } else if (gamepad2.dpad_left && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
-            leftFinger.setPosition(LEFT_FINGER_DROP);
-        } else if (gamepad2.dpad_right  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
-            rightFinger.setPosition(RIGHT_FINGER_DROP);
-        } else if (gamepad2.dpad_down  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
-            leftFinger.setPosition(LEFT_FINGER_INTAKE);
-            rightFinger.setPosition(RIGHT_FINGER_INTAKE);
-        }
-
-        // grabbing off the floor or stack
-        if (gamepad2.right_bumper && gamepad2.dpad_up && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            leftFinger.setPosition(LEFT_FINGER_GRIP);
-            rightFinger.setPosition(RIGHT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_left && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            leftFinger.setPosition(LEFT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_right && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            rightFinger.setPosition(RIGHT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_down && (currentScoreState == OdoMec.scoreState.IDLE)) {
-            leftFinger.setPosition(LEFT_FINGER_INTAKE);
-            rightFinger.setPosition(RIGHT_FINGER_INTAKE);
-        }
-    }
-    private void emergencyStop() {
-        if (gamepad1.y) {
-            leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            leftHang.setPower(0);
-            rightHang.setPower(0);
         }
     }
 
@@ -632,6 +435,70 @@ public class OdoMec extends LinearOpMode {
 
         while(opModeIsActive()){
 
+            // mecanum drive
+            double forward = gamepad1.left_stick_y;
+            double strafe = -gamepad1.left_stick_x;
+            double turn = -gamepad1.right_stick_x;
+
+            double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1);
+
+            double rightFrontPower = (forward - strafe - turn) / denominator;
+            double leftFrontPower = (forward + strafe + turn) / denominator;
+            double rightBackPower = (forward + strafe - turn) / denominator;
+            double leftBackPower = (forward - strafe + turn) / denominator;
+
+            if (gamepad1.left_bumper) {
+                rightFrontPower = Range.clip(rightFrontPower, -0.4, 0.4);
+                leftFrontPower = Range.clip(leftFrontPower, -0.4, 0.4);
+                rightBackPower = Range.clip(rightBackPower, -0.4, 0.4);
+                leftBackPower = Range.clip(leftBackPower, -0.4, 0.4);
+            } else {
+                rightFrontPower = Range.clip(rightFrontPower, -1, 1);
+                leftFrontPower = Range.clip(leftFrontPower, -1, 1);
+                rightBackPower = Range.clip(rightBackPower, -1, 1);
+                leftBackPower = Range.clip(leftBackPower, -1, 1);
+            }
+
+            rightFront.setPower(rightFrontPower);
+            leftFront.setPower(leftFrontPower);
+            rightBack.setPower(rightBackPower);
+            leftBack.setPower(leftBackPower);
+
+            // hanging
+            if (gamepad1.right_trigger > TRIGGER_THRESHOLD){
+                if (!leftUpper.isPressed()) {
+                    leftHang.setDirection(DcMotor.Direction.FORWARD);
+                    leftHang.setPower(.9);
+                }
+                if (!rightUpper.isPressed()) {
+                    rightHang.setDirection(DcMotor.Direction.FORWARD);
+                    rightHang.setPower(.9);
+                }
+            } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD){
+                if (!leftLower.isPressed()) {
+                    leftHang.setDirection(DcMotor.Direction.REVERSE);
+                    leftHang.setPower(.9);
+                }
+                if (!rightLower.isPressed()) {
+                    rightHang.setDirection(DcMotor.Direction.REVERSE);
+                    rightHang.setPower(.9);
+                }
+            } else {
+                leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftHang.setPower(0);
+                rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightHang.setPower(0);
+            }
+
+
+            // emergency stop
+            if (gamepad1.y) {
+                leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftHang.setPower(0);
+                rightHang.setPower(0);
+            }
+
             // claw drive position
             //TODO: add safety, this is drive around pos
             if (gamepad1.right_bumper && currentDriveState == OdoMec.driveState.IDLE) {
@@ -639,9 +506,136 @@ public class OdoMec extends LinearOpMode {
             }
             handleDriveSequence();
 
+            // intake
+            // claw intake from floor
+            //TODO: add saftey, this is intake from stuff
+            if (gamepad1.left_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
+                activeIntakePosition = new OdoMec.IntakePosition(SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE);
+                currentIntakeState = OdoMec.intakeState.MOVING_SHOULDER;
+            }
+            // claw intake the top 2 from a stack of 5
+            if (gamepad1.b && currentIntakeState == OdoMec.intakeState.IDLE) {
+                activeIntakePosition = new OdoMec.IntakePosition(SHOULDER_TOP_TWO, WRIST_TOP_TWO, ELBOW_TOP_TWO);
+                currentIntakeState = OdoMec.intakeState.MOVING_SHOULDER;
+            }
+            // claw intake the next 2 from a stack of 3
+            if (gamepad1.a && currentIntakeState == OdoMec.intakeState.IDLE) {
+                activeIntakePosition = new OdoMec.IntakePosition(SHOULDER_NEXT_TWO, WRIST_NEXT_TWO, ELBOW_NEXT_TWO);
+                currentIntakeState = OdoMec.intakeState.MOVING_SHOULDER;
+            }
+            if (activeIntakePosition != null) {
+                handleIntakeSequence(activeIntakePosition);
+            }
+            if (currentIntakeState == OdoMec.intakeState.COMPLETED) {
+                currentIntakeState = OdoMec.intakeState.IDLE;
+                activeIntakePosition = null; // Reset the active position
+            }
+
+            // scoring
+            // score position one
+            if (gamepad2.y && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_ONE_SHOULDER, SCORE_ONE_WRIST, SCORE_ONE_ELBOW, SCORE_ONE_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position two
+            if (gamepad2.b && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_TWO_SHOULDER, SCORE_TWO_WRIST, SCORE_TWO_ELBOW, SCORE_TWO_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position three
+            if (gamepad2.a && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_THREE_SHOULDER, SCORE_THREE_WRIST, SCORE_THREE_ELBOW, SCORE_THREE_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position four
+            //TODO: gotta put !gamepad2.left_bumper above
+            if (gamepad2.x && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_FOUR_SHOULDER, SCORE_FOUR_WRIST, SCORE_FOUR_ELBOW, SCORE_FOUR_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position five
+            if ((gamepad2.left_bumper && gamepad2.y) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_FIVE_SHOULDER, SCORE_FIVE_WRIST, SCORE_FIVE_ELBOW, SCORE_FIVE_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position six
+            if ((gamepad2.left_bumper && gamepad2.b) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_SIX_SHOULDER, SCORE_SIX_WRIST, SCORE_SIX_ELBOW, SCORE_SIX_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position seven
+            if ((gamepad2.left_bumper && gamepad2.a) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_SEVEN_SHOULDER, SCORE_SEVEN_WRIST, SCORE_SEVEN_ELBOW, SCORE_SEVEN_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position eight
+            if ((gamepad2.left_bumper && gamepad2.x) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_EIGHT_SHOULDER, SCORE_EIGHT_WRIST, SCORE_EIGHT_ELBOW, SCORE_EIGHT_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position nine
+            if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_NINE_SHOULDER, SCORE_NINE_WRIST, SCORE_NINE_ELBOW, SCORE_NINE_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position ten
+            if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_TEN_SHOULDER, SCORE_TEN_WRIST, SCORE_TEN_ELBOW, SCORE_TEN_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            // score position eleven
+            if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                // Assign a new ScorePosition inside the if block
+                activeScorePosition = new OdoMec.ScorePosition(SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_ELBOW, SCORE_ELEVEN_LIFT);
+                currentScoreState = OdoMec.scoreState.MOVING_SHOULDER;
+            }
+            if (activeScorePosition != null) {
+                handleScorePosSequence(activeScorePosition);
+            }
+            if (currentScoreState == OdoMec.scoreState.COMPLETED) {
+                currentScoreState = OdoMec.scoreState.IDLE;
+                activeScorePosition = null; // Reset the active position
+            }
+
+            // dropping on the backboard for scoring
+            if (gamepad2.dpad_up  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
+                leftFinger.setPosition(LEFT_FINGER_DROP);
+                rightFinger.setPosition(RIGHT_FINGER_DROP);
+            } else if (gamepad2.dpad_left && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
+                leftFinger.setPosition(LEFT_FINGER_DROP);
+            } else if (gamepad2.dpad_right  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
+                rightFinger.setPosition(RIGHT_FINGER_DROP);
+            } else if (gamepad2.dpad_down  && !gamepad2.right_bumper && currentIntakeState == OdoMec.intakeState.IDLE) {
+                leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+            }
+
+            // grabbing off the floor or stack
+            if (gamepad2.right_bumper && gamepad2.dpad_up && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                leftFinger.setPosition(LEFT_FINGER_GRIP);
+                rightFinger.setPosition(RIGHT_FINGER_GRIP);
+            } else if (gamepad2.right_bumper && gamepad2.dpad_left && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                leftFinger.setPosition(LEFT_FINGER_GRIP);
+            } else if (gamepad2.right_bumper && gamepad2.dpad_right && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                rightFinger.setPosition(RIGHT_FINGER_GRIP);
+            } else if (gamepad2.right_bumper && gamepad2.dpad_down && (currentScoreState == OdoMec.scoreState.IDLE)) {
+                leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+            }
 
             // telemetry
             telemetry.addData("Status", "Run " + runtime.toString());
+            telemetry.addData("Motors", "forward (%.2f), strafe (%.2f),turn (%.2f)", forward, strafe, turn);
             telemetry.addData("Intake", currentIntakeState);
             telemetry.addData("Drive", currentDriveState);
             telemetry.addData("Score", currentScoreState);
@@ -653,10 +647,6 @@ public class OdoMec extends LinearOpMode {
 
             // launcher
             airplane();
-            driveCode();
-            scoringFunction();
-            intakeFunction();
-            emergencyStop();
 
             telemetry.update();
         }

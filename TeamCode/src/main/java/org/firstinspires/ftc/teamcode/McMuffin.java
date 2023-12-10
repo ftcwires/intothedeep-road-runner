@@ -149,19 +149,6 @@ public class McMuffin extends LinearOpMode {
         rightLift.setPosition(0.37);
 
 
-       // does intake exist?????????????
-        /*frontIntake = hardwareMap.get(DcMotor.class, "frontIntake");
-        rearIntake = hardwareMap.get(DcMotor.class, "rearIntake");
-
-        frontIntake.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rearIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rearIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-         */
-
-
         telemetry.update();
         waitForStart();
 
