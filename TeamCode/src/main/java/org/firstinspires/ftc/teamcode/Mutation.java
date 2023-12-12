@@ -37,6 +37,13 @@ public class Mutation extends LinearOpMode {
     private double servodelta = 0.02;
     private double servodelaytime = 0.03;
 
+    private static final double LOW_ACC = 7.25;
+    private static final double LOW_VEL = 8.5;
+    private static final double MED_ACC = 10.25;
+    private static final double MED_VEL = 11.5;
+    private static final double HIGH_ACC = 11.25;
+    private static final double HIGH_VEL = 13.5;
+
 
     // servo values
     public static final double SHOULDER_DRIVE = 0.425; // 0.425
@@ -137,67 +144,65 @@ public class Mutation extends LinearOpMode {
     private RevTouchSensor leftLower;
 
 
-    // state machines enumeration
-    // intake
+    // state machines - states enumeration, positions, handle sequences, functions
+    // INTAKE
     private enum intakeState {
         IDLE,
+        MOVING_LIFT,
         MOVING_SHOULDER,
         MOVING_WRIST,
         MOVING_ELBOW,
         COMPLETED
     }
+
     private Mutation.intakeState currentIntakeState = Mutation.intakeState.IDLE;
     private Mutation.IntakePosition activeIntakePosition = null;
-    // drive
-    private enum driveState {
-        IDLE,
-        MOVING_LIFT,
-        MOVING_SHOULDER,
-        MOVING_ELBOW,
-        MOVING_WRIST,
-        COMPLETED
+
+
+    static class IntakePosition {
+        double liftPosition;
+        double shoulderPosition;
+        double wristPosition;
+        double elbowPosition;
+        double accelerationMax;
+        double velocityMax;
+
+        public IntakePosition(double liftPos, double shoulderPos, double wristPos, double elbowPos, double accMax, double velMax) {
+            this.liftPosition = liftPos;
+            this.shoulderPosition = shoulderPos;
+            this.wristPosition = wristPos;
+            this.elbowPosition = elbowPos;
+            this.accelerationMax = accMax;
+            this.velocityMax = velMax;
+        }
     }
 
-    private Mutation.driveState currentDriveState = Mutation.driveState.IDLE;
-    // score
-    private enum scoreState {
-        IDLE,
-        MOVING_SHOULDER,
-        MOVING_WRIST,
-        MOVING_ELBOW,
-        MOVING_LIFT,
-        COMPLETED
-    }
-
-    private Mutation.scoreState currentScoreState = Mutation.scoreState.IDLE;
-    private Mutation.ScorePosition activeScorePosition = null;
-
-    // state machine sequences to provide cascading actions with a single input (button press)
-    // intake
     private void handleIntakeSequence(Mutation.IntakePosition intakePos) {
         switch (currentIntakeState) {
             case MOVING_SHOULDER:
                 // Move the shoulder to intake position
-                moveServoGradually(shoulder, intakePos.shoulderPosition + .05);
-                shoulder.setPosition(intakePos.shoulderPosition);
-                if (isServoAtPosition(shoulder, intakePos.shoulderPosition)) {
+                moveServoWithTrapezoidalVelocity(shoulder, intakePos.shoulderPosition, intakePos.accelerationMax, intakePos.velocityMax);
+                if (isServoAtPosition(shoulder, intakePos.shoulderPosition, SERVO_TOLERANCE)) {
                     currentIntakeState = Mutation.intakeState.MOVING_WRIST;
                 }
                 break;
             case MOVING_WRIST:
                 // Move the wrist to intake position
-                wrist.setPosition(intakePos.wristPosition);
-                if (isServoAtPosition(wrist, intakePos.wristPosition)) {
-                    currentIntakeState = intakeState.MOVING_ELBOW;
+                moveServoWithTrapezoidalVelocity(wrist, intakePos.wristPosition, intakePos.accelerationMax, intakePos.velocityMax);
+                if (isServoAtPosition(wrist, intakePos.wristPosition, SERVO_TOLERANCE)) {
+                    currentIntakeState = Mutation.intakeState.MOVING_ELBOW;
                 }
                 break;
             case MOVING_ELBOW:
                 // Move the elbow to intake position so it don't slap the floor
-                leftFinger.setPosition(LEFT_FINGER_INTAKE);
-                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
-                moveServoGradually(elbow, intakePos.elbowPosition);
-                if (isServoAtPosition(elbow, intakePos.elbowPosition)) {
-                    currentIntakeState = intakeState.COMPLETED;
+                moveServoWithTrapezoidalVelocity(elbow, intakePos.elbowPosition, intakePos.accelerationMax, intakePos.velocityMax);
+                if (isServoAtPosition(elbow, intakePos.elbowPosition, SERVO_TOLERANCE)) {
+                    // Check if the elbow is 70% down and open the claws if it is
+                    if (elbow.getPosition() > (intakePos.elbowPosition - 0.4)) {
+                        leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                        rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+                    }
+                    currentIntakeState = Mutation.intakeState.COMPLETED;
                 }
                 break;
             case COMPLETED:
@@ -210,301 +215,22 @@ public class Mutation extends LinearOpMode {
         }
     }
 
-    // drive
-    private void handleDriveSequence() {
-        switch (currentDriveState) {
-            case MOVING_SHOULDER:
-                // Move the shoulder to drive position
-                //moveServoGradually(shoulder, SHOULDER_DRIVE + .05);
-                //shoulder.setPosition(SHOULDER_DRIVE);
-                moveServoGradually(shoulder, SHOULDER_DRIVE);
-                if (isServoAtPosition(shoulder, SHOULDER_DRIVE)) {
-                    currentDriveState = driveState.MOVING_LIFT;
-                }
-                break;
-            case MOVING_LIFT:
-                rightLift.setPosition(LIFT_DRIVE);
-                leftLift.setPosition(LIFT_DRIVE);
-                if (isServoAtPosition(rightLift, LIFT_DRIVE) && isServoAtPosition(leftLift, LIFT_DRIVE)) {
-                    currentDriveState = driveState.MOVING_ELBOW;
-                }
-                break;
-
-            case MOVING_ELBOW:
-                // Move the elbow to drive position
-                leftFinger.setPosition(LEFT_FINGER_GRIP);
-                rightFinger.setPosition(RIGHT_FINGER_GRIP);
-                elbow.setPosition(ELBOW_DRIVE);
-                if (isServoAtPosition(elbow, ELBOW_DRIVE)) {
-                    currentDriveState = Mutation.driveState.MOVING_WRIST;
-                }
-                break;
-            case MOVING_WRIST:
-                // Move the wrist to drive position
-                wrist.setPosition(WRIST_DRIVE);
-                if (isServoAtPosition(wrist, WRIST_DRIVE)) {
-                    currentDriveState = Mutation.driveState.COMPLETED;
-                }
-                break;
-            case COMPLETED:
-                // Sequence complete, reset the state or perform additional actions
-                break;
-        }
-        // Check to reset the state to IDLE outside the switch
-        if (currentDriveState == Mutation.driveState.COMPLETED) {
-            currentDriveState = Mutation.driveState.IDLE;
-        }
-    }
-    private void driveCode() {
-        // mecanum drive
-        double forward = gamepad1.left_stick_y;
-        double strafe = -gamepad1.left_stick_x;
-        double turn = -gamepad1.right_stick_x;
-
-        double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1);
-
-        double rightFrontPower = (forward - strafe - turn) / denominator;
-        double leftFrontPower = (forward + strafe + turn) / denominator;
-        double rightBackPower = (forward + strafe - turn) / denominator;
-        double leftBackPower = (forward - strafe + turn) / denominator;
-
-        if (gamepad1.left_bumper) {
-            rightFrontPower = Range.clip(rightFrontPower, -0.4, 0.4);
-            leftFrontPower = Range.clip(leftFrontPower, -0.4, 0.4);
-            rightBackPower = Range.clip(rightBackPower, -0.4, 0.4);
-            leftBackPower = Range.clip(leftBackPower, -0.4, 0.4);
-        } else {
-            rightFrontPower = Range.clip(rightFrontPower, -1, 1);
-            leftFrontPower = Range.clip(leftFrontPower, -1, 1);
-            rightBackPower = Range.clip(rightBackPower, -1, 1);
-            leftBackPower = Range.clip(leftBackPower, -1, 1);
-        }
-
-        rightFront.setPower(rightFrontPower);
-        leftFront.setPower(leftFrontPower);
-        rightBack.setPower(rightBackPower);
-        leftBack.setPower(leftBackPower);
-    }
-
-    // score
-    private void handleScorePosSequence(Mutation.ScorePosition scorePos) {
-        switch (currentScoreState) {
-            case MOVING_SHOULDER:
-                // Move the shoulder to the specified position
-                moveServoGradually(shoulder, scorePos.shoulderPosition - .05);
-                shoulder.setPosition(scorePos.shoulderPosition);
-                if (isServoAtPosition(shoulder, scorePos.shoulderPosition)) {
-                    currentScoreState = Mutation.scoreState.MOVING_WRIST;
-                }
-                break;
-            case MOVING_WRIST:
-                // Move the wrist to the specified position
-                wrist.setPosition(scorePos.wristPosition);
-                if (isServoAtPosition(wrist, scorePos.wristPosition)) {
-                    currentScoreState = Mutation.scoreState.MOVING_ELBOW;
-                }
-                break;
-            case MOVING_ELBOW:
-                // Move the elbow to the specified position
-                leftFinger.setPosition(LEFT_FINGER_GRIP);
-                rightFinger.setPosition(RIGHT_FINGER_GRIP);
-                elbow.setPosition(scorePos.elbowPosition);
-                if (isServoAtPosition(elbow, scorePos.elbowPosition)) {
-                    currentScoreState = Mutation.scoreState.MOVING_LIFT;
-                }
-                break;
-            case MOVING_LIFT:
-                setLiftPosition(scorePos.liftPosition);
-                if (isServoAtPosition(leftLift, scorePos.liftPosition) || isServoAtPosition(rightLift, scorePos.liftPosition)) {
-                    currentScoreState = Mutation.scoreState.COMPLETED;
-                }
-                break;
-            case COMPLETED:
-                // Sequence complete, reset the state or perform additional actions
-                currentScoreState = Mutation.scoreState.IDLE;
-                activeScorePosition = null;
-                break;
-        }
-
-        if (currentScoreState == Mutation.scoreState.COMPLETED) {
-            currentScoreState = Mutation.scoreState.IDLE;
-        }
-    }
-
-    // classes to support state machine actions
-    static class IntakePosition {
-        double shoulderPosition;
-        double wristPosition;
-        double elbowPosition;
-
-        public IntakePosition(double shoulderPos, double wristPos, double elbowPos) {
-            this.shoulderPosition = shoulderPos;
-            this.wristPosition = wristPos;
-            this.elbowPosition = elbowPos;
-        }
-    }
-
-    static class ScorePosition {
-        double shoulderPosition;
-        double wristPosition;
-        double elbowPosition;
-        double liftPosition;
-
-        public ScorePosition(double shoulderPos, double wristPos, double elbowPos, double liftPos) {
-            this.shoulderPosition = shoulderPos;
-            this.wristPosition = wristPos;
-            this.elbowPosition = elbowPos;
-            this.liftPosition = liftPos;
-        }
-    }
-
-    // functions to support state machine actions
-    private boolean isServoAtPosition(Servo servo, double position) {
-        return Math.abs(servo.getPosition() - position) < SERVO_TOLERANCE;
-    }
-
-    private void scoringFunction() {
-        // scoring
-        // score position one
-        if (gamepad2.y && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_ONE_SHOULDER, SCORE_ONE_WRIST, SCORE_ONE_ELBOW, SCORE_ONE_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position two
-        if (gamepad2.b && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_TWO_SHOULDER, SCORE_TWO_WRIST, SCORE_TWO_ELBOW, SCORE_TWO_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position three
-        if (gamepad2.a && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_THREE_SHOULDER, SCORE_THREE_WRIST, SCORE_THREE_ELBOW, SCORE_THREE_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position four
-        //TODO: gotta put !gamepad2.left_bumper above
-        if (gamepad2.x && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_FOUR_SHOULDER, SCORE_FOUR_WRIST, SCORE_FOUR_ELBOW, SCORE_FOUR_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position five
-        if ((gamepad2.left_bumper && gamepad2.y) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_FIVE_SHOULDER, SCORE_FIVE_WRIST, SCORE_FIVE_ELBOW, SCORE_FIVE_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position six
-        if ((gamepad2.left_bumper && gamepad2.b) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_SIX_SHOULDER, SCORE_SIX_WRIST, SCORE_SIX_ELBOW, SCORE_SIX_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position seven
-        if ((gamepad2.left_bumper && gamepad2.a) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_SEVEN_SHOULDER, SCORE_SEVEN_WRIST, SCORE_SEVEN_ELBOW, SCORE_SEVEN_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position eight
-        if ((gamepad2.left_bumper && gamepad2.x) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_EIGHT_SHOULDER, SCORE_EIGHT_WRIST, SCORE_EIGHT_ELBOW, SCORE_EIGHT_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position nine
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_NINE_SHOULDER, SCORE_NINE_WRIST, SCORE_NINE_ELBOW, SCORE_NINE_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position ten
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_TEN_SHOULDER, SCORE_TEN_WRIST, SCORE_TEN_ELBOW, SCORE_TEN_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        // score position eleven
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
-            // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_ELBOW, SCORE_ELEVEN_LIFT);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
-        }
-        if (activeScorePosition != null) {
-            handleScorePosSequence(activeScorePosition);
-        }
-        if (currentScoreState == Mutation.scoreState.COMPLETED) {
-            currentScoreState = Mutation.scoreState.IDLE;
-            activeScorePosition = null; // Reset the active position
-        }
-    }
-
-    private void moveServoGradually(Servo servo, double targetPosition) {
-        double currentPosition = servo.getPosition();
-
-        // Check if enough time has passed since the last update
-        if (servoTimer.seconds() > servodelaytime) {
-            // Determine the direction of movement
-            double direction = targetPosition > currentPosition ? servodelta : -servodelta;
-
-            // Calculate the new position
-            servoposition = currentPosition + direction;
-            servoposition = Range.clip(servoposition, 0, 1); // Ensure the position is within valid range
-
-            // Update the servo position
-            servo.setPosition(servoposition);
-
-            // Reset the timer
-            servoTimer.reset();
-        }
-    }
-
-    private void hangCode() {
-        // hanging
-        if (gamepad1.right_trigger > TRIGGER_THRESHOLD){
-            if (!leftUpper.isPressed()) {
-                leftHang.setDirection(DcMotor.Direction.FORWARD);
-                leftHang.setPower(.9);
-            }
-            if (!rightUpper.isPressed()) {
-                rightHang.setDirection(DcMotor.Direction.FORWARD);
-                rightHang.setPower(.9);
-            }
-        } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD){
-            if (!leftLower.isPressed()) {
-                leftHang.setDirection(DcMotor.Direction.REVERSE);
-                leftHang.setPower(.9);
-            }
-            if (!rightLower.isPressed()) {
-                rightHang.setDirection(DcMotor.Direction.REVERSE);
-                rightHang.setPower(.9);
-            }
-        } else {
-            leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            leftHang.setPower(0);
-            rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            rightHang.setPower(0);
-        }
-    }
-
     private void intakeFunction() {
         // intake
         // claw intake from floor
         //TODO: add saftey
         if (gamepad1.left_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
-            activeIntakePosition = new Mutation.IntakePosition(SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE);
+            activeIntakePosition = new Mutation.IntakePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE, MED_ACC, MED_VEL);
             currentIntakeState = Mutation.intakeState.MOVING_SHOULDER;
         }
         // claw intake the top 2 from a stack of 5
         if (gamepad1.b && currentIntakeState == Mutation.intakeState.IDLE) {
-            activeIntakePosition = new Mutation.IntakePosition(SHOULDER_TOP_TWO, WRIST_TOP_TWO, ELBOW_TOP_TWO);
+            activeIntakePosition = new Mutation.IntakePosition(LIFT_DRIVE, SHOULDER_TOP_TWO, WRIST_TOP_TWO, ELBOW_TOP_TWO, MED_ACC, MED_VEL);
             currentIntakeState = Mutation.intakeState.MOVING_SHOULDER;
         }
         // claw intake the next 2 from a stack of 3
         if (gamepad1.a && currentIntakeState == Mutation.intakeState.IDLE) {
-            activeIntakePosition = new Mutation.IntakePosition(SHOULDER_NEXT_TWO, WRIST_NEXT_TWO, ELBOW_NEXT_TWO);
+            activeIntakePosition = new Mutation.IntakePosition(LIFT_DRIVE, SHOULDER_NEXT_TWO, WRIST_NEXT_TWO, ELBOW_NEXT_TWO, MED_ACC, MED_VEL);
             currentIntakeState = Mutation.intakeState.MOVING_SHOULDER;
         }
         if (activeIntakePosition != null) {
@@ -542,6 +268,381 @@ public class Mutation extends LinearOpMode {
             rightFinger.setPosition(RIGHT_FINGER_INTAKE);
         }
     }
+
+    // DRIVE
+    private enum driveState {
+        IDLE,
+        MOVING_LIFT,
+        MOVING_SHOULDER,
+        MOVING_WRIST,
+        MOVING_ELBOW,
+        COMPLETED
+    }
+
+    private Mutation.driveState currentDriveState = Mutation.driveState.IDLE;
+    private Mutation.DrivePosition activeDrivePosition = null;
+
+
+    static class DrivePosition {
+        double liftPosition;
+        double shoulderPosition;
+        double wristPosition;
+        double elbowPosition;
+        double accelerationMax;
+        double velocityMax;
+
+        public DrivePosition(double liftPos, double shoulderPos, double wristPos, double elbowPos, double accMax, double velMax) {
+            this.liftPosition = liftPos;
+            this.shoulderPosition = shoulderPos;
+            this.wristPosition = wristPos;
+            this.elbowPosition = elbowPos;
+            this.accelerationMax = accMax;
+            this.velocityMax = velMax;
+        }
+    }
+    private void handleDriveSequence(Mutation.DrivePosition drivePos) {
+        switch (currentDriveState) {
+            case MOVING_LIFT:
+                setLiftPosition(LIFT_DRIVE);
+                break;
+            case MOVING_SHOULDER:
+                // Move the shoulder to intake position
+                moveServoWithTrapezoidalVelocity(shoulder, drivePos.shoulderPosition, drivePos.accelerationMax, drivePos.velocityMax);
+                if (isServoAtPosition(shoulder, drivePos.shoulderPosition, SERVO_TOLERANCE)) {
+                    currentDriveState = Mutation.driveState.MOVING_ELBOW;
+                }
+                break;
+            case MOVING_ELBOW:
+                // Move the elbow to intake position so it don't slap the floor
+                leftFinger.setPosition(LEFT_FINGER_GRIP);
+                rightFinger.setPosition(RIGHT_FINGER_GRIP);
+                moveServoWithTrapezoidalVelocity(elbow, drivePos.elbowPosition, drivePos.accelerationMax, drivePos.velocityMax);
+                if (isServoAtPosition(elbow, drivePos.elbowPosition, SERVO_TOLERANCE)) {
+                    currentDriveState = Mutation.driveState.MOVING_WRIST;
+                }
+                break;
+            case MOVING_WRIST:
+                // Move the wrist to intake position
+                moveServoWithTrapezoidalVelocity(wrist, drivePos.wristPosition, drivePos.accelerationMax, drivePos.velocityMax);
+                if (isServoAtPosition(wrist, drivePos.wristPosition, SERVO_TOLERANCE)) {
+                    currentDriveState = Mutation.driveState.COMPLETED;
+                }
+                break;
+            case COMPLETED:
+                // Sequence complete, reset the state or perform additional actions
+                break;
+        }
+        // Check to reset the state to IDLE outside the switch
+        if (currentDriveState == Mutation.driveState.COMPLETED) {
+            currentDriveState = Mutation.driveState.IDLE;
+        }
+    }
+
+    private void drivingFunction() {
+        // Check if the right bumper is pressed and the drive state is IDLE
+        if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
+            activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_DRIVE, ELBOW_DRIVE, MED_ACC, MED_VEL);
+            currentDriveState = Mutation.driveState.MOVING_SHOULDER;
+        }
+
+        if (activeDrivePosition != null) {
+            handleDriveSequence(activeDrivePosition);
+        }
+
+        if (currentDriveState == Mutation.driveState.COMPLETED) {
+            currentDriveState = Mutation.driveState.IDLE;
+            activeDrivePosition = null; // Reset the active position
+        }
+    }
+    // SCORE
+    private enum scoreState {
+        IDLE,
+        MOVING_LIFT,
+        MOVING_SHOULDER,
+        MOVING_WRIST,
+        MOVING_ELBOW,
+        COMPLETED
+    }
+
+    private Mutation.scoreState currentScoreState = Mutation.scoreState.IDLE;
+    private Mutation.ScorePosition activeScorePosition = null;
+
+
+    static class ScorePosition {
+        double liftPosition;
+        double shoulderPosition;
+        double wristPosition;
+        double elbowPosition;
+        double accelerationMax;
+        double velocityMax;
+
+        public ScorePosition(double liftPos, double shoulderPos, double wristPos, double elbowPos, double accMax, double velMax) {
+            this.liftPosition = liftPos;
+            this.shoulderPosition = shoulderPos;
+            this.wristPosition = wristPos;
+            this.elbowPosition = elbowPos;
+            this.accelerationMax = accMax;
+            this.velocityMax = velMax;
+        }
+    }
+    private void handleScoreSequence(Mutation.ScorePosition scorePos) {
+        switch (currentScoreState) {
+
+            case MOVING_SHOULDER:
+                // Move the shoulder to intake position
+                moveServoWithTrapezoidalVelocity(shoulder, scorePos.shoulderPosition, scorePos.accelerationMax, scorePos.velocityMax);
+                if (isServoAtPosition(shoulder, scorePos.shoulderPosition, SERVO_TOLERANCE)) {
+                    currentScoreState = Mutation.scoreState.MOVING_ELBOW;
+                }
+                break;
+            case MOVING_ELBOW:
+                // Move the elbow to intake position so it don't slap the floor
+                leftFinger.setPosition(LEFT_FINGER_GRIP);
+                rightFinger.setPosition(RIGHT_FINGER_GRIP);
+                moveServoWithTrapezoidalVelocity(elbow, scorePos.elbowPosition, scorePos.accelerationMax, scorePos.velocityMax);
+                if (isServoAtPosition(elbow, scorePos.elbowPosition, SERVO_TOLERANCE)) {
+                    currentScoreState = Mutation.scoreState.MOVING_WRIST;
+                }
+                break;
+            case MOVING_WRIST:
+                // Move the wrist to intake position
+                moveServoWithTrapezoidalVelocity(wrist, scorePos.wristPosition, scorePos.accelerationMax, scorePos.velocityMax);
+                if (isServoAtPosition(wrist, scorePos.wristPosition, SERVO_TOLERANCE)) {
+                    currentScoreState = Mutation.scoreState.MOVING_LIFT;
+                }
+                break;
+            case MOVING_LIFT:
+                setLiftPosition(scorePos.liftPosition);
+                if (isServoAtPosition(leftLift, scorePos.liftPosition, SERVO_TOLERANCE) && isServoAtPosition(rightLift, scorePos.liftPosition, SERVO_TOLERANCE)) {
+                    currentScoreState = Mutation.scoreState.COMPLETED;
+                }
+                break;
+            case COMPLETED:
+                // Sequence complete, reset the state or perform additional actions
+                break;
+        }
+        // Check to reset the state to IDLE outside the switch
+        if (currentScoreState == Mutation.scoreState.COMPLETED) {
+            currentScoreState = Mutation.scoreState.IDLE;
+        }
+    }
+
+    private void scoringFunction() {
+        // scoring
+        // score position one
+        if (gamepad2.y && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_ONE_SHOULDER, SCORE_ONE_ELBOW, SCORE_ONE_WRIST, SCORE_ONE_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position two
+        if (gamepad2.b && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_TWO_SHOULDER, SCORE_TWO_ELBOW, SCORE_TWO_WRIST, SCORE_TWO_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position three
+        if (gamepad2.a && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_THREE_SHOULDER, SCORE_THREE_ELBOW, SCORE_THREE_WRIST, SCORE_THREE_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position four
+        //TODO: gotta put !gamepad2.left_bumper above
+        if (gamepad2.x && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_FOUR_SHOULDER, SCORE_FOUR_ELBOW, SCORE_FOUR_WRIST, SCORE_FOUR_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position five
+        if ((gamepad2.left_bumper && gamepad2.y) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_FIVE_SHOULDER, SCORE_FIVE_ELBOW, SCORE_FIVE_WRIST, SCORE_FIVE_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position six
+        if ((gamepad2.left_bumper && gamepad2.b) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_SIX_SHOULDER, SCORE_SIX_ELBOW, SCORE_SIX_WRIST, SCORE_SIX_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position seven
+        if ((gamepad2.left_bumper && gamepad2.a) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_SEVEN_SHOULDER, SCORE_SEVEN_ELBOW, SCORE_SEVEN_WRIST, SCORE_SEVEN_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position eight
+        if ((gamepad2.left_bumper && gamepad2.x) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_EIGHT_SHOULDER, SCORE_EIGHT_ELBOW, SCORE_EIGHT_WRIST, SCORE_EIGHT_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position nine
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_NINE_SHOULDER, SCORE_NINE_ELBOW, SCORE_NINE_WRIST, SCORE_NINE_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position ten
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_TEN_SHOULDER, SCORE_TEN_ELBOW, SCORE_TEN_WRIST, SCORE_TEN_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        // score position eleven
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
+            // Assign a new ScorePosition inside the if block
+            activeScorePosition = new Mutation.ScorePosition(SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_ELBOW, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_LIFT, MED_ACC, MED_VEL);
+            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+        }
+        if (activeScorePosition != null) {
+            handleScoreSequence(activeScorePosition);
+        }
+        if (currentScoreState == Mutation.scoreState.COMPLETED) {
+            currentScoreState = Mutation.scoreState.IDLE;
+            activeScorePosition = null; // Reset the active position
+        }
+    }
+    
+    // functions to support state machine actions using servos
+
+    // check servo positions with some tolerance
+    private boolean isServoAtPosition(Servo servo, double targetPosition, double tolerance) {
+        double currentPosition = servo.getPosition();
+        double normalizedTarget = Range.clip(targetPosition, 0.0, 1.0); // Ensure target is within valid range
+        double normalizedCurrent = Range.clip(currentPosition, 0.0, 1.0); // Ensure current position is within valid range
+
+        return Math.abs(normalizedCurrent - normalizedTarget) < tolerance;
+    }
+
+    // move servo with ramping and soft-start created from the math and methods explained here: https://www.instructables.com/Servo-Ramping-and-Soft-Start/
+    private void moveServoWithTrapezoidalVelocity(Servo servo, double targetPosition, double amax, double vmax) {
+        double currentPosition = servo.getPosition();
+        double currentVelocity = 0.0; // Initial velocity is zero
+        double p0 = 0.0; // Distance needed to come to rest
+
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+
+        while (Math.abs(currentPosition - targetPosition) > SERVO_TOLERANCE && opModeIsActive()) {
+            // Calculate the elapsed time since the last update
+            double elapsedTime = timer.seconds();
+            timer.reset();
+
+            // Calculate the distance needed to come to rest given the current velocity
+            p0 = 2 * currentVelocity + Math.abs(currentVelocity) * currentVelocity / (2 * amax);
+
+            // Calculate the desired velocity based on the position error
+            double velocityError = targetPosition - currentPosition - p0;
+            double sign = Math.signum(velocityError);
+            double desiredVelocity = currentVelocity + sign * amax;
+            desiredVelocity = Range.clip(desiredVelocity, -vmax, vmax); // Constrain to vmax
+
+            // Update the servo position based on the desired velocity and elapsed time
+            currentPosition += desiredVelocity * elapsedTime;
+            currentPosition = Range.clip(currentPosition, 0, 1); // Ensure the position is within valid range
+            servo.setPosition(currentPosition);
+
+            // Update the current velocity for the next iteration
+            currentVelocity = desiredVelocity;
+
+            telemetry.addData("Servo Position", currentPosition);
+            telemetry.update();
+        }
+    }
+
+    // moves servo gradually
+    private void moveServoGradually(Servo servo, double targetPosition) {
+        double currentPosition = servo.getPosition();
+
+        // Check if enough time has passed since the last update
+        if (servoTimer.seconds() > servodelaytime) {
+            // Determine the direction of movement
+            double direction = targetPosition > currentPosition ? servodelta : -servodelta;
+
+            // Calculate the new position
+            servoposition = currentPosition + direction;
+            servoposition = Range.clip(servoposition, 0, 1); // Ensure the position is within valid range
+
+            // Update the servo position
+            servo.setPosition(servoposition);
+
+            // Reset the timer
+            servoTimer.reset();
+        }
+    }
+
+    // lift (has been adjusted mechanically to use the same height)
+    public Servo setLiftPosition(double targetPosition) {
+        // Ensure the target position is within the valid range
+        targetPosition = Math.max(0.0, Math.min(targetPosition, 1.0));
+
+        // Set the servo positions
+        leftLift.setPosition(targetPosition);
+        rightLift.setPosition(targetPosition);
+        return null;
+    }
+    private void driveCode() {
+        // mecanum drive
+        double forward = gamepad1.left_stick_y;
+        double strafe = -gamepad1.left_stick_x;
+        double turn = -gamepad1.right_stick_x;
+
+        double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1);
+
+        double rightFrontPower = (forward - strafe - turn) / denominator;
+        double leftFrontPower = (forward + strafe + turn) / denominator;
+        double rightBackPower = (forward + strafe - turn) / denominator;
+        double leftBackPower = (forward - strafe + turn) / denominator;
+
+        if (gamepad1.left_bumper) {
+            rightFrontPower = Range.clip(rightFrontPower, -0.4, 0.4);
+            leftFrontPower = Range.clip(leftFrontPower, -0.4, 0.4);
+            rightBackPower = Range.clip(rightBackPower, -0.4, 0.4);
+            leftBackPower = Range.clip(leftBackPower, -0.4, 0.4);
+        } else {
+            rightFrontPower = Range.clip(rightFrontPower, -1, 1);
+            leftFrontPower = Range.clip(leftFrontPower, -1, 1);
+            rightBackPower = Range.clip(rightBackPower, -1, 1);
+            leftBackPower = Range.clip(leftBackPower, -1, 1);
+        }
+
+        rightFront.setPower(rightFrontPower);
+        leftFront.setPower(leftFrontPower);
+        rightBack.setPower(rightBackPower);
+        leftBack.setPower(leftBackPower);
+    }
+
+     private void hangCode() {
+        // hanging
+        if (gamepad1.right_trigger > TRIGGER_THRESHOLD){
+            if (!leftUpper.isPressed()) {
+                leftHang.setDirection(DcMotor.Direction.FORWARD);
+                leftHang.setPower(.9);
+            }
+            if (!rightUpper.isPressed()) {
+                rightHang.setDirection(DcMotor.Direction.FORWARD);
+                rightHang.setPower(.9);
+            }
+        } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD){
+            if (!leftLower.isPressed()) {
+                leftHang.setDirection(DcMotor.Direction.REVERSE);
+                leftHang.setPower(.9);
+            }
+            if (!rightLower.isPressed()) {
+                rightHang.setDirection(DcMotor.Direction.REVERSE);
+                rightHang.setPower(.9);
+            }
+        } else {
+            leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            leftHang.setPower(0);
+            rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightHang.setPower(0);
+        }
+    }
+
+
     private void emergencyStop() {
         if (gamepad1.y) {
             leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -549,16 +650,6 @@ public class Mutation extends LinearOpMode {
             leftHang.setPower(0);
             rightHang.setPower(0);
         }
-    }
-
-    // lift (has been adjusted mechanically to use the same height)
-    public void setLiftPosition(double targetPosition) {
-        // Ensure the target position is within the valid range
-        targetPosition = Math.max(0.0, Math.min(targetPosition, 1.0));
-
-        // Set the servo positions
-        leftLift.setPosition(targetPosition);
-        rightLift.setPosition(targetPosition);
     }
 
     // launcher
@@ -641,19 +732,14 @@ public class Mutation extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            // claw drive position
-            //TODO: add safety, this is drive around pos
-            if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
-                currentDriveState = driveState.MOVING_SHOULDER;
-            }
-            handleDriveSequence();
-
-
             // telemetry
             telemetry.addData("Status", "Run " + runtime.toString());
             telemetry.addData("Intake", currentIntakeState);
             telemetry.addData("Drive", currentDriveState);
             telemetry.addData("Score", currentScoreState);
+            telemetry.addData("Shoulder Position", shoulder.getPosition());
+            telemetry.addData("Wrist Position", wrist.getPosition());
+            telemetry.addData("Elbow Position", elbow.getPosition());
 
             //telemetry.addData("Left Lower", leftLower.isPressed() ? "Pressed" : "Not Pressed");
             //telemetry.addData("Left Upper", leftUpper.isPressed() ? "Pressed" : "Not Pressed");
@@ -662,9 +748,17 @@ public class Mutation extends LinearOpMode {
 
             // launcher
             airplane();
+            // mecanum drive
             driveCode();
-            scoringFunction();
+            // hang
+            hangCode();
+            // intake positions
             intakeFunction();
+            // driving pos
+            drivingFunction();
+            // scoring positions
+            scoringFunction();
+            // emergency stop slides
             emergencyStop();
 
             telemetry.update();
