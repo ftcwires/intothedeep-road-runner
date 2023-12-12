@@ -145,8 +145,8 @@ public class McMuffin extends LinearOpMode {
         elbow.setPosition(0.5);
         rightFinger.setPosition(0.27);
         leftFinger.setPosition(0.74);
-        leftLift.setPosition(0.37);
-        rightLift.setPosition(0.37);
+        leftLift.setPosition(0.06);
+        rightLift.setPosition(0.06);
 
 
         telemetry.update();

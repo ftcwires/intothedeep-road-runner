@@ -34,8 +34,6 @@ public class OdoMec extends LinearOpMode {
     private Servo rightFinger;
     private Servo rightLift;
     private Servo leftLift;
-    double LiftLeftOffset = -.05;
-    double LiftHeight;
     private double servoposition = 0.0;
     private double servodelta = 0.02;
     private double servodelaytime = 0.03;
@@ -58,7 +56,7 @@ public class OdoMec extends LinearOpMode {
     private static final double TRIGGER_THRESHOLD = 0.5;
     private static final double LAUNCHER_START_POS = 0.8;
     private static final double SERVO_TOLERANCE = 0.01;
-    private static final double LIFT_DRIVE = 0.37;
+    private static final double LIFT_DRIVE = 0.06;
     private double liftTargetPosition = LIFT_DRIVE;
 
     // stack positions (top 2 o 5 and next 2 of 3 )

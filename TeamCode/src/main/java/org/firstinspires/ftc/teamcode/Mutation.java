@@ -33,8 +33,6 @@ public class Mutation extends LinearOpMode {
     private Servo rightFinger;
     private Servo rightLift;
     private Servo leftLift;
-    double LiftLeftOffset = -.05;
-    double LiftHeight;
     private double servoposition = 0.0;
     private double servodelta = 0.02;
     private double servodelaytime = 0.03;
@@ -57,8 +55,8 @@ public class Mutation extends LinearOpMode {
     public static final double TRIGGER_THRESHOLD = 0.5;
     public static final double LAUNCHER_START_POS = 0.8;
     public static final double SERVO_TOLERANCE = 0.01;
-    public static final double LIFT_DRIVE = 0.37;
-    private double liftTargetPosition = LIFT_DRIVE;
+    public static final double LIFT_DRIVE = 0.069; // 0.78 is the highest it can mechanically go right now
+    private double liftTargetPosition = LIFT_DRIVE; // was 0.37 before moving servos for larger range
 
     // stack positions (top 2 o 5 and next 2 of 3 )
     // TODO find positions with McMuffin (currently all set to drive) change to the actual double values like above from McMuffin
@@ -85,17 +83,17 @@ public class Mutation extends LinearOpMode {
     public static final double SCORE_TWO_SHOULDER = SCORE_ONE_SHOULDER;
     public static final double SCORE_TWO_WRIST = SCORE_ONE_WRIST;
     public static final double SCORE_TWO_ELBOW = SCORE_ONE_ELBOW;
-    public static final double SCORE_TWO_LIFT = 0.57;
+    public static final double SCORE_TWO_LIFT = 0.26;
     // score position three button map (gamepad2.a)
     public static final double SCORE_THREE_SHOULDER = SCORE_ONE_SHOULDER;
     public static final double SCORE_THREE_WRIST = SCORE_ONE_WRIST;
     public static final double SCORE_THREE_ELBOW = SCORE_ONE_ELBOW;
-    public static final double SCORE_THREE_LIFT = 0.68;
+    public static final double SCORE_THREE_LIFT = 0.37;
     // score position four button map (gamepad2.x)
     public static final double SCORE_FOUR_SHOULDER = SCORE_ONE_SHOULDER;
     public static final double SCORE_FOUR_WRIST = SCORE_ONE_WRIST;
     public static final double SCORE_FOUR_ELBOW = SCORE_ONE_ELBOW;
-    public static final double SCORE_FOUR_LIFT = 0.75;
+    public static final double SCORE_FOUR_LIFT = .44;
     // score position five button map (gamepad2.left_bumper && gamepad2.y)
     public static final double SCORE_FIVE_SHOULDER = 0.92611111;
     public static final double SCORE_FIVE_WRIST = 1;
