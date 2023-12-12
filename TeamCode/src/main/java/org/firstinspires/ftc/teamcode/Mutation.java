@@ -47,29 +47,29 @@ public class Mutation extends LinearOpMode {
 
     // servo values
     public static final double SHOULDER_DRIVE = 0.425; // 0.425
-    public static final double SHOULDER_INT = 0.43; // 0.455
-    public static final double ELBOW_DRIVE= 0.5;
-    public static final double ELBOW_INTAKE = 0.8;
-    public static final double WRIST_INT = 0.55; // int for auto & testing 0.55; // int for DRIVE 0.265
-    public static final double WRIST_DRIVE = 0.82; // int for auto & testing 0.55; // int for DRIVE 0.265
-    public static final double WRIST_INTAKE = 0.545;
-    public static final double LEFT_FINGER_GRIP = 0.74;
+    public static final double SHOULDER_INT = 0.43;
+    public static final double ELBOW_DRIVE= 0.47;
+    public static final double ELBOW_INTAKE = 0.78;
+    public static final double WRIST_TUCK = 0.29;
+    public static final double WRIST_DRIVE = 0.82;
+    public static final double WRIST_INTAKE = 0.57;
+    public static final double LEFT_FINGER_GRIP = 0.72;
     public static final double LEFT_FINGER_DROP = 0.5;
-    public static final double LEFT_FINGER_INTAKE = 0.34;
+    public static final double LEFT_FINGER_INTAKE = 0.3;
     public static final double RIGHT_FINGER_GRIP = .27;
     public static final double RIGHT_FINGER_DROP = .5;
     public static final double RIGHT_FINGER_INTAKE = 0.64;
     public static final double TRIGGER_THRESHOLD = 0.5;
     public static final double LAUNCHER_START_POS = 0.8;
     public static final double SERVO_TOLERANCE = 0.01;
-    public static final double LIFT_DRIVE = 0.069; // 0.78 is the highest it can mechanically go right now
+    public static final double LIFT_DRIVE = 0.10; // 0.78 is the highest it can mechanically go right now
     private double liftTargetPosition = LIFT_DRIVE; // was 0.37 before moving servos for larger range
 
     // stack positions (top 2 o 5 and next 2 of 3 )
     // TODO find positions with McMuffin (currently all set to drive) change to the actual double values like above from McMuffin
     // intake two off a stack of five
     public static final double SHOULDER_TOP_TWO = 0.425;
-    public static final double WRIST_TOP_TWO = 0.606;
+    public static final double WRIST_TOP_TWO = 0.59;
     public static final double ELBOW_TOP_TWO = 0.74;
 
     // intake two off a stack of three
@@ -152,6 +152,7 @@ public class Mutation extends LinearOpMode {
         MOVING_SHOULDER,
         MOVING_WRIST,
         MOVING_ELBOW,
+        MOVING_CLAWS,
         COMPLETED
     }
 
@@ -188,20 +189,27 @@ public class Mutation extends LinearOpMode {
                 break;
             case MOVING_WRIST:
                 // Move the wrist to intake position
-                moveServoWithTrapezoidalVelocity(wrist, intakePos.wristPosition, intakePos.accelerationMax, intakePos.velocityMax);
+                //moveServoGradually(wrist, intakePos.wristPosition);
+                wrist.setPosition(intakePos.wristPosition);
+                //moveServoWithTrapezoidalVelocity(wrist, intakePos.wristPosition, intakePos.accelerationMax, intakePos.velocityMax);
                 if (isServoAtPosition(wrist, intakePos.wristPosition, SERVO_TOLERANCE)) {
                     currentIntakeState = Mutation.intakeState.MOVING_ELBOW;
                 }
                 break;
             case MOVING_ELBOW:
                 // Move the elbow to intake position so it don't slap the floor
-                moveServoWithTrapezoidalVelocity(elbow, intakePos.elbowPosition, intakePos.accelerationMax, intakePos.velocityMax);
+                moveServoGradually(elbow, intakePos.elbowPosition);
+               // moveServoWithTrapezoidalVelocity(elbow, intakePos.elbowPosition, intakePos.accelerationMax, intakePos.velocityMax);
                 if (isServoAtPosition(elbow, intakePos.elbowPosition, SERVO_TOLERANCE)) {
                     // Check if the elbow is 70% down and open the claws if it is
-                    if (elbow.getPosition() > (intakePos.elbowPosition - 0.4)) {
-                        leftFinger.setPosition(LEFT_FINGER_INTAKE);
-                        rightFinger.setPosition(RIGHT_FINGER_INTAKE);
-                    }
+                    currentIntakeState = Mutation.intakeState.MOVING_CLAWS;
+                }
+                break;
+            case MOVING_CLAWS:
+                leftFinger.setPosition(LEFT_FINGER_INTAKE);
+                rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+                if (isServoAtPosition(leftFinger, LEFT_FINGER_INTAKE, SERVO_TOLERANCE) || isServoAtPosition(rightFinger, RIGHT_FINGER_INTAKE, SERVO_TOLERANCE)) {
+                    // Check if the elbow is 70% down and open the claws if it is
                     currentIntakeState = Mutation.intakeState.COMPLETED;
                 }
                 break;
@@ -241,32 +249,6 @@ public class Mutation extends LinearOpMode {
             activeIntakePosition = null; // Reset the active position
         }
 
-
-        // dropping on the backboard for scoring
-        if (gamepad2.dpad_up  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
-            leftFinger.setPosition(LEFT_FINGER_DROP);
-            rightFinger.setPosition(RIGHT_FINGER_DROP);
-        } else if (gamepad2.dpad_left && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
-            leftFinger.setPosition(LEFT_FINGER_DROP);
-        } else if (gamepad2.dpad_right  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
-            rightFinger.setPosition(RIGHT_FINGER_DROP);
-        } else if (gamepad2.dpad_down  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
-            leftFinger.setPosition(LEFT_FINGER_INTAKE);
-            rightFinger.setPosition(RIGHT_FINGER_INTAKE);
-        }
-
-        // grabbing off the floor or stack
-        if (gamepad2.right_bumper && gamepad2.dpad_up && (currentScoreState == Mutation.scoreState.IDLE)) {
-            leftFinger.setPosition(LEFT_FINGER_GRIP);
-            rightFinger.setPosition(RIGHT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_left && (currentScoreState == Mutation.scoreState.IDLE)) {
-            leftFinger.setPosition(LEFT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_right && (currentScoreState == Mutation.scoreState.IDLE)) {
-            rightFinger.setPosition(RIGHT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_down && (currentScoreState == Mutation.scoreState.IDLE)) {
-            leftFinger.setPosition(LEFT_FINGER_INTAKE);
-            rightFinger.setPosition(RIGHT_FINGER_INTAKE);
-        }
     }
 
     // DRIVE
@@ -341,7 +323,7 @@ public class Mutation extends LinearOpMode {
     private void drivingFunction() {
         // Check if the right bumper is pressed and the drive state is IDLE
         if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
-            activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_DRIVE, ELBOW_DRIVE, MED_ACC, MED_VEL);
+            activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, HIGH_ACC, HIGH_VEL);
             currentDriveState = Mutation.driveState.MOVING_SHOULDER;
         }
 
@@ -652,6 +634,35 @@ public class Mutation extends LinearOpMode {
         }
     }
 
+    // operating the claws to grab and drop
+    private void grapdropFunction() {
+        // dropping on the backboard for scoring
+        if (gamepad2.dpad_up  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
+            leftFinger.setPosition(LEFT_FINGER_DROP);
+            rightFinger.setPosition(RIGHT_FINGER_DROP);
+        } else if (gamepad2.dpad_left && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
+            leftFinger.setPosition(LEFT_FINGER_DROP);
+        } else if (gamepad2.dpad_right  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
+            rightFinger.setPosition(RIGHT_FINGER_DROP);
+        } else if (gamepad2.dpad_down  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
+            leftFinger.setPosition(LEFT_FINGER_INTAKE);
+            rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+        }
+
+        // grabbing off the floor or stack
+        if (gamepad2.right_bumper && gamepad2.dpad_up && (currentScoreState == Mutation.scoreState.IDLE)) {
+            leftFinger.setPosition(LEFT_FINGER_GRIP);
+            rightFinger.setPosition(RIGHT_FINGER_GRIP);
+        } else if (gamepad2.right_bumper && gamepad2.dpad_left && (currentScoreState == Mutation.scoreState.IDLE)) {
+            leftFinger.setPosition(LEFT_FINGER_GRIP);
+        } else if (gamepad2.right_bumper && gamepad2.dpad_right && (currentScoreState == Mutation.scoreState.IDLE)) {
+            rightFinger.setPosition(RIGHT_FINGER_GRIP);
+        } else if (gamepad2.right_bumper && gamepad2.dpad_down && (currentScoreState == Mutation.scoreState.IDLE)) {
+            leftFinger.setPosition(LEFT_FINGER_INTAKE);
+            rightFinger.setPosition(RIGHT_FINGER_INTAKE);
+        }
+    }
+
     // launcher
     private void airplane() {
         if (gamepad2.back) {
@@ -720,7 +731,7 @@ public class Mutation extends LinearOpMode {
         setLiftPosition(LIFT_DRIVE);
         shoulder.setPosition(SHOULDER_INT);
         elbow.setPosition(ELBOW_DRIVE);
-        wrist.setPosition(WRIST_INTAKE);
+        wrist.setPosition(WRIST_TUCK);
         launcherstartPos();
 
         telemetry.addData("Status", "OdoMec is ready to run!");
@@ -752,6 +763,8 @@ public class Mutation extends LinearOpMode {
             driveCode();
             // hang
             hangCode();
+            // claws
+            grapdropFunction();
             // intake positions
             intakeFunction();
             // driving pos

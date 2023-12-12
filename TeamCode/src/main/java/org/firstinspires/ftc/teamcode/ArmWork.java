@@ -39,7 +39,7 @@ public class ArmWork extends LinearOpMode{
     private static final double TRIGGER_THRESHOLD = 0.5;
     private static final double LAUNCHER_START_POS = 0.8;
     private static final double SERVO_TOLERANCE = 0.01;
-    private static final double LIFT_DRIVE = 0.069;
+    private static final double LIFT_DRIVE = 0.10;
     private double liftTargetPosition = LIFT_DRIVE;
 
     // score position one button map (gamepad2.y)
