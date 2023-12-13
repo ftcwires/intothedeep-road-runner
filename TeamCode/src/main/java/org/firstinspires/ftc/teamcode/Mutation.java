@@ -324,7 +324,7 @@ public class Mutation extends LinearOpMode {
         // Check if the right bumper is pressed and the drive state is IDLE
         if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
             activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, MED_ACC, MED_VEL);
-            currentDriveState = Mutation.driveState.MOVING_SHOULDER;
+            currentDriveState = driveState.MOVING_LIFT;
         }
 
         if (activeDrivePosition != null) {
