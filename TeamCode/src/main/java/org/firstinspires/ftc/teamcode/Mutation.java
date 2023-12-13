@@ -286,6 +286,7 @@ public class Mutation extends LinearOpMode {
         switch (currentDriveState) {
             case MOVING_LIFT:
                 setLiftPosition(LIFT_DRIVE);
+                currentDriveState = Mutation.driveState.MOVING_SHOULDER;
                 break;
             case MOVING_SHOULDER:
                 // Move the shoulder to intake position
@@ -324,7 +325,7 @@ public class Mutation extends LinearOpMode {
         // Check if the right bumper is pressed and the drive state is IDLE
         if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
             activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, MED_ACC, MED_VEL);
-            currentDriveState = driveState.MOVING_LIFT;
+            currentDriveState = Mutation.driveState.MOVING_LIFT;
         }
 
         if (activeDrivePosition != null) {
