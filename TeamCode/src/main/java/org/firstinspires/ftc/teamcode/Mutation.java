@@ -439,43 +439,43 @@ public class Mutation extends LinearOpMode {
         // score position five
         if ((gamepad2.left_bumper && gamepad2.y) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_FIVE_SHOULDER, SCORE_FIVE_ELBOW, SCORE_FIVE_WRIST, SCORE_FIVE_LIFT, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_FIVE_LIFT, SCORE_FIVE_SHOULDER, SCORE_FIVE_WRIST, SCORE_FIVE_ELBOW, MED_ACC, MED_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position six
         if ((gamepad2.left_bumper && gamepad2.b) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_SIX_SHOULDER, SCORE_SIX_ELBOW, SCORE_SIX_WRIST, SCORE_SIX_LIFT, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_SIX_LIFT, SCORE_SIX_SHOULDER, SCORE_SIX_WRIST, SCORE_SIX_ELBOW, MED_ACC, MED_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position seven
         if ((gamepad2.left_bumper && gamepad2.a) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_SEVEN_SHOULDER, SCORE_SEVEN_ELBOW, SCORE_SEVEN_WRIST, SCORE_SEVEN_LIFT, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_SEVEN_LIFT, SCORE_SEVEN_SHOULDER, SCORE_SEVEN_WRIST, SCORE_SEVEN_ELBOW, MED_ACC, MED_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position eight
         if ((gamepad2.left_bumper && gamepad2.x) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_EIGHT_SHOULDER, SCORE_EIGHT_ELBOW, SCORE_EIGHT_WRIST, SCORE_EIGHT_LIFT, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_EIGHT_LIFT, SCORE_EIGHT_SHOULDER, SCORE_EIGHT_WRIST, SCORE_EIGHT_ELBOW, MED_ACC, MED_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position nine
         if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_NINE_SHOULDER, SCORE_NINE_ELBOW, SCORE_NINE_WRIST, SCORE_NINE_LIFT, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_NINE_LIFT, SCORE_NINE_SHOULDER, SCORE_NINE_WRIST, SCORE_NINE_ELBOW, MED_ACC, MED_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position ten
         if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_TEN_SHOULDER, SCORE_TEN_ELBOW, SCORE_TEN_WRIST, SCORE_TEN_LIFT, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_TEN_LIFT, SCORE_TEN_SHOULDER, SCORE_TEN_WRIST, SCORE_TEN_ELBOW, MED_ACC, MED_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position eleven
         if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_ELBOW, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_LIFT, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_ELEVEN_LIFT, SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_ELBOW, MED_ACC, MED_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         if (activeScorePosition != null) {
