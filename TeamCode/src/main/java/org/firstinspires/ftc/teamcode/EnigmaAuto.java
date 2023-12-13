@@ -511,7 +511,6 @@ public class EnigmaAuto extends LinearOpMode {
         while (!isStopRequested() && timer.time() < time) {
         }
     }
-
 class teamElementPipeline extends OpenCvPipeline{
         Mat YCbCr = new Mat();
         Mat leftCrop;
