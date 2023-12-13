@@ -52,7 +52,7 @@ public class Mutation extends LinearOpMode {
     public static final double ELBOW_INTAKE = 0.78;
     public static final double WRIST_TUCK = 0.29;
     public static final double WRIST_DRIVE = 0.82;
-    public static final double WRIST_INTAKE = 0.545;
+    public static final double WRIST_INTAKE = 0.555;
     public static final double LEFT_FINGER_GRIP = 0.72;
     public static final double LEFT_FINGER_DROP = 0.5;
     public static final double LEFT_FINGER_INTAKE = 0.3;
