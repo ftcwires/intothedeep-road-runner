@@ -147,6 +147,16 @@ public class EnigmaAuto extends LinearOpMode {
         }
     }
 
+    private Servo setLiftPosition(double targetPosition) {
+        // Ensure the target position is within the valid range
+        targetPosition = Math.max(0.0, Math.min(targetPosition, 1.0));
+
+        // Set the servo positions
+        leftLift.setPosition(targetPosition);
+        rightLift.setPosition(targetPosition);
+        return null;
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         wrist = hardwareMap.get(Servo.class, "wrist");
@@ -161,15 +171,15 @@ public class EnigmaAuto extends LinearOpMode {
         shoulder.setDirection(Servo.Direction.REVERSE);
         wrist.setDirection(Servo.Direction.REVERSE);
 
+
         //init pos
-        leftLift.setPosition(0.37);
-        rightLift.setPosition(0.37);
-        shoulder.setPosition(0.43);
-        wrist.setPosition(0.575);
-        elbow.setPosition(0.5);
-        sleep(1000);
-        leftFinger.setPosition(0.74);
-        rightFinger.setPosition(0.27);
+        setLiftPosition(Mutation.LIFT_DRIVE);
+        shoulder.setPosition(Mutation.SHOULDER_DRIVE);
+        wrist.setPosition(Mutation.WRIST_INTAKE);
+        elbow.setPosition(Mutation.ELBOW_DRIVE);
+        sleep(2500);
+        leftFinger.setPosition(Mutation.LEFT_FINGER_GRIP);
+        rightFinger.setPosition(Mutation.RIGHT_FINGER_GRIP);
 
         // Vision OpenCV / Color Detection
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -263,17 +273,17 @@ public class EnigmaAuto extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(70));
-                        dropYellowPixelPose = new Pose2d(23, 36, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(19, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPosePush = new Pose2d(32, 0, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(23.25, 0, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(30, 36,  Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(26, 36,  Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(-35));
-                        dropYellowPixelPose = new Pose2d(37, 36, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(31, 36, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
@@ -378,7 +388,7 @@ public class EnigmaAuto extends LinearOpMode {
             sleep(10);
         }
         sleep(1000);
-        rightFinger.setPosition(0.64);
+        rightFinger.setPosition(Mutation.RIGHT_FINGER_DROP);
         sleep(500);
         elbow.setPosition(ELBOW_DRIVE);
         sleep(500);
@@ -433,7 +443,7 @@ public class EnigmaAuto extends LinearOpMode {
             sleep(7);
         }
         sleep(300);
-        leftFinger.setPosition(0.5);
+        leftFinger.setPosition(Mutation.LEFT_FINGER_DROP);
         sleep(300);
         for(int s = 0; s<200; s++) {
             moveServoGradually(shoulder, Mutation.SHOULDER_DRIVE);
@@ -468,11 +478,11 @@ public class EnigmaAuto extends LinearOpMode {
             telemetry.addData("Initializing ENIGMA Autonomous Team# a",
                     TEAM_NAME, " ", TEAM_NUMBER);
             telemetry.addData("---------------------------------------","");
-            telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
-            telemetry.addData("    Blue Left   ", "(X / ▢)");
-            telemetry.addData("    Blue Right ", "(Y / Δ)");
-            telemetry.addData("    Red Left    ", "(B / O)");
-            telemetry.addData("    Red Right  ", "(A / X)");
+            telemetry.addData("Select Starting Position using XYAB:","");
+            telemetry.addData("    Blue Left   ", "(X)");
+            telemetry.addData("    Blue Right ", "(Y)");
+            telemetry.addData("    Red Left    ", "(B)");
+            telemetry.addData("    Red Right  ", "(A)");
             if(gamepad1.x){
                 startPosition = START_POSITION.BLUE_LEFT;
                 break;
