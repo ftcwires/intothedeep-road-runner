@@ -348,7 +348,7 @@ public class EnigmaAuto extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(70));
-                        dropYellowPixelPose = new Pose2d(37, -86, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(34, -86, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPosePush = new Pose2d(32, 0, Math.toRadians(0)); // change up
@@ -358,7 +358,7 @@ public class EnigmaAuto extends LinearOpMode {
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(-35));
-                        dropYellowPixelPose = new Pose2d(21, -86, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(23, -86, Math.toRadians(90));
                         break;
                 }
                 midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
