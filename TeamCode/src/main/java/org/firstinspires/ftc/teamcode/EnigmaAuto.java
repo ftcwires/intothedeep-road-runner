@@ -321,17 +321,17 @@ public class EnigmaAuto extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(70));
-                        dropYellowPixelPose = new Pose2d(27, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(19, 86, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPosePush = new Pose2d(32, 0, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(23.25, 0, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(34, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(26.25, 86, Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(-35));
-                        dropYellowPixelPose = new Pose2d(43, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(33.5, 86, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(8, -8, Math.toRadians(0));
@@ -387,11 +387,11 @@ public class EnigmaAuto extends LinearOpMode {
             moveServoGradually(elbow, ELBOW_INTAKE);
             sleep(10);
         }
-        sleep(1000);
+        sleep(200);
         rightFinger.setPosition(Mutation.RIGHT_FINGER_DROP);
-        sleep(500);
+        sleep(200);
         elbow.setPosition(ELBOW_DRIVE);
-        sleep(500);
+        wrist.setPosition(Mutation.WRIST_TUCK);
 
         //Move robot to midwayPose1
         Actions.runBlocking(
@@ -442,9 +442,9 @@ public class EnigmaAuto extends LinearOpMode {
             moveServoGradually(shoulder, SCORE_ONE_SHOULDER);
             sleep(7);
         }
-        sleep(300);
+        sleep(200);
         leftFinger.setPosition(Mutation.LEFT_FINGER_DROP);
-        sleep(300);
+        sleep(100);
         for(int s = 0; s<200; s++) {
             moveServoGradually(shoulder, Mutation.SHOULDER_DRIVE);
             sleep(7);
