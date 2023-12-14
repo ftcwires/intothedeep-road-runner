@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 
-@TeleOp
+//@TeleOp
 public class MutationOld extends LinearOpMode {
     // Declare vars
     private RevTouchSensor rightUpper;

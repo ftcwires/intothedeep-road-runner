@@ -52,7 +52,7 @@ public class Mutation extends LinearOpMode {
     public static final double ELBOW_INTAKE = 0.78;
     public static final double WRIST_TUCK = 0.29;
     public static final double WRIST_DRIVE = 0.82;
-    public static final double WRIST_INTAKE = 0.57;
+    public static final double WRIST_INTAKE = 0.555;
     public static final double LEFT_FINGER_GRIP = 0.72;
     public static final double LEFT_FINGER_DROP = 0.5;
     public static final double LEFT_FINGER_INTAKE = 0.3;
@@ -102,41 +102,41 @@ public class Mutation extends LinearOpMode {
     public static final double SCORE_FOUR_ELBOW = SCORE_ONE_ELBOW;
     public static final double SCORE_FOUR_LIFT = .44;
     // score position five button map (gamepad2.left_bumper && gamepad2.y)
-    public static final double SCORE_FIVE_SHOULDER = 0.92611111;
-    public static final double SCORE_FIVE_WRIST = 1;
-    public static final double SCORE_FIVE_ELBOW = 0.73;
-    public static final double SCORE_FIVE_LIFT = 0.59;
+    public static final double SCORE_FIVE_SHOULDER = SCORE_ONE_SHOULDER;
+    public static final double SCORE_FIVE_WRIST = SCORE_ONE_WRIST;
+    public static final double SCORE_FIVE_ELBOW = SCORE_ONE_ELBOW;
+    public static final double SCORE_FIVE_LIFT = 0.55;
     // score position six button map (gamepad2.left_bumper && gamepad2.b)
-    private static final double SCORE_SIX_SHOULDER = 0.925;
-    private static final double SCORE_SIX_WRIST = 1;
-    private static final double SCORE_SIX_ELBOW = 0.75;
-    private static final double SCORE_SIX_LIFT = .71;
+    private static final double SCORE_SIX_SHOULDER = SCORE_ONE_SHOULDER;
+    private static final double SCORE_SIX_WRIST = SCORE_ONE_WRIST;
+    private static final double SCORE_SIX_ELBOW = SCORE_ONE_ELBOW;
+    private static final double SCORE_SIX_LIFT = .66;
     // score position seven button map (gamepad2.left_bumper && gamepad2.a)
-    private static final double SCORE_SEVEN_SHOULDER = 0.91;
-    private static final double SCORE_SEVEN_WRIST = 1;
-    private static final double SCORE_SEVEN_ELBOW = 0.72;
-    private static final double SCORE_SEVEN_LIFT = 0.8;
+    private static final double SCORE_SEVEN_SHOULDER = SCORE_ONE_SHOULDER;
+    private static final double SCORE_SEVEN_WRIST = 0.305;
+    private static final double SCORE_SEVEN_ELBOW = 0.6;
+    private static final double SCORE_SEVEN_LIFT = .66;
     // score position eight button map (gamepad2.left_bumper && gamepad2.x)
-    private static final double SCORE_EIGHT_SHOULDER = 0.94;
-    private static final double SCORE_EIGHT_WRIST = 0.93;
-    private static final double SCORE_EIGHT_ELBOW = 0.8;
-    private static final double SCORE_EIGHT_LIFT = 0.8;
+    private static final double SCORE_EIGHT_SHOULDER = SCORE_ONE_SHOULDER;
+    private static final double SCORE_EIGHT_WRIST = 0.235;
+    private static final double SCORE_EIGHT_ELBOW = 0.67;
+    private static final double SCORE_EIGHT_LIFT = .66;
     // score position nine button map (gamepad2.left_trigger && gamepad2.y)
-    private static final double SCORE_NINE_SHOULDER = 0.93  ;
-    private static final double SCORE_NINE_WRIST = 0.93;
-    private static final double SCORE_NINE_ELBOW = 0.79;
-    private static final double SCORE_NINE_LIFT = 0.86;
+    private static final double SCORE_NINE_SHOULDER = SCORE_ONE_SHOULDER;
+    private static final double SCORE_NINE_WRIST = 0.174;
+    private static final double SCORE_NINE_ELBOW = 0.72;
+    private static final double SCORE_NINE_LIFT = .66;
     // score position ten button map (gamepad2.left_trigger && gamepad2.b)
-    private static final double SCORE_TEN_SHOULDER = 0.9;
-    private static final double SCORE_TEN_WRIST = 0.93;
-    private static final double SCORE_TEN_ELBOW = 0.76;
-    private static final double SCORE_TEN_LIFT = 0.98;
+    private static final double SCORE_TEN_SHOULDER = SCORE_ONE_SHOULDER;
+    private static final double SCORE_TEN_WRIST = SCORE_ONE_WRIST;
+    private static final double SCORE_TEN_ELBOW = SCORE_ONE_ELBOW;
+    private static final double SCORE_TEN_LIFT = .66;
     // score position eleven button map (gamepad2.left_trigger && gamepad2.a)
-    private static final double SCORE_ELEVEN_SHOULDER = 0.9;
-    private static final double SCORE_ELEVEN_WRIST = 0.93;
-    private static final double SCORE_ELEVEN_ELBOW = 0.76;
-    private static final double SCORE_ELEVEN_LIFT = 0.98;
-
+    private static final double SCORE_ELEVEN_SHOULDER = SCORE_ONE_SHOULDER;
+    private static final double SCORE_ELEVEN_WRIST = SCORE_ONE_WRIST;
+    private static final double SCORE_ELEVEN_ELBOW = SCORE_ONE_ELBOW;
+    private static final double SCORE_ELEVEN_LIFT = .66;
+    
     // sensors
     private RevTouchSensor rightUpper;
     private RevTouchSensor leftUpper;
@@ -286,6 +286,7 @@ public class Mutation extends LinearOpMode {
         switch (currentDriveState) {
             case MOVING_LIFT:
                 setLiftPosition(LIFT_DRIVE);
+                currentDriveState = Mutation.driveState.MOVING_SHOULDER;
                 break;
             case MOVING_SHOULDER:
                 // Move the shoulder to intake position
@@ -771,6 +772,8 @@ public class Mutation extends LinearOpMode {
             telemetry.addData("Shoulder Position", shoulder.getPosition());
             telemetry.addData("Wrist Position", wrist.getPosition());
             telemetry.addData("Elbow Position", elbow.getPosition());
+            telemetry.addData("Lift Left", leftLift.getPosition());
+            telemetry.addData("Lift Right", rightLift.getPosition());
 
             //telemetry.addData("Left Lower", leftLower.isPressed() ? "Pressed" : "Not Pressed");
             //telemetry.addData("Left Upper", leftUpper.isPressed() ? "Pressed" : "Not Pressed");
