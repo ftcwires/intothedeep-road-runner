@@ -324,7 +324,7 @@ public class Mutation extends LinearOpMode {
     private void drivingFunction() {
         // Check if the right bumper is pressed and the drive state is IDLE
         if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
-            activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, MED_ACC, MED_VEL);
+            activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, HIGH_ACC, HIGH_VEL);
             currentDriveState = Mutation.driveState.MOVING_LIFT;
         }
 
@@ -567,6 +567,7 @@ public class Mutation extends LinearOpMode {
         return null;
     }
 
+    // Mecanum thread creation
     private class MecanumDriveRunnable implements Runnable {
         public volatile boolean running = true;
 
@@ -756,6 +757,7 @@ public class Mutation extends LinearOpMode {
         telemetry.addData("Status", "OdoMec is ready to run!");
         telemetry.addData("Initializing TeleOp","");
 
+        // Mecanum drive in a separate thread to avoid blocks in state machines like any loops (while/for) or sleep()
         MecanumDriveRunnable mecanumDriveRunnable = new MecanumDriveRunnable();
         Thread mecanumDriveThread = new Thread(mecanumDriveRunnable);
 
@@ -768,6 +770,7 @@ public class Mutation extends LinearOpMode {
         while(opModeIsActive()){
 
             // telemetry
+            /*
             telemetry.addData("Right Front Power", rightFront.getPower());
             telemetry.addData("Left Front Power", leftFront.getPower());
             telemetry.addData("Right Back Power", rightBack.getPower());
@@ -778,7 +781,7 @@ public class Mutation extends LinearOpMode {
             telemetry.addData("Mecanum Thread Running", mecanumDriveRunnable.running);
             telemetry.addData("Loop Time", "Duration: " + runtime.milliseconds() + " ms");
 
-            /*
+
             telemetry.addData("Status", "Run " + runtime.toString());
             telemetry.addData("Intake", currentIntakeState);
             telemetry.addData("Drive", currentDriveState);
