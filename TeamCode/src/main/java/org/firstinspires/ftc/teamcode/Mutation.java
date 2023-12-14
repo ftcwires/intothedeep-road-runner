@@ -530,8 +530,8 @@ public class Mutation extends LinearOpMode {
             // Update the current velocity for the next iteration
             currentVelocity = desiredVelocity;
 
-            telemetry.addData("Servo Position", currentPosition);
-            telemetry.update();
+           // telemetry.addData("Servo Position", currentPosition);
+           // telemetry.update();
         }
     }
 
@@ -573,11 +573,13 @@ public class Mutation extends LinearOpMode {
         @Override
         public void run() {
             while (running && opModeIsActive()) {
-                driveCode();
                 try {
-                    Thread.sleep(10); // Small delay to prevent high CPU usage
+                    driveCode();
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+                    running = false; // Set running to false to stop the loop
+                    Thread.currentThread().interrupt(); // Preserve interrupt status
+                    break; // Break the loop to stop the thread
                 }
             }
         }
@@ -756,15 +758,27 @@ public class Mutation extends LinearOpMode {
 
         MecanumDriveRunnable mecanumDriveRunnable = new MecanumDriveRunnable();
         Thread mecanumDriveThread = new Thread(mecanumDriveRunnable);
-        mecanumDriveThread.start();
+
 
         waitForStart();
         runtime.reset();
 
+        mecanumDriveThread.start();
 
         while(opModeIsActive()){
 
             // telemetry
+            telemetry.addData("Right Front Power", rightFront.getPower());
+            telemetry.addData("Left Front Power", leftFront.getPower());
+            telemetry.addData("Right Back Power", rightBack.getPower());
+            telemetry.addData("Left Back Power", leftBack.getPower());
+            telemetry.addData("Forward", gamepad1.left_stick_y);
+            telemetry.addData("Strafe", -gamepad1.left_stick_x);
+            telemetry.addData("Turn", -gamepad1.right_stick_x);
+            telemetry.addData("Mecanum Thread Running", mecanumDriveRunnable.running);
+            telemetry.addData("Loop Time", "Duration: " + runtime.milliseconds() + " ms");
+
+            /*
             telemetry.addData("Status", "Run " + runtime.toString());
             telemetry.addData("Intake", currentIntakeState);
             telemetry.addData("Drive", currentDriveState);
@@ -774,7 +788,7 @@ public class Mutation extends LinearOpMode {
             telemetry.addData("Elbow Position", elbow.getPosition());
             telemetry.addData("Lift Left", leftLift.getPosition());
             telemetry.addData("Lift Right", rightLift.getPosition());
-
+            */
             //telemetry.addData("Left Lower", leftLower.isPressed() ? "Pressed" : "Not Pressed");
             //telemetry.addData("Left Upper", leftUpper.isPressed() ? "Pressed" : "Not Pressed");
             //telemetry.addData("Right Lower", rightLower.isPressed() ? "Pressed" : "Not Pressed");
@@ -782,7 +796,7 @@ public class Mutation extends LinearOpMode {
 
             // launcher
             airplane();
-                        // hang
+            // hang
             hangCode();
             // claws
             grapdropFunction();
@@ -796,16 +810,16 @@ public class Mutation extends LinearOpMode {
             emergencyStop();
             // mecanum drive
             //driveCode(); say what
-            // Stop the mecanum drive thread after the op mode is over
-            mecanumDriveRunnable.running = false;
-            mecanumDriveThread.interrupt();
-            try {
-                mecanumDriveThread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-
             telemetry.update();
+        }
+
+        // Stop the mecanum drive thread after the op mode is over
+        mecanumDriveRunnable.running = false;
+        mecanumDriveThread.interrupt();
+        try {
+            mecanumDriveThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
 
     }
