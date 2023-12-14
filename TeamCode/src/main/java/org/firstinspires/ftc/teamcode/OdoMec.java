@@ -9,7 +9,7 @@ import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp
+//@TeleOp
 public class OdoMec extends LinearOpMode {
 // adding for push test
     // Declare vars
