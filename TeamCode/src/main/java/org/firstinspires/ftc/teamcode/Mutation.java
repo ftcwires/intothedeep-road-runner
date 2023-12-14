@@ -136,7 +136,7 @@ public class Mutation extends LinearOpMode {
     private static final double SCORE_ELEVEN_WRIST = 0.93;
     private static final double SCORE_ELEVEN_ELBOW = 0.76;
     private static final double SCORE_ELEVEN_LIFT = 0.98;
-    
+
     // sensors
     private RevTouchSensor rightUpper;
     private RevTouchSensor leftUpper;
@@ -324,7 +324,7 @@ public class Mutation extends LinearOpMode {
         // Check if the right bumper is pressed and the drive state is IDLE
         if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
             activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, MED_ACC, MED_VEL);
-            currentDriveState = driveState.MOVING_LIFT;
+            currentDriveState = Mutation.driveState.MOVING_LIFT;
         }
 
         if (activeDrivePosition != null) {
@@ -565,6 +565,22 @@ public class Mutation extends LinearOpMode {
         rightLift.setPosition(targetPosition);
         return null;
     }
+
+    private class MecanumDriveRunnable implements Runnable {
+        public volatile boolean running = true;
+
+        @Override
+        public void run() {
+            while (running && opModeIsActive()) {
+                driveCode();
+                try {
+                    Thread.sleep(10); // Small delay to prevent high CPU usage
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
     private void driveCode() {
         // mecanum drive
         double forward = gamepad1.left_stick_y;
@@ -737,6 +753,10 @@ public class Mutation extends LinearOpMode {
         telemetry.addData("Status", "OdoMec is ready to run!");
         telemetry.addData("Initializing TeleOp","");
 
+        MecanumDriveRunnable mecanumDriveRunnable = new MecanumDriveRunnable();
+        Thread mecanumDriveThread = new Thread(mecanumDriveRunnable);
+        mecanumDriveThread.start();
+
         waitForStart();
         runtime.reset();
 
@@ -759,9 +779,7 @@ public class Mutation extends LinearOpMode {
 
             // launcher
             airplane();
-            // mecanum drive
-            driveCode();
-            // hang
+                        // hang
             hangCode();
             // claws
             grapdropFunction();
@@ -773,6 +791,16 @@ public class Mutation extends LinearOpMode {
             scoringFunction();
             // emergency stop slides
             emergencyStop();
+            // mecanum drive
+            //driveCode();
+            // Stop the mecanum drive thread after the op mode is over
+            mecanumDriveRunnable.running = false;
+            mecanumDriveThread.interrupt();
+            try {
+                mecanumDriveThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
 
             telemetry.update();
         }
