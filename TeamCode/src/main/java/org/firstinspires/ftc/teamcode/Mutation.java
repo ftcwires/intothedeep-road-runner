@@ -795,7 +795,7 @@ public class Mutation extends LinearOpMode {
             // emergency stop slides
             emergencyStop();
             // mecanum drive
-            //driveCode();
+            //driveCode(); say what
             // Stop the mecanum drive thread after the op mode is over
             mecanumDriveRunnable.running = false;
             mecanumDriveThread.interrupt();
