@@ -44,8 +44,8 @@ public class Mutation extends LinearOpMode {
     private static final double HIGH_ACC = 11.25;
     private static final double HIGH_VEL = 13.5;
 
-    private static final double SUPER_ACC = 18.0;
-    private static final double SUPER_VEL = 20.0;
+    private static final double SUPER_ACC = 20.0;
+    private static final double SUPER_VEL = 22.0;
 
 
     // servo values
