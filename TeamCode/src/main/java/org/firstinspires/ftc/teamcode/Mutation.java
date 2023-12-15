@@ -44,6 +44,9 @@ public class Mutation extends LinearOpMode {
     private static final double HIGH_ACC = 11.25;
     private static final double HIGH_VEL = 13.5;
 
+    private static final double SUPER_ACC = 18.0;
+    private static final double SUPER_VEL = 20.0;
+
 
     // servo values
     public static final double SHOULDER_DRIVE = 0.425; // 0.425
@@ -228,7 +231,7 @@ public class Mutation extends LinearOpMode {
         // claw intake from floor
         //TODO: add saftey
         if (gamepad1.left_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
-            activeIntakePosition = new Mutation.IntakePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE, MED_ACC, MED_VEL);
+            activeIntakePosition = new Mutation.IntakePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE, SUPER_ACC, SUPER_VEL);
             currentIntakeState = Mutation.intakeState.MOVING_SHOULDER;
         }
         // claw intake the top 2 from a stack of 5
@@ -324,7 +327,7 @@ public class Mutation extends LinearOpMode {
     private void drivingFunction() {
         // Check if the right bumper is pressed and the drive state is IDLE
         if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
-            activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, HIGH_ACC, HIGH_VEL);
+            activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, SUPER_ACC, SUPER_VEL);
             currentDriveState = Mutation.driveState.MOVING_LIFT;
         }
 
@@ -415,13 +418,13 @@ public class Mutation extends LinearOpMode {
         // score position one
         if (gamepad2.y && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_ONE_LIFT, SCORE_ONE_SHOULDER, SCORE_ONE_WRIST, SCORE_ONE_ELBOW, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_ONE_LIFT, SCORE_ONE_SHOULDER, SCORE_ONE_WRIST, SCORE_ONE_ELBOW, SUPER_ACC, SUPER_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position two
         if (gamepad2.b && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_TWO_LIFT, SCORE_TWO_SHOULDER, SCORE_TWO_WRIST, SCORE_TWO_ELBOW, MED_ACC, MED_VEL);
+            activeScorePosition = new Mutation.ScorePosition(SCORE_TWO_LIFT, SCORE_TWO_SHOULDER, SCORE_TWO_WRIST, SCORE_TWO_ELBOW, SUPER_ACC, SUPER_VEL);
             currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
         }
         // score position three

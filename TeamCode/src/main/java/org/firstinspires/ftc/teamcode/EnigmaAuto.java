@@ -64,7 +64,7 @@ import java.util.List;
 /**
  * ENIGMA Autonomous Example for only vision detection using openCv and park
  */
-@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "Beginnings")
+@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "Mutation")
 public class EnigmaAuto extends LinearOpMode {
 
     public static String TEAM_NAME = "ENIGMA"; //TODO: Enter team Name
