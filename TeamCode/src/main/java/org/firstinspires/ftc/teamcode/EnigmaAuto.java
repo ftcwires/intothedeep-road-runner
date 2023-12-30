@@ -104,6 +104,10 @@ public class EnigmaAuto extends LinearOpMode {
 
     private static final double PIXEL_STACK_FINGER_GRAB = 0.6;
 
+    private static final double SHOULDER_TOP_ONE = 0.425;  // SHOULDER_TOP_TWO; //0.4455
+    private static final double WRIST_TOP_ONE = 0.575; // WRIST_TOP_TWO; //0.585
+    private static final double ELBOW_TOP_ONE = 0.74; // ELBOW_TOP_TWO; //0.73
+
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -272,7 +276,7 @@ public class EnigmaAuto extends LinearOpMode {
         initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
         moveBeyondTrussPose = new Pose2d(15,0,0);
 
-        //TODO: edit crap here
+        //TODO: edit here
         switch (startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
@@ -390,13 +394,21 @@ public class EnigmaAuto extends LinearOpMode {
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(0);
-        shoulder.setPosition(Evolution.SHOULDER_DRIVE);
-        wrist.setPosition(Evolution.WRIST_INTAKE);
+
         for(int c = 0; c<40; c++) {
-            moveServoGradually(elbow, ELBOW_INTAKE);
-            sleep(10);
+            moveServoGradually(shoulder, Evolution.SHOULDER_DRIVE);
+            sleep(15);
         }
-        sleep(200);
+        for(int c = 0; c<40; c++) {
+            moveServoGradually(wrist, Evolution.WRIST_INTAKE);
+            sleep(15);
+        }
+        for(int c = 0; c<40; c++) {
+            moveServoGradually(elbow, Evolution.ELBOW_INTAKE);
+            sleep(15);
+        }
+
+        //sleep(200);
         rightFinger.setPosition(Evolution.RIGHT_FINGER_DROP);
         sleep(200);
         elbow.setPosition(ELBOW_DRIVE);
@@ -418,32 +430,31 @@ public class EnigmaAuto extends LinearOpMode {
                             .build());
 
             //TODO : Code to intake pixel from stack
-            safeWaitSeconds(1);
-            shoulder.setPosition(SHOULDER_TOP_TWO);
-            wrist.setPosition(WRIST_TOP_TWO);
-            elbow.setPosition(ELBOW_TOP_TWO);
-            for(int e = 0; e<40; e++) {
-                moveServoGradually(elbow, ELBOW_TOP_TWO);
-                sleep(10);
+            //safeWaitSeconds(1);
+
+            rightFinger.setPosition(PIXEL_STACK_FINGER_GRAB);
+            for(int e = 0; e<50; e++) {
+                moveServoGradually(elbow, ELBOW_TOP_ONE);
+                sleep(15);
             }
-            for(int w = 0; w<40; w++) {
-                moveServoGradually(wrist, WRIST_TOP_TWO);
-                sleep(10);
+            for(int w = 0; w<50; w++) {
+                moveServoGradually(wrist, WRIST_TOP_ONE);
+                sleep(15);
             }
-            for(int s = 0; s<40; s++) {
-                moveServoGradually(shoulder, SHOULDER_TOP_TWO);
-                sleep(10);
+            for(int s = 0; s<50; s++) {
+                moveServoGradually(shoulder, SHOULDER_TOP_ONE);
+                sleep(15);
             }
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
                             .strafeToLinearHeading(intakeStack2.position, intakeStack2.heading)
                             .build());
             sleep(300);
-            rightFinger.setPosition(PIXEL_STACK_FINGER_GRAB);
-            sleep(500);
+            rightFinger.setPosition(Evolution.RIGHT_FINGER_GRIP);
+            sleep(650);
             elbow.setPosition(ELBOW_DRIVE);
             wrist.setPosition(Evolution.WRIST_TUCK);
-            sleep(500);
+            sleep(100);
 
             //Move robot to midwayPose2 and to dropYellowPixelPose
             Actions.runBlocking(
@@ -478,6 +489,8 @@ public class EnigmaAuto extends LinearOpMode {
         }
         sleep(50);
         leftFinger.setPosition(Evolution.LEFT_FINGER_DROP);
+        sleep(400);
+        rightFinger.setPosition(Evolution.RIGHT_FINGER_DROP);
         sleep(50);
         for(int s = 0; s<200; s++) {
             moveServoGradually(shoulder, Evolution.SHOULDER_DRIVE);
@@ -500,6 +513,53 @@ public class EnigmaAuto extends LinearOpMode {
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
                         //.splineToLinearHeading(parkPose,0)
                         .build());
+
+        // just copy paste it
+
+        //For Blue Right and Red Left, intake pixel from stack
+        if (startPosition == START_POSITION.BLUE_RIGHT ||
+                startPosition == START_POSITION.RED_LEFT) {
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .strafeToLinearHeading(midwayPose1a.position, midwayPose1a.heading)
+                            .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
+                            .build());
+
+            //TODO : Code to intake pixel from stack
+            //safeWaitSeconds(1);
+
+            rightFinger.setPosition(PIXEL_STACK_FINGER_GRAB);
+            for(int e = 0; e<50; e++) {
+                moveServoGradually(elbow, ELBOW_TOP_ONE);
+                sleep(15);
+            }
+            for(int w = 0; w<50; w++) {
+                moveServoGradually(wrist, WRIST_TOP_ONE);
+                sleep(15);
+            }
+            for(int s = 0; s<50; s++) {
+                moveServoGradually(shoulder, SHOULDER_TOP_ONE);
+                sleep(15);
+            }
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .strafeToLinearHeading(intakeStack2.position, intakeStack2.heading)
+                            .build());
+            sleep(300);
+            rightFinger.setPosition(Evolution.RIGHT_FINGER_GRIP);
+            sleep(650);
+            elbow.setPosition(ELBOW_DRIVE);
+            wrist.setPosition(Evolution.WRIST_TUCK);
+            sleep(100);
+
+            //Move robot to midwayPose2 and to dropYellowPixelPose
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
+                            .build());
+        }
+
+
     }
 
 
