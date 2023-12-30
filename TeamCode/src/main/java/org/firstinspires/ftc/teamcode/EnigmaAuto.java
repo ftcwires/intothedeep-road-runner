@@ -506,59 +506,29 @@ public class EnigmaAuto extends LinearOpMode {
         }
 
 
-
+/* the original ending
         //Move robot to park in Backstage
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
                         //.splineToLinearHeading(parkPose,0)
                         .build());
+*/
 
-        // just copy paste it
+        for(int w = 0; w<40; w++) {
+            moveServoGradually(wrist, Evolution.WRIST_DRIVE);
+            sleep(10);
+        }
 
-        //For Blue Right and Red Left, intake pixel from stack
+        // GRAB MORE?! For Blue Right and Red Left, intake pixel from stack
         if (startPosition == START_POSITION.BLUE_RIGHT ||
                 startPosition == START_POSITION.RED_LEFT) {
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(midwayPose1a.position, midwayPose1a.heading)
+                            .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
                             .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
                             .build());
-
-            //TODO : Code to intake pixel from stack
-            //safeWaitSeconds(1);
-
-            rightFinger.setPosition(PIXEL_STACK_FINGER_GRAB);
-            for(int e = 0; e<50; e++) {
-                moveServoGradually(elbow, ELBOW_TOP_ONE);
-                sleep(15);
-            }
-            for(int w = 0; w<50; w++) {
-                moveServoGradually(wrist, WRIST_TOP_ONE);
-                sleep(15);
-            }
-            for(int s = 0; s<50; s++) {
-                moveServoGradually(shoulder, SHOULDER_TOP_ONE);
-                sleep(15);
-            }
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(intakeStack2.position, intakeStack2.heading)
-                            .build());
-            sleep(300);
-            rightFinger.setPosition(Evolution.RIGHT_FINGER_GRIP);
-            sleep(650);
-            elbow.setPosition(ELBOW_DRIVE);
-            wrist.setPosition(Evolution.WRIST_TUCK);
-            sleep(100);
-
-            //Move robot to midwayPose2 and to dropYellowPixelPose
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
-                            .build());
         }
-
 
     }
 
