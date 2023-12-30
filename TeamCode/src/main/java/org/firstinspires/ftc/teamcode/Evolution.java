@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 //@TeleOp
-public class Mutation extends LinearOpMode {
+public class Evolution extends LinearOpMode {
 
     // Declare vars
     // timers
@@ -161,8 +160,8 @@ public class Mutation extends LinearOpMode {
         COMPLETED
     }
 
-    private Mutation.intakeState currentIntakeState = Mutation.intakeState.IDLE;
-    private Mutation.IntakePosition activeIntakePosition = null;
+    private Evolution.intakeState currentIntakeState = Evolution.intakeState.IDLE;
+    private Evolution.IntakePosition activeIntakePosition = null;
 
 
     static class IntakePosition {
@@ -183,13 +182,13 @@ public class Mutation extends LinearOpMode {
         }
     }
 
-    private void handleIntakeSequence(Mutation.IntakePosition intakePos) {
+    private void handleIntakeSequence(Evolution.IntakePosition intakePos) {
         switch (currentIntakeState) {
             case MOVING_SHOULDER:
                 // Move the shoulder to intake position
                 moveServoWithTrapezoidalVelocity(shoulder, intakePos.shoulderPosition, intakePos.accelerationMax, intakePos.velocityMax);
                 if (isServoAtPosition(shoulder, intakePos.shoulderPosition, SERVO_TOLERANCE)) {
-                    currentIntakeState = Mutation.intakeState.MOVING_WRIST;
+                    currentIntakeState = Evolution.intakeState.MOVING_WRIST;
                 }
                 break;
             case MOVING_WRIST:
@@ -198,7 +197,7 @@ public class Mutation extends LinearOpMode {
                 wrist.setPosition(intakePos.wristPosition);
                 //moveServoWithTrapezoidalVelocity(wrist, intakePos.wristPosition, intakePos.accelerationMax, intakePos.velocityMax);
                 if (isServoAtPosition(wrist, intakePos.wristPosition, SERVO_TOLERANCE)) {
-                    currentIntakeState = Mutation.intakeState.MOVING_ELBOW;
+                    currentIntakeState = Evolution.intakeState.MOVING_ELBOW;
                 }
                 break;
             case MOVING_ELBOW:
@@ -207,7 +206,7 @@ public class Mutation extends LinearOpMode {
                // moveServoWithTrapezoidalVelocity(elbow, intakePos.elbowPosition, intakePos.accelerationMax, intakePos.velocityMax);
                 if (isServoAtPosition(elbow, intakePos.elbowPosition, SERVO_TOLERANCE)) {
                     // Check if the elbow is 70% down and open the claws if it is
-                    currentIntakeState = Mutation.intakeState.MOVING_CLAWS;
+                    currentIntakeState = Evolution.intakeState.MOVING_CLAWS;
                 }
                 break;
             case MOVING_CLAWS:
@@ -215,7 +214,7 @@ public class Mutation extends LinearOpMode {
                 rightFinger.setPosition(RIGHT_FINGER_INTAKE);
                 if (isServoAtPosition(leftFinger, LEFT_FINGER_INTAKE, SERVO_TOLERANCE) || isServoAtPosition(rightFinger, RIGHT_FINGER_INTAKE, SERVO_TOLERANCE)) {
                     // Check if the elbow is 70% down and open the claws if it is
-                    currentIntakeState = Mutation.intakeState.COMPLETED;
+                    currentIntakeState = Evolution.intakeState.COMPLETED;
                 }
                 break;
             case COMPLETED:
@@ -223,8 +222,8 @@ public class Mutation extends LinearOpMode {
                 break;
         }
         // Check to reset the state to IDLE outside the switch
-        if (currentIntakeState == Mutation.intakeState.COMPLETED) {
-            currentIntakeState = Mutation.intakeState.IDLE;
+        if (currentIntakeState == Evolution.intakeState.COMPLETED) {
+            currentIntakeState = Evolution.intakeState.IDLE;
         }
     }
 
@@ -232,25 +231,25 @@ public class Mutation extends LinearOpMode {
         // intake
         // claw intake from floor
         //TODO: add saftey
-        if (gamepad1.left_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
-            activeIntakePosition = new Mutation.IntakePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE, SUPER_ACC, SUPER_VEL);
-            currentIntakeState = Mutation.intakeState.MOVING_SHOULDER;
+        if (gamepad1.left_bumper && currentIntakeState == Evolution.intakeState.IDLE) {
+            activeIntakePosition = new Evolution.IntakePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_INTAKE, ELBOW_INTAKE, SUPER_ACC, SUPER_VEL);
+            currentIntakeState = Evolution.intakeState.MOVING_SHOULDER;
         }
         // claw intake the top 2 from a stack of 5
-        if (gamepad1.b && currentIntakeState == Mutation.intakeState.IDLE) {
-            activeIntakePosition = new Mutation.IntakePosition(LIFT_DRIVE, SHOULDER_TOP_TWO, WRIST_TOP_TWO, ELBOW_TOP_TWO, MED_ACC, MED_VEL);
-            currentIntakeState = Mutation.intakeState.MOVING_SHOULDER;
+        if (gamepad1.b && currentIntakeState == Evolution.intakeState.IDLE) {
+            activeIntakePosition = new Evolution.IntakePosition(LIFT_DRIVE, SHOULDER_TOP_TWO, WRIST_TOP_TWO, ELBOW_TOP_TWO, MED_ACC, MED_VEL);
+            currentIntakeState = Evolution.intakeState.MOVING_SHOULDER;
         }
         // claw intake the next 2 from a stack of 3
-        if (gamepad1.a && currentIntakeState == Mutation.intakeState.IDLE) {
-            activeIntakePosition = new Mutation.IntakePosition(LIFT_DRIVE, SHOULDER_NEXT_TWO, WRIST_NEXT_TWO, ELBOW_NEXT_TWO, MED_ACC, MED_VEL);
-            currentIntakeState = Mutation.intakeState.MOVING_SHOULDER;
+        if (gamepad1.a && currentIntakeState == Evolution.intakeState.IDLE) {
+            activeIntakePosition = new Evolution.IntakePosition(LIFT_DRIVE, SHOULDER_NEXT_TWO, WRIST_NEXT_TWO, ELBOW_NEXT_TWO, MED_ACC, MED_VEL);
+            currentIntakeState = Evolution.intakeState.MOVING_SHOULDER;
         }
         if (activeIntakePosition != null) {
             handleIntakeSequence(activeIntakePosition);
         }
-        if (currentIntakeState == Mutation.intakeState.COMPLETED) {
-            currentIntakeState = Mutation.intakeState.IDLE;
+        if (currentIntakeState == Evolution.intakeState.COMPLETED) {
+            currentIntakeState = Evolution.intakeState.IDLE;
             activeIntakePosition = null; // Reset the active position
         }
 
@@ -266,8 +265,8 @@ public class Mutation extends LinearOpMode {
         COMPLETED
     }
 
-    private Mutation.driveState currentDriveState = Mutation.driveState.IDLE;
-    private Mutation.DrivePosition activeDrivePosition = null;
+    private Evolution.driveState currentDriveState = Evolution.driveState.IDLE;
+    private Evolution.DrivePosition activeDrivePosition = null;
 
 
     static class DrivePosition {
@@ -287,17 +286,17 @@ public class Mutation extends LinearOpMode {
             this.velocityMax = velMax;
         }
     }
-    private void handleDriveSequence(Mutation.DrivePosition drivePos) {
+    private void handleDriveSequence(Evolution.DrivePosition drivePos) {
         switch (currentDriveState) {
             case MOVING_LIFT:
                 setLiftPosition(LIFT_DRIVE);
-                currentDriveState = Mutation.driveState.MOVING_SHOULDER;
+                currentDriveState = Evolution.driveState.MOVING_SHOULDER;
                 break;
             case MOVING_SHOULDER:
                 // Move the shoulder to intake position
                 moveServoWithTrapezoidalVelocity(shoulder, drivePos.shoulderPosition, drivePos.accelerationMax, drivePos.velocityMax);
                 if (isServoAtPosition(shoulder, drivePos.shoulderPosition, SERVO_TOLERANCE)) {
-                    currentDriveState = Mutation.driveState.MOVING_ELBOW;
+                    currentDriveState = Evolution.driveState.MOVING_ELBOW;
                 }
                 break;
             case MOVING_ELBOW:
@@ -306,14 +305,14 @@ public class Mutation extends LinearOpMode {
                 rightFinger.setPosition(RIGHT_FINGER_GRIP);
                 moveServoWithTrapezoidalVelocity(elbow, drivePos.elbowPosition, drivePos.accelerationMax, drivePos.velocityMax);
                 if (isServoAtPosition(elbow, drivePos.elbowPosition, SERVO_TOLERANCE)) {
-                    currentDriveState = Mutation.driveState.MOVING_WRIST;
+                    currentDriveState = Evolution.driveState.MOVING_WRIST;
                 }
                 break;
             case MOVING_WRIST:
                 // Move the wrist to intake position
                 moveServoWithTrapezoidalVelocity(wrist, drivePos.wristPosition, drivePos.accelerationMax, drivePos.velocityMax);
                 if (isServoAtPosition(wrist, drivePos.wristPosition, SERVO_TOLERANCE)) {
-                    currentDriveState = Mutation.driveState.COMPLETED;
+                    currentDriveState = Evolution.driveState.COMPLETED;
                 }
                 break;
             case COMPLETED:
@@ -321,24 +320,24 @@ public class Mutation extends LinearOpMode {
                 break;
         }
         // Check to reset the state to IDLE outside the switch
-        if (currentDriveState == Mutation.driveState.COMPLETED) {
-            currentDriveState = Mutation.driveState.IDLE;
+        if (currentDriveState == Evolution.driveState.COMPLETED) {
+            currentDriveState = Evolution.driveState.IDLE;
         }
     }
 
     private void drivingFunction() {
         // Check if the right bumper is pressed and the drive state is IDLE
-        if (gamepad1.right_bumper && currentDriveState == Mutation.driveState.IDLE) {
-            activeDrivePosition = new Mutation.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, SUPER_ACC, SUPER_VEL);
-            currentDriveState = Mutation.driveState.MOVING_LIFT;
+        if (gamepad1.right_bumper && currentDriveState == Evolution.driveState.IDLE) {
+            activeDrivePosition = new Evolution.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, SUPER_ACC, SUPER_VEL);
+            currentDriveState = Evolution.driveState.MOVING_LIFT;
         }
 
         if (activeDrivePosition != null) {
             handleDriveSequence(activeDrivePosition);
         }
 
-        if (currentDriveState == Mutation.driveState.COMPLETED) {
-            currentDriveState = Mutation.driveState.IDLE;
+        if (currentDriveState == Evolution.driveState.COMPLETED) {
+            currentDriveState = Evolution.driveState.IDLE;
             activeDrivePosition = null; // Reset the active position
         }
     }
@@ -352,8 +351,8 @@ public class Mutation extends LinearOpMode {
         COMPLETED
     }
 
-    private Mutation.scoreState currentScoreState = Mutation.scoreState.IDLE;
-    private Mutation.ScorePosition activeScorePosition = null;
+    private Evolution.scoreState currentScoreState = Evolution.scoreState.IDLE;
+    private Evolution.ScorePosition activeScorePosition = null;
 
 
     static class ScorePosition {
@@ -373,14 +372,14 @@ public class Mutation extends LinearOpMode {
             this.velocityMax = velMax;
         }
     }
-    private void handleScoreSequence(Mutation.ScorePosition scorePos) {
+    private void handleScoreSequence(Evolution.ScorePosition scorePos) {
         switch (currentScoreState) {
 
             case MOVING_SHOULDER:
                 // Move the shoulder to intake position
                 moveServoWithTrapezoidalVelocity(shoulder, scorePos.shoulderPosition, scorePos.accelerationMax, scorePos.velocityMax);
                 if (isServoAtPosition(shoulder, scorePos.shoulderPosition, SERVO_TOLERANCE)) {
-                    currentScoreState = Mutation.scoreState.MOVING_ELBOW;
+                    currentScoreState = Evolution.scoreState.MOVING_ELBOW;
                 }
                 break;
             case MOVING_ELBOW:
@@ -389,20 +388,20 @@ public class Mutation extends LinearOpMode {
                 rightFinger.setPosition(RIGHT_FINGER_GRIP);
                 moveServoWithTrapezoidalVelocity(elbow, scorePos.elbowPosition, scorePos.accelerationMax, scorePos.velocityMax);
                 if (isServoAtPosition(elbow, scorePos.elbowPosition, SERVO_TOLERANCE)) {
-                    currentScoreState = Mutation.scoreState.MOVING_WRIST;
+                    currentScoreState = Evolution.scoreState.MOVING_WRIST;
                 }
                 break;
             case MOVING_WRIST:
                 // Move the wrist to intake position
                 moveServoWithTrapezoidalVelocity(wrist, scorePos.wristPosition, scorePos.accelerationMax, scorePos.velocityMax);
                 if (isServoAtPosition(wrist, scorePos.wristPosition, SERVO_TOLERANCE)) {
-                    currentScoreState = Mutation.scoreState.MOVING_LIFT;
+                    currentScoreState = Evolution.scoreState.MOVING_LIFT;
                 }
                 break;
             case MOVING_LIFT:
                 setLiftPosition(scorePos.liftPosition);
                 if (isServoAtPosition(leftLift, scorePos.liftPosition, SERVO_TOLERANCE) && isServoAtPosition(rightLift, scorePos.liftPosition, SERVO_TOLERANCE)) {
-                    currentScoreState = Mutation.scoreState.COMPLETED;
+                    currentScoreState = Evolution.scoreState.COMPLETED;
                 }
                 break;
             case COMPLETED:
@@ -410,85 +409,85 @@ public class Mutation extends LinearOpMode {
                 break;
         }
         // Check to reset the state to IDLE outside the switch
-        if (currentScoreState == Mutation.scoreState.COMPLETED) {
-            currentScoreState = Mutation.scoreState.IDLE;
+        if (currentScoreState == Evolution.scoreState.COMPLETED) {
+            currentScoreState = Evolution.scoreState.IDLE;
         }
     }
 
     private void scoringFunction() {
         // scoring
         // score position one
-        if (gamepad2.y && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (gamepad2.y && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_ONE_LIFT, SCORE_ONE_SHOULDER, SCORE_ONE_WRIST, SCORE_ONE_ELBOW, SUPER_ACC, SUPER_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_ONE_LIFT, SCORE_ONE_SHOULDER, SCORE_ONE_WRIST, SCORE_ONE_ELBOW, SUPER_ACC, SUPER_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position two
-        if (gamepad2.b && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (gamepad2.b && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_TWO_LIFT, SCORE_TWO_SHOULDER, SCORE_TWO_WRIST, SCORE_TWO_ELBOW, SUPER_ACC, SUPER_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_TWO_LIFT, SCORE_TWO_SHOULDER, SCORE_TWO_WRIST, SCORE_TWO_ELBOW, SUPER_ACC, SUPER_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position three
-        if (gamepad2.a && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (gamepad2.a && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_THREE_LIFT, SCORE_THREE_SHOULDER, SCORE_THREE_WRIST, SCORE_THREE_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_THREE_LIFT, SCORE_THREE_SHOULDER, SCORE_THREE_WRIST, SCORE_THREE_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position four
         //TODO: gotta put !gamepad2.left_bumper above
-        if (gamepad2.x && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (gamepad2.x && !gamepad2.left_bumper && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_FOUR_LIFT, SCORE_FOUR_SHOULDER, SCORE_FOUR_WRIST, SCORE_FOUR_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_FOUR_LIFT, SCORE_FOUR_SHOULDER, SCORE_FOUR_WRIST, SCORE_FOUR_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position five
-        if ((gamepad2.left_bumper && gamepad2.y) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if ((gamepad2.left_bumper && gamepad2.y) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_FIVE_LIFT, SCORE_FIVE_SHOULDER, SCORE_FIVE_WRIST, SCORE_FIVE_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_FIVE_LIFT, SCORE_FIVE_SHOULDER, SCORE_FIVE_WRIST, SCORE_FIVE_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position six
-        if ((gamepad2.left_bumper && gamepad2.b) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if ((gamepad2.left_bumper && gamepad2.b) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_SIX_LIFT, SCORE_SIX_SHOULDER, SCORE_SIX_WRIST, SCORE_SIX_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_SIX_LIFT, SCORE_SIX_SHOULDER, SCORE_SIX_WRIST, SCORE_SIX_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position seven
-        if ((gamepad2.left_bumper && gamepad2.a) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if ((gamepad2.left_bumper && gamepad2.a) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_SEVEN_LIFT, SCORE_SEVEN_SHOULDER, SCORE_SEVEN_WRIST, SCORE_SEVEN_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_SEVEN_LIFT, SCORE_SEVEN_SHOULDER, SCORE_SEVEN_WRIST, SCORE_SEVEN_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position eight
-        if ((gamepad2.left_bumper && gamepad2.x) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if ((gamepad2.left_bumper && gamepad2.x) && (gamepad2.left_trigger < TRIGGER_THRESHOLD) && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_EIGHT_LIFT, SCORE_EIGHT_SHOULDER, SCORE_EIGHT_WRIST, SCORE_EIGHT_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_EIGHT_LIFT, SCORE_EIGHT_SHOULDER, SCORE_EIGHT_WRIST, SCORE_EIGHT_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position nine
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.y) && !gamepad2.left_bumper && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_NINE_LIFT, SCORE_NINE_SHOULDER, SCORE_NINE_WRIST, SCORE_NINE_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_NINE_LIFT, SCORE_NINE_SHOULDER, SCORE_NINE_WRIST, SCORE_NINE_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position ten
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.b) && !gamepad2.left_bumper && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_TEN_LIFT, SCORE_TEN_SHOULDER, SCORE_TEN_WRIST, SCORE_TEN_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_TEN_LIFT, SCORE_TEN_SHOULDER, SCORE_TEN_WRIST, SCORE_TEN_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         // score position eleven
-        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && !gamepad2.left_bumper && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (((gamepad2.left_trigger > TRIGGER_THRESHOLD) && gamepad2.a) && !gamepad2.left_bumper && (currentScoreState == Evolution.scoreState.IDLE)) {
             // Assign a new ScorePosition inside the if block
-            activeScorePosition = new Mutation.ScorePosition(SCORE_ELEVEN_LIFT, SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_ELBOW, MED_ACC, MED_VEL);
-            currentScoreState = Mutation.scoreState.MOVING_SHOULDER;
+            activeScorePosition = new Evolution.ScorePosition(SCORE_ELEVEN_LIFT, SCORE_ELEVEN_SHOULDER, SCORE_ELEVEN_WRIST, SCORE_ELEVEN_ELBOW, MED_ACC, MED_VEL);
+            currentScoreState = Evolution.scoreState.MOVING_SHOULDER;
         }
         if (activeScorePosition != null) {
             handleScoreSequence(activeScorePosition);
         }
-        if (currentScoreState == Mutation.scoreState.COMPLETED) {
-            currentScoreState = Mutation.scoreState.IDLE;
+        if (currentScoreState == Evolution.scoreState.COMPLETED) {
+            currentScoreState = Evolution.scoreState.IDLE;
             activeScorePosition = null; // Reset the active position
         }
     }
@@ -662,27 +661,27 @@ public class Mutation extends LinearOpMode {
     // operating the claws to grab and drop
     private void grapdropFunction() {
         // dropping on the backboard for scoring
-        if (gamepad2.dpad_up  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
+        if (gamepad2.dpad_up  && !gamepad2.right_bumper && currentIntakeState == Evolution.intakeState.IDLE) {
             leftFinger.setPosition(LEFT_FINGER_DROP);
             rightFinger.setPosition(RIGHT_FINGER_DROP);
-        } else if (gamepad2.dpad_left && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
+        } else if (gamepad2.dpad_left && !gamepad2.right_bumper && currentIntakeState == Evolution.intakeState.IDLE) {
             leftFinger.setPosition(LEFT_FINGER_DROP);
-        } else if (gamepad2.dpad_right  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
+        } else if (gamepad2.dpad_right  && !gamepad2.right_bumper && currentIntakeState == Evolution.intakeState.IDLE) {
             rightFinger.setPosition(RIGHT_FINGER_DROP);
-        } else if (gamepad2.dpad_down  && !gamepad2.right_bumper && currentIntakeState == Mutation.intakeState.IDLE) {
+        } else if (gamepad2.dpad_down  && !gamepad2.right_bumper && currentIntakeState == Evolution.intakeState.IDLE) {
             leftFinger.setPosition(LEFT_FINGER_INTAKE);
             rightFinger.setPosition(RIGHT_FINGER_INTAKE);
         }
 
         // grabbing off the floor or stack
-        if (gamepad2.right_bumper && gamepad2.dpad_up && (currentScoreState == Mutation.scoreState.IDLE)) {
+        if (gamepad2.right_bumper && gamepad2.dpad_up && (currentScoreState == Evolution.scoreState.IDLE)) {
             leftFinger.setPosition(LEFT_FINGER_GRIP);
             rightFinger.setPosition(RIGHT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_left && (currentScoreState == Mutation.scoreState.IDLE)) {
+        } else if (gamepad2.right_bumper && gamepad2.dpad_left && (currentScoreState == Evolution.scoreState.IDLE)) {
             leftFinger.setPosition(LEFT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_right && (currentScoreState == Mutation.scoreState.IDLE)) {
+        } else if (gamepad2.right_bumper && gamepad2.dpad_right && (currentScoreState == Evolution.scoreState.IDLE)) {
             rightFinger.setPosition(RIGHT_FINGER_GRIP);
-        } else if (gamepad2.right_bumper && gamepad2.dpad_down && (currentScoreState == Mutation.scoreState.IDLE)) {
+        } else if (gamepad2.right_bumper && gamepad2.dpad_down && (currentScoreState == Evolution.scoreState.IDLE)) {
             leftFinger.setPosition(LEFT_FINGER_INTAKE);
             rightFinger.setPosition(RIGHT_FINGER_INTAKE);
         }
