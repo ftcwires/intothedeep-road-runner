@@ -55,7 +55,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 /**
  * ENIGMA Autonomous Example for only vision detection using openCv and park
  */
-@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "Mutation")
+@Autonomous(name = "ENIGMA Autonomous Mode - Backup", group = "00-Autonomous", preselectTeleOp = "Mutation")
 public class EnigmaAuto2QualBackup extends LinearOpMode {
 
     public static String TEAM_NAME = "ENIGMA"; //TODO: Enter team Name

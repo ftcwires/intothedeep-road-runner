@@ -64,7 +64,7 @@ import java.util.List;
 /**
  * ENIGMA Autonomous Example for only vision detection using openCv and park
  */
-@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "Mutation")
+@Autonomous(name = "ENIGMA Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "Evolution")
 public class EnigmaAuto extends LinearOpMode {
 
     public static String TEAM_NAME = "ENIGMA"; //TODO: Enter team Name
@@ -90,13 +90,19 @@ public class EnigmaAuto extends LinearOpMode {
     double LiftLeftOffset = .04;
     double LiftHeight;
 
-    private static final double ELBOW_DRIVE= Mutation.ELBOW_DRIVE;
-    private static final double ELBOW_INTAKE = Mutation.ELBOW_INTAKE;
-    private static final double WRIST_INTAKE = Mutation.WRIST_INTAKE;
+    private static final double ELBOW_DRIVE= Evolution.ELBOW_DRIVE;
+    private static final double ELBOW_INTAKE = Evolution.ELBOW_INTAKE;
+    private static final double WRIST_INTAKE = Evolution.WRIST_INTAKE;
     //private static final double SHOULDER_DRIVE = 0.425; // 0.425
-    private static final double SCORE_ONE_SHOULDER = Mutation.SCORE_ONE_SHOULDER;
-    private static final double SCORE_ONE_WRIST = Mutation.SCORE_ONE_WRIST;
-    private static final double SCORE_ONE_ELBOW = Mutation.SCORE_ONE_ELBOW;
+    private static final double SCORE_ONE_SHOULDER = Evolution.SCORE_ONE_SHOULDER;
+    private static final double SCORE_ONE_WRIST = Evolution.SCORE_ONE_WRIST;
+    private static final double SCORE_ONE_ELBOW = Evolution.SCORE_ONE_ELBOW;
+
+    public static final double SHOULDER_TOP_TWO = Evolution.SHOULDER_TOP_TWO;
+    public static final double WRIST_TOP_TWO = Evolution.WRIST_TOP_TWO;
+    public static final double ELBOW_TOP_TWO = Evolution.ELBOW_TOP_TWO;
+
+    private static final double PIXEL_STACK_FINGER_GRAB = 0.6;
 
 
     //Define and declare Robot Starting Locations
@@ -173,13 +179,13 @@ public class EnigmaAuto extends LinearOpMode {
 
 
         //init pos
-        setLiftPosition(Mutation.LIFT_DRIVE);
-        shoulder.setPosition(Mutation.SHOULDER_DRIVE);
-        wrist.setPosition(Mutation.WRIST_INTAKE);
-        elbow.setPosition(Mutation.ELBOW_DRIVE);
+        setLiftPosition(Evolution.LIFT_DRIVE);
+        shoulder.setPosition(Evolution.SHOULDER_DRIVE);
+        wrist.setPosition(Evolution.WRIST_INTAKE);
+        elbow.setPosition(Evolution.ELBOW_DRIVE);
         sleep(2500);
-        leftFinger.setPosition(Mutation.LEFT_FINGER_GRIP);
-        rightFinger.setPosition(Mutation.RIGHT_FINGER_GRIP);
+        leftFinger.setPosition(Evolution.LEFT_FINGER_GRIP);
+        rightFinger.setPosition(Evolution.RIGHT_FINGER_GRIP);
 
         // Vision OpenCV / Color Detection
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -256,6 +262,7 @@ public class EnigmaAuto extends LinearOpMode {
         Pose2d midwayPose1 = new Pose2d(0,0,0);
         Pose2d midwayPose1a = new Pose2d(0,0,0);
         Pose2d intakeStack = new Pose2d(0,0,0);
+        Pose2d intakeStack2 = new Pose2d(0,0,0);
         Pose2d midwayPose2 = new Pose2d(0,0,0);
         Pose2d dropYellowPixelPose = new Pose2d(0, 0, 0);
         Pose2d parkPose = new Pose2d(0,0, 0);
@@ -287,7 +294,8 @@ public class EnigmaAuto extends LinearOpMode {
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
+                //used to be 2          ^  this goes for all of them
                 parkPose = new Pose2d(8, 30, Math.toRadians(-90));
                 break;
 
@@ -311,7 +319,7 @@ public class EnigmaAuto extends LinearOpMode {
                         break;
                 }
                 midwayPose1 = new Pose2d(14, -13, Math.toRadians(45));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(8, -30, Math.toRadians(90));
                 break;
 
@@ -336,9 +344,10 @@ public class EnigmaAuto extends LinearOpMode {
                 }
                 midwayPose1 = new Pose2d(8, -8, Math.toRadians(0));
                 midwayPose1a = new Pose2d(18, -21, Math.toRadians(-90));
-                intakeStack = new Pose2d(52, -19,Math.toRadians(-90));
+                intakeStack = new Pose2d(53.25, -15,Math.toRadians(-90));
+                intakeStack2 = new Pose2d(53.25, -19.25,Math.toRadians(-90));
                 midwayPose2 = new Pose2d(52, 62, Math.toRadians(-90));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(50, 84, Math.toRadians(-90));
                 break;
 
@@ -365,7 +374,7 @@ public class EnigmaAuto extends LinearOpMode {
                 midwayPose1a = new Pose2d(18, 21, Math.toRadians(90));
                 intakeStack = new Pose2d(52, 19,Math.toRadians(90));
                 midwayPose2 = new Pose2d(52, -62, Math.toRadians(90));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(50, -84, Math.toRadians(90));
                 break;
         }
@@ -380,18 +389,18 @@ public class EnigmaAuto extends LinearOpMode {
                         .build());
 
         //TODO : Code to drop Purple Pixel on Spike Mark
-        safeWaitSeconds(1);
-        shoulder.setPosition(Mutation.SHOULDER_DRIVE);
-        wrist.setPosition(Mutation.WRIST_INTAKE);
+        safeWaitSeconds(0);
+        shoulder.setPosition(Evolution.SHOULDER_DRIVE);
+        wrist.setPosition(Evolution.WRIST_INTAKE);
         for(int c = 0; c<40; c++) {
             moveServoGradually(elbow, ELBOW_INTAKE);
             sleep(10);
         }
         sleep(200);
-        rightFinger.setPosition(Mutation.RIGHT_FINGER_DROP);
+        rightFinger.setPosition(Evolution.RIGHT_FINGER_DROP);
         sleep(200);
         elbow.setPosition(ELBOW_DRIVE);
-        wrist.setPosition(Mutation.WRIST_TUCK);
+        wrist.setPosition(Evolution.WRIST_TUCK);
 
         //Move robot to midwayPose1
         Actions.runBlocking(
@@ -410,6 +419,31 @@ public class EnigmaAuto extends LinearOpMode {
 
             //TODO : Code to intake pixel from stack
             safeWaitSeconds(1);
+            shoulder.setPosition(SHOULDER_TOP_TWO);
+            wrist.setPosition(WRIST_TOP_TWO);
+            elbow.setPosition(ELBOW_TOP_TWO);
+            for(int e = 0; e<40; e++) {
+                moveServoGradually(elbow, ELBOW_TOP_TWO);
+                sleep(10);
+            }
+            for(int w = 0; w<40; w++) {
+                moveServoGradually(wrist, WRIST_TOP_TWO);
+                sleep(10);
+            }
+            for(int s = 0; s<40; s++) {
+                moveServoGradually(shoulder, SHOULDER_TOP_TWO);
+                sleep(10);
+            }
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .strafeToLinearHeading(intakeStack2.position, intakeStack2.heading)
+                            .build());
+            sleep(300);
+            rightFinger.setPosition(PIXEL_STACK_FINGER_GRAB);
+            sleep(500);
+            elbow.setPosition(ELBOW_DRIVE);
+            wrist.setPosition(Evolution.WRIST_TUCK);
+            sleep(500);
 
             //Move robot to midwayPose2 and to dropYellowPixelPose
             Actions.runBlocking(
@@ -429,7 +463,7 @@ public class EnigmaAuto extends LinearOpMode {
 
 
         //TODO : Code to drop Pixel on Backdrop
-        safeWaitSeconds(1);
+        safeWaitSeconds(0);
         for(int w = 0; w<40; w++) {
             moveServoGradually(wrist, SCORE_ONE_WRIST);
             sleep(10);
@@ -442,11 +476,11 @@ public class EnigmaAuto extends LinearOpMode {
             moveServoGradually(shoulder, SCORE_ONE_SHOULDER);
             sleep(7);
         }
-        sleep(200);
-        leftFinger.setPosition(Mutation.LEFT_FINGER_DROP);
-        sleep(100);
+        sleep(50);
+        leftFinger.setPosition(Evolution.LEFT_FINGER_DROP);
+        sleep(50);
         for(int s = 0; s<200; s++) {
-            moveServoGradually(shoulder, Mutation.SHOULDER_DRIVE);
+            moveServoGradually(shoulder, Evolution.SHOULDER_DRIVE);
             sleep(7);
         }
         for(int w = 0; w<40; w++) {
