@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @TeleOp
 public class DistanceSensTest extends LinearOpMode {
-    double DistanceDetection = 10;
+    double DistanceDetection = 1;
     private Servo leftFinger;
     private Servo rightFinger;
     private DistanceSensor distanceL;
