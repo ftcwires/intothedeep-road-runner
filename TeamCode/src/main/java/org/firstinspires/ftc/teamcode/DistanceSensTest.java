@@ -9,39 +9,29 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @TeleOp
 public class DistanceSensTest extends LinearOpMode {
-
-    public static final double LEFT_FINGER_GRIP = 0.72;
-    public static final double RIGHT_FINGER_GRIP = .27;
-    Servo xyz;
     double DistanceDetection = 10;
     private Servo leftFinger;
     private Servo rightFinger;
     private DistanceSensor distanceL;
     private DistanceSensor distanceR;
-    private void function() {
-    }
     @Override
     public void runOpMode() throws InterruptedException {
-
+    //Hardware Mapping ↓
         distanceL = hardwareMap.get(DistanceSensor.class, "DistanceL");
         distanceR = hardwareMap.get(DistanceSensor.class, "DistanceR");
-        leftFinger = hardwareMap.get(Servo.class, "leftFinger");
-        rightFinger = hardwareMap.get(Servo.class, "rightFinger");
-
-
-
-
+        leftFinger = hardwareMap.get(Servo.class, "lFinger");
+        rightFinger = hardwareMap.get(Servo.class, "rFinger");
 
         telemetry.update();
         waitForStart();
-
+    //CODE ↓
         while(opModeIsActive()) {
             if (distanceL.getDistance(DistanceUnit.CM) < DistanceDetection) {
-                leftFinger.setPosition(LEFT_FINGER_GRIP);
+                leftFinger.setPosition(Evolution.LEFT_FINGER_GRIP);
             }
 
             if (distanceR.getDistance(DistanceUnit.CM) < DistanceDetection) {
-                rightFinger.setPosition(RIGHT_FINGER_GRIP);
+                rightFinger.setPosition(Evolution.RIGHT_FINGER_GRIP);
             }
 
             telemetry.update();
