@@ -17,8 +17,8 @@ public class DistanceSensTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
     //Hardware Mapping ↓
-        distanceL = hardwareMap.get(DistanceSensor.class, "DistanceL");
-        distanceR = hardwareMap.get(DistanceSensor.class, "DistanceR");
+        distanceL = hardwareMap.get(DistanceSensor.class, "ds1");
+        distanceR = hardwareMap.get(DistanceSensor.class, "ds2");
         leftFinger = hardwareMap.get(Servo.class, "lFinger");
         rightFinger = hardwareMap.get(Servo.class, "rFinger");
 
