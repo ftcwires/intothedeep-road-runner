@@ -506,30 +506,31 @@ public class EnigmaAuto extends LinearOpMode {
         }
 
 
-/* the original ending
-        //Move robot to park in Backstage
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(parkPose.position, parkPose.heading)
-                        //.splineToLinearHeading(parkPose,0)
-                        .build());
-*/
-
-        for(int w = 0; w<40; w++) {
-            moveServoGradually(wrist, Evolution.WRIST_DRIVE);
-            sleep(10);
-        }
-
-        // GRAB MORE?! For Blue Right and Red Left, intake pixel from stack
-        if (startPosition == START_POSITION.BLUE_RIGHT ||
-                startPosition == START_POSITION.RED_LEFT) {
+        boolean go_for_bonus_white_pixels = true;
+        if(go_for_bonus_white_pixels == false) {
+            //Move robot to park in Backstage
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
-                            .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
+                            .strafeToLinearHeading(parkPose.position, parkPose.heading)
+                            //.splineToLinearHeading(parkPose,0)
                             .build());
-        }
+        } else {
+            // GRAB MORE?! For Blue Right and Red Left, intake pixel from stack
 
+            for (int w = 0; w < 40; w++) {
+                moveServoGradually(wrist, Evolution.WRIST_DRIVE);
+                sleep(10);
+            }
+
+            if (startPosition == START_POSITION.BLUE_RIGHT ||
+                    startPosition == START_POSITION.RED_LEFT) {
+                Actions.runBlocking(
+                        drive.actionBuilder(drive.pose)
+                                .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
+                                .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
+                                .build());
+            }
+        }
     }
 
 
