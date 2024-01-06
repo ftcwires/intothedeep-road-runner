@@ -4,9 +4,12 @@ import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp
 public class Evolution extends LinearOpMode {
@@ -33,9 +36,16 @@ public class Evolution extends LinearOpMode {
     private Servo rightFinger;
     private Servo rightLift;
     private Servo leftLift;
+    private DistanceSensor distanceL;
+    private DistanceSensor distanceR;
     private double servoposition = 0.0;
     private double servodelta = 0.02;
     private double servodelaytime = 0.03;
+
+    private double DistanceDetection = 4;
+    private boolean tuckPreparing = false;
+
+    ElapsedTime tuckTimer = new ElapsedTime();
 
     private static final double LOW_ACC = 7.25;
     private static final double LOW_VEL = 8.5;
@@ -53,21 +63,20 @@ public class Evolution extends LinearOpMode {
     public static final double AIR_PLANE_SHOOT = 0.8;
     public static final double SHOULDER_DRIVE = 0.425; // 0.425
     public static final double SHOULDER_INT = 0.43;
-    public static final double ELBOW_DRIVE= 0.47;
-    public static final double ELBOW_INTAKE = 0.78;
-    public static final double WRIST_TUCK = 0.29;
-    public static final double WRIST_DRIVE = 0.82;
-    public static final double WRIST_INTAKE = 0.555;
+    public static final double ELBOW_DRIVE= 0.53;
+    public static final double ELBOW_INTAKE = 0.83;
+    public static final double WRIST_DRIVE = 0.195;
+    public static final double WRIST_INTAKE = 0.465;
     public static final double LEFT_FINGER_GRIP = 0.72;
     public static final double LEFT_FINGER_DROP = 0.5;
-    public static final double LEFT_FINGER_INTAKE = 0.3;
+    public static final double LEFT_FINGER_INTAKE = 1;
     public static final double RIGHT_FINGER_GRIP = .27;
     public static final double RIGHT_FINGER_DROP = .5;
-    public static final double RIGHT_FINGER_INTAKE = 0.64;
+    public static final double RIGHT_FINGER_INTAKE = 0;
     public static final double TRIGGER_THRESHOLD = 0.5;
     public static final double LAUNCHER_START_POS = 0.8;
     public static final double SERVO_TOLERANCE = 0.01;
-    public static final double LIFT_DRIVE = 0.10; // 0.78 is the highest it can mechanically go right now
+    public static final double LIFT_DRIVE = 0.06; // 0.78 is the highest it can mechanically go right now
     private double liftTargetPosition = LIFT_DRIVE; // was 0.37 before moving servos for larger range
 
     // stack positions (top 2 o 5 and next 2 of 3 )
@@ -141,6 +150,8 @@ public class Evolution extends LinearOpMode {
     private static final double SCORE_ELEVEN_WRIST = SCORE_ONE_WRIST;
     private static final double SCORE_ELEVEN_ELBOW = SCORE_ONE_ELBOW;
     private static final double SCORE_ELEVEN_LIFT = .66;
+
+    private boolean inIntakePos = false;
     
     // sensors
     private RevTouchSensor rightUpper;
@@ -219,6 +230,7 @@ public class Evolution extends LinearOpMode {
                 }
                 break;
             case COMPLETED:
+                inIntakePos = true;
                 // Sequence complete, reset the state or perform additional actions
                 break;
         }
@@ -287,6 +299,32 @@ public class Evolution extends LinearOpMode {
             this.velocityMax = velMax;
         }
     }
+
+    private void autoClose() {
+        if (distanceL.getDistance(DistanceUnit.CM) < DistanceDetection) {
+            leftFinger.setPosition(Evolution.LEFT_FINGER_GRIP);
+        }
+
+        if (distanceR.getDistance(DistanceUnit.CM) < DistanceDetection) {
+            rightFinger.setPosition(Evolution.RIGHT_FINGER_GRIP);
+        }
+    }
+
+    private void autoTuck() {
+        if (distanceL.getDistance(DistanceUnit.CM) < DistanceDetection && distanceR.getDistance(DistanceUnit.CM) < DistanceDetection && inIntakePos == true && tuckPreparing == false) {
+            tuckPreparing = true;
+            tuckTimer.reset();
+        }
+
+        if (tuckTimer.seconds() > 1 && tuckPreparing == true) {
+            activeDrivePosition = new Evolution.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_DRIVE, ELBOW_DRIVE, SUPER_ACC, SUPER_VEL);
+            currentDriveState = Evolution.driveState.MOVING_LIFT;
+            inIntakePos = false;
+            tuckPreparing = false;
+            tuckTimer.reset();
+        }
+    }
+
     private void handleDriveSequence(Evolution.DrivePosition drivePos) {
         switch (currentDriveState) {
             case MOVING_LIFT:
@@ -317,6 +355,7 @@ public class Evolution extends LinearOpMode {
                 }
                 break;
             case COMPLETED:
+                inIntakePos = false;
                 // Sequence complete, reset the state or perform additional actions
                 break;
         }
@@ -329,7 +368,7 @@ public class Evolution extends LinearOpMode {
     private void drivingFunction() {
         // Check if the right bumper is pressed and the drive state is IDLE
         if (gamepad1.right_bumper && currentDriveState == Evolution.driveState.IDLE) {
-            activeDrivePosition = new Evolution.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_TUCK, ELBOW_DRIVE, SUPER_ACC, SUPER_VEL);
+            activeDrivePosition = new Evolution.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_DRIVE, ELBOW_DRIVE, SUPER_ACC, SUPER_VEL);
             currentDriveState = Evolution.driveState.MOVING_LIFT;
         }
 
@@ -406,6 +445,7 @@ public class Evolution extends LinearOpMode {
                 }
                 break;
             case COMPLETED:
+                inIntakePos = false;
                 // Sequence complete, reset the state or perform additional actions
                 break;
         }
@@ -749,6 +789,8 @@ public class Evolution extends LinearOpMode {
         rightUpper = hardwareMap.get(RevTouchSensor.class, "rightUpper");
         leftLower = hardwareMap.get(RevTouchSensor.class, "leftLower");
         rightLower = hardwareMap.get(RevTouchSensor.class, "rightLower");
+        distanceL = hardwareMap.get(DistanceSensor.class, "dsL");
+        distanceR = hardwareMap.get(DistanceSensor.class, "dsR");
 
         // init positions
         leftFinger.setPosition(LEFT_FINGER_GRIP);
@@ -756,7 +798,7 @@ public class Evolution extends LinearOpMode {
         setLiftPosition(LIFT_DRIVE);
         shoulder.setPosition(SHOULDER_INT);
         elbow.setPosition(ELBOW_DRIVE);
-        wrist.setPosition(WRIST_TUCK);
+        wrist.setPosition(WRIST_DRIVE);
         launcherstartPos();
 
         telemetry.addData("Status", "OdoMec is ready to run!");
@@ -816,6 +858,8 @@ public class Evolution extends LinearOpMode {
             scoringFunction();
             // emergency stop slides
             emergencyStop();
+            autoClose();
+            autoTuck();
             // mecanum drive
             //driveCode(); say what
             telemetry.update();

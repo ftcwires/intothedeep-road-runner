@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @TeleOp
 public class DistanceSensTest extends LinearOpMode {
-    double DistanceDetection = 1;
+    public double DistanceDetection = 4;
     private Servo leftFinger;
     private Servo rightFinger;
     private DistanceSensor distanceL;
@@ -17,8 +17,8 @@ public class DistanceSensTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
     //Hardware Mapping ↓
-        distanceL = hardwareMap.get(DistanceSensor.class, "ds1");
-        distanceR = hardwareMap.get(DistanceSensor.class, "ds2");
+        distanceL = hardwareMap.get(DistanceSensor.class, "dsL");
+        distanceR = hardwareMap.get(DistanceSensor.class, "dsR");
         leftFinger = hardwareMap.get(Servo.class, "lFinger");
         rightFinger = hardwareMap.get(Servo.class, "rFinger");
 

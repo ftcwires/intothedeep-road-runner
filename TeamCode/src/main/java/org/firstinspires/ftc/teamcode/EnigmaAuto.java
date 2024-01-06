@@ -412,7 +412,7 @@ public class EnigmaAuto extends LinearOpMode {
         rightFinger.setPosition(Evolution.RIGHT_FINGER_DROP);
         sleep(200);
         elbow.setPosition(ELBOW_DRIVE);
-        wrist.setPosition(Evolution.WRIST_TUCK);
+        wrist.setPosition(Evolution.WRIST_DRIVE);
 
         //Move robot to midwayPose1
         Actions.runBlocking(
@@ -453,7 +453,7 @@ public class EnigmaAuto extends LinearOpMode {
             rightFinger.setPosition(Evolution.RIGHT_FINGER_GRIP);
             sleep(650);
             elbow.setPosition(ELBOW_DRIVE);
-            wrist.setPosition(Evolution.WRIST_TUCK);
+            wrist.setPosition(Evolution.WRIST_DRIVE);
             sleep(100);
 
             //Move robot to midwayPose2 and to dropYellowPixelPose
