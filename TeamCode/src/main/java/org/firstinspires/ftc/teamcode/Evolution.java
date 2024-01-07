@@ -96,45 +96,45 @@ public class Evolution extends LinearOpMode {
     // score positions (11 rows on the board)
     // TODO find positions with McMuffin (currently all set to drive) change to the actual double values like above from McMuffin
     // score position one button map (gamepad2.y)
-    public static final double SCORE_ONE_SHOULDER = 0.915;
-    public static final double SCORE_ONE_WRIST = 0.365;
-    public static final double SCORE_ONE_ELBOW = 0.57;
+    public static final double SCORE_ONE_SHOULDER = 0.935;
+    public static final double SCORE_ONE_WRIST = 0.385;
+    public static final double SCORE_ONE_ELBOW = 0.5;
     public static final double SCORE_ONE_LIFT = LIFT_DRIVE;
     // score position two button map (gamepad2.b)
-    public static final double SCORE_TWO_SHOULDER = SCORE_ONE_SHOULDER;
-    public static final double SCORE_TWO_WRIST = SCORE_ONE_WRIST;
-    public static final double SCORE_TWO_ELBOW = SCORE_ONE_ELBOW;
-    public static final double SCORE_TWO_LIFT = 0.26;
+    public static final double SCORE_TWO_SHOULDER = 0.935;
+    public static final double SCORE_TWO_WRIST = 0.385;
+    public static final double SCORE_TWO_ELBOW = 0.5;
+    public static final double SCORE_TWO_LIFT = 0.27;
     // score position three button map (gamepad2.a)
-    public static final double SCORE_THREE_SHOULDER = SCORE_ONE_SHOULDER;
-    public static final double SCORE_THREE_WRIST = SCORE_ONE_WRIST;
-    public static final double SCORE_THREE_ELBOW = SCORE_ONE_ELBOW;
-    public static final double SCORE_THREE_LIFT = 0.37;
+    public static final double SCORE_THREE_SHOULDER = 0.935;
+    public static final double SCORE_THREE_WRIST = 0.385;
+    public static final double SCORE_THREE_ELBOW = 0.5;
+    public static final double SCORE_THREE_LIFT = 0.39;
     // score position four button map (gamepad2.x)
-    public static final double SCORE_FOUR_SHOULDER = SCORE_ONE_SHOULDER;
-    public static final double SCORE_FOUR_WRIST = SCORE_ONE_WRIST;
-    public static final double SCORE_FOUR_ELBOW = SCORE_ONE_ELBOW;
-    public static final double SCORE_FOUR_LIFT = .44;
+    public static final double SCORE_FOUR_SHOULDER = 0.936;
+    public static final double SCORE_FOUR_WRIST = 0.385;
+    public static final double SCORE_FOUR_ELBOW = 0.5;
+    public static final double SCORE_FOUR_LIFT = 0.48;
     // score position five button map (gamepad2.left_bumper && gamepad2.y)
-    public static final double SCORE_FIVE_SHOULDER = SCORE_ONE_SHOULDER;
-    public static final double SCORE_FIVE_WRIST = SCORE_ONE_WRIST;
-    public static final double SCORE_FIVE_ELBOW = SCORE_ONE_ELBOW;
+    public static final double SCORE_FIVE_SHOULDER = 0.935;
+    public static final double SCORE_FIVE_WRIST = 0.385;
+    public static final double SCORE_FIVE_ELBOW = 0.5;
     public static final double SCORE_FIVE_LIFT = 0.55;
     // score position six button map (gamepad2.left_bumper && gamepad2.b)
-    private static final double SCORE_SIX_SHOULDER = SCORE_ONE_SHOULDER;
-    private static final double SCORE_SIX_WRIST = SCORE_ONE_WRIST;
-    private static final double SCORE_SIX_ELBOW = SCORE_ONE_ELBOW;
-    private static final double SCORE_SIX_LIFT = .66;
+    private static final double SCORE_SIX_SHOULDER = 0.895;
+    private static final double SCORE_SIX_WRIST = 0.225;
+    private static final double SCORE_SIX_ELBOW = 0.63;
+    private static final double SCORE_SIX_LIFT = .46;
     // score position seven button map (gamepad2.left_bumper && gamepad2.a)
-    private static final double SCORE_SEVEN_SHOULDER = SCORE_ONE_SHOULDER;
-    private static final double SCORE_SEVEN_WRIST = 0.305;
-    private static final double SCORE_SEVEN_ELBOW = 0.6;
-    private static final double SCORE_SEVEN_LIFT = .66;
+    private static final double SCORE_SEVEN_SHOULDER = 0.895;
+    private static final double SCORE_SEVEN_WRIST = 0.225;
+    private static final double SCORE_SEVEN_ELBOW = 0.63;
+    private static final double SCORE_SEVEN_LIFT = .57;
     // score position eight button map (gamepad2.left_bumper && gamepad2.x)
-    private static final double SCORE_EIGHT_SHOULDER = SCORE_ONE_SHOULDER;
-    private static final double SCORE_EIGHT_WRIST = 0.235;
-    private static final double SCORE_EIGHT_ELBOW = 0.67;
-    private static final double SCORE_EIGHT_LIFT = .66;
+    private static final double SCORE_EIGHT_SHOULDER = 0.895;
+    private static final double SCORE_EIGHT_WRIST = 0.16;
+    private static final double SCORE_EIGHT_ELBOW = 0.69;
+    private static final double SCORE_EIGHT_LIFT = 0.57;
     // score position nine button map (gamepad2.left_trigger && gamepad2.y)
     private static final double SCORE_NINE_SHOULDER = SCORE_ONE_SHOULDER;
     private static final double SCORE_NINE_WRIST = 0.174;
@@ -150,6 +150,11 @@ public class Evolution extends LinearOpMode {
     private static final double SCORE_ELEVEN_WRIST = SCORE_ONE_WRIST;
     private static final double SCORE_ELEVEN_ELBOW = SCORE_ONE_ELBOW;
     private static final double SCORE_ELEVEN_LIFT = .66;
+
+    public static final double SCORE_DOUBLE_SHOULDER = 0.916;
+    public static final double SCORE_DOUBLE_WRIST = 0.84;
+    public static final double SCORE_DOUBLE_ELBOW = 0.58;
+    public static final double SCORE_DOUBLE_LIFT = SCORE_ONE_LIFT;
 
     private boolean inIntakePos = false;
     
@@ -315,13 +320,13 @@ public class Evolution extends LinearOpMode {
             tuckPreparing = true;
             tuckTimer.reset();
         }
-
-        if (tuckTimer.seconds() > 1 && tuckPreparing == true) {
-            activeDrivePosition = new Evolution.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_DRIVE, ELBOW_DRIVE, SUPER_ACC, SUPER_VEL);
-            currentDriveState = Evolution.driveState.MOVING_LIFT;
-            inIntakePos = false;
+        if (tuckTimer.seconds() > 1.0 && tuckPreparing == true) {
+            if (inIntakePos == true) {
+                activeDrivePosition = new Evolution.DrivePosition(LIFT_DRIVE, SHOULDER_DRIVE, WRIST_DRIVE, ELBOW_DRIVE, SUPER_ACC, SUPER_VEL);
+                currentDriveState = Evolution.driveState.MOVING_LIFT;
+                inIntakePos = false;
+            }
             tuckPreparing = false;
-            tuckTimer.reset();
         }
     }
 
@@ -859,7 +864,7 @@ public class Evolution extends LinearOpMode {
             // emergency stop slides
             emergencyStop();
             autoClose();
-            autoTuck();
+            //autoTuck();
             // mecanum drive
             //driveCode(); say what
             telemetry.update();
