@@ -104,9 +104,9 @@ public class EnigmaAuto extends LinearOpMode {
 
     private static final double PIXEL_STACK_FINGER_GRAB = 0.6;
 
-    private static final double SHOULDER_TOP_ONE = 0.425;  // SHOULDER_TOP_TWO; //0.4455
-    private static final double WRIST_TOP_ONE = 0.575; // WRIST_TOP_TWO; //0.585
-    private static final double ELBOW_TOP_ONE = 0.74; // ELBOW_TOP_TWO; //0.73
+    private static final double SHOULDER_TOP_ONE = 0.31;  // SHOULDER_TOP_TWO; //0.4455
+    private static final double WRIST_TOP_ONE = 0.505; // WRIST_TOP_TWO; //0.585
+    private static final double ELBOW_TOP_ONE = 0.77; // ELBOW_TOP_TWO; //0.73
 
 
     //Define and declare Robot Starting Locations
@@ -284,17 +284,17 @@ public class EnigmaAuto extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(70));
-                        dropYellowPixelPose = new Pose2d(19, 36, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(19, 38.5, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPosePush = new Pose2d(32, 0, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(23.25, 0, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(26, 36,  Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(26, 38.5,  Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(-35));
-                        dropYellowPixelPose = new Pose2d(31, 36, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(31, 38.5, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
@@ -309,17 +309,17 @@ public class EnigmaAuto extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(70));
-                        dropYellowPixelPose = new Pose2d(34, -36, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(34, -38.5, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPosePush = new Pose2d(32, 0, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(23.25, 0, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(27, -36,  Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(27, -38.5,  Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(-35));
-                        dropYellowPixelPose = new Pose2d(20, -36, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(20, -38.5, Math.toRadians(90));
                         break;
                 }
                 midwayPose1 = new Pose2d(14, -13, Math.toRadians(45));
@@ -333,23 +333,23 @@ public class EnigmaAuto extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(70));
-                        dropYellowPixelPose = new Pose2d(19, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(19, 87.5, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPosePush = new Pose2d(32, 0, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(23.25, 0, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(26.25, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(26.25, 87.5, Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(-35));
-                        dropYellowPixelPose = new Pose2d(33.5, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(33.5, 87.5, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(8, -8, Math.toRadians(0));
                 midwayPose1a = new Pose2d(18, -21, Math.toRadians(-90));
                 intakeStack = new Pose2d(53.25, -15,Math.toRadians(-90));
-                intakeStack2 = new Pose2d(53.25, -19.25,Math.toRadians(-90));
+                intakeStack2 = new Pose2d(53.25, -17,Math.toRadians(-90));
                 midwayPose2 = new Pose2d(52, 62, Math.toRadians(-90));
                 waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(50, 84, Math.toRadians(-90));
@@ -361,17 +361,17 @@ public class EnigmaAuto extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPosePush = new Pose2d(27, 8, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(70));
-                        dropYellowPixelPose = new Pose2d(34, -86, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(34, -87.5, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPosePush = new Pose2d(32, 0, Math.toRadians(0)); // change up
                         dropPurplePixelPose = new Pose2d(23.25, 0, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(29, -86, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(29, -87.5, Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPosePush = new Pose2d(27, -9, Math.toRadians(-45));
                         dropPurplePixelPose = new Pose2d(22, 0, Math.toRadians(-35));
-                        dropYellowPixelPose = new Pose2d(23, -86, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(23, -87.5, Math.toRadians(90));
                         break;
                 }
                 midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
@@ -387,26 +387,35 @@ public class EnigmaAuto extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
-                        .strafeToLinearHeading(dropPurplePixelPosePush.position, dropPurplePixelPosePush.heading)
+                        //.strafeToLinearHeading(dropPurplePixelPosePush.position, dropPurplePixelPosePush.heading)
+                        //.strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
+                        //.strafeToLinearHeading(dropPurplePixelPosePos.position, dropPurplePixelPosePos.heading)
+                        .build());
+
+        for(int c = 0; c<40; c++) {
+            moveServoGradually(shoulder, Evolution.SHOULDER_DRIVE);
+            sleep(5);
+        }
+        for(int c = 0; c<40; c++) {
+            moveServoGradually(wrist, Evolution.WRIST_INTAKE);
+            sleep(5);
+        }
+        for(int c = 0; c<40; c++) {
+            moveServoGradually(elbow, Evolution.ELBOW_TOP_TWO);
+            sleep(5);
+        }
+
+        //Move robot to dropPurplePixel based on identified Spike Mark Location
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        //.strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
+                        //.strafeToLinearHeading(dropPurplePixelPosePush.position, dropPurplePixelPosePush.heading)
                         .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
                         //.strafeToLinearHeading(dropPurplePixelPosePos.position, dropPurplePixelPosePos.heading)
                         .build());
 
-        //TODO : Code to drop Purple Pixel on Spike Mark
+        // Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(0);
-
-        for(int c = 0; c<40; c++) {
-            moveServoGradually(shoulder, Evolution.SHOULDER_DRIVE);
-            sleep(15);
-        }
-        for(int c = 0; c<40; c++) {
-            moveServoGradually(wrist, Evolution.WRIST_INTAKE);
-            sleep(15);
-        }
-        for(int c = 0; c<40; c++) {
-            moveServoGradually(elbow, Evolution.ELBOW_INTAKE);
-            sleep(15);
-        }
 
         //sleep(200);
         rightFinger.setPosition(Evolution.RIGHT_FINGER_DROP);
@@ -432,7 +441,7 @@ public class EnigmaAuto extends LinearOpMode {
             //TODO : Code to intake pixel from stack
             //safeWaitSeconds(1);
 
-            rightFinger.setPosition(PIXEL_STACK_FINGER_GRAB);
+            rightFinger.setPosition(Evolution.RIGHT_FINGER_INTAKE);
             for(int e = 0; e<50; e++) {
                 moveServoGradually(elbow, ELBOW_TOP_ONE);
                 sleep(15);

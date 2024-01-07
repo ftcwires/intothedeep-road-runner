@@ -67,11 +67,11 @@ public class Evolution extends LinearOpMode {
     public static final double ELBOW_INTAKE = 0.83;
     public static final double WRIST_DRIVE = 0.195;
     public static final double WRIST_INTAKE = 0.465;
-    public static final double LEFT_FINGER_GRIP = 0.72;
-    public static final double LEFT_FINGER_DROP = 0.5;
+    public static final double LEFT_FINGER_GRIP = 0.67;
+    public static final double LEFT_FINGER_DROP = 1;
     public static final double LEFT_FINGER_INTAKE = 1;
-    public static final double RIGHT_FINGER_GRIP = .27;
-    public static final double RIGHT_FINGER_DROP = .5;
+    public static final double RIGHT_FINGER_GRIP = .33;
+    public static final double RIGHT_FINGER_DROP = 0;
     public static final double RIGHT_FINGER_INTAKE = 0;
     public static final double TRIGGER_THRESHOLD = 0.5;
     public static final double LAUNCHER_START_POS = 0.8;
@@ -84,7 +84,7 @@ public class Evolution extends LinearOpMode {
     // intake two off a stack of five
     public static final double SHOULDER_TOP_TWO = 0.425;
     public static final double WRIST_TOP_TWO = 0.59;
-    public static final double ELBOW_TOP_TWO = 0.74;
+    public static final double ELBOW_TOP_TWO = 0.81;
 
     // intake two off a stack of three
     public static final double SHOULDER_NEXT_TWO = 0.425;
