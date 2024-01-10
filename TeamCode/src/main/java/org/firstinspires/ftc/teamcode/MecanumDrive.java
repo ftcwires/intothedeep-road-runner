@@ -97,7 +97,7 @@ public final class MecanumDrive {
 
         // path controller gains
         //TODO Step 13 Set value of Gains after running ManualFeedbackTuner
-        public double axialGain = 20.0;
+        public double axialGain = 6.0;
         public double lateralGain = 3.0;
         public double headingGain = 16.5; // shared with turn
 
