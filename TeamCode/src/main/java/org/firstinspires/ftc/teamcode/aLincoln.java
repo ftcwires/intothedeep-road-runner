@@ -109,6 +109,8 @@ public class aLincoln extends OpMode {
             pattern = pattern.next();
             displayPattern();
             gamepadRateLimit.reset();
+        } else if ((displayKind == DisplayKind.MANUAL) && (gamepad1.dpad_down)) {
+            blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
     }
 
