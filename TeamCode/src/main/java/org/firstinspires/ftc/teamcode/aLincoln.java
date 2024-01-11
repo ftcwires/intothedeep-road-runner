@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
  * Displays the first pattern upon init.
  */
 @TeleOp(name="BlinkinExample")
-@Disabled
 public class aLincoln extends OpMode {
 
     /*
@@ -114,6 +113,7 @@ public class aLincoln extends OpMode {
         }
     }
 
+
     protected void setDisplayKind(DisplayKind displayKind)
     {
         this.displayKind = displayKind;
@@ -134,4 +134,5 @@ public class aLincoln extends OpMode {
         blinkinLedDriver.setPattern(pattern);
         patternName.setValue(pattern.toString());
     }
+
 }

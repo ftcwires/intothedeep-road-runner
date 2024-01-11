@@ -19,6 +19,7 @@ public class AberhamLinconTest extends LinearOpMode {
         telemetry.update();
         waitForStart();
         color.enableLed(true);
+        color.green();
 
         while(opModeIsActive()) {
 
