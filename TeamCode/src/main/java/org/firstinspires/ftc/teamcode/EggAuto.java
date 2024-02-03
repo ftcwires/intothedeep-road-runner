@@ -33,8 +33,12 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -48,18 +52,34 @@ import java.util.List;
 /**
  * FTC WIRES Autonomous Example for only vision detection using tensorflow and park
  */
-//@Autonomous(name = "FTC Wires Auto Tensor Flow Vision", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
-public class FTCWiresAutoVisionTFOD extends LinearOpMode {
+//@Autonomous(name = "EggAuto", group = "00-Autonomous", preselectTeleOp = "Beginnings")
+public class EggAuto extends LinearOpMode {
 
-    public static String TEAM_NAME = "EDIT TEAM NAME"; //TODO: Enter team Name
-    public static int TEAM_NUMBER = 0; //TODO: Enter team Number
+    public static String TEAM_NAME = "Enigma"; //TODO: Enter team Name
+    public static int TEAM_NUMBER = 16265; //TODO: Enter team Number
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     //Vision parameters
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
+    private RevTouchSensor rightUpper;
+    private RevTouchSensor leftUpper;
+    private RevTouchSensor rightLower;
+    private RevTouchSensor leftLower;
+    private Servo rightLift;
+    private Servo leftLift;
+    private Servo shoulder;
+    private Servo wrist;
+    private Servo hopper;
+    DcMotor frontIntake;
+    DcMotor rearIntake;
 
+    double LiftLeftOffset = .04;
+    double LiftHeight;
+
+    //MecanumDrive drive;
+    //OgDrive ogDrive;
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
         BLUE_LEFT,
@@ -78,6 +98,24 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        wrist = hardwareMap.get(Servo.class, "wrist");
+        hopper = hardwareMap.get(Servo.class, "hopper");
+        shoulder = hardwareMap.get(Servo.class, "shoulder");
+        rightLift = hardwareMap.get(Servo.class, "rightLift");
+        leftLift = hardwareMap.get(Servo.class, "leftLift");
+
+        shoulder.setDirection(Servo.Direction.REVERSE);
+        wrist.setDirection(Servo.Direction.REVERSE);
+
+        frontIntake = hardwareMap.get(DcMotor.class, "frontIntake");
+        rearIntake = hardwareMap.get(DcMotor.class, "rearIntake");
+
+        frontIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rearIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rearIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Key Pay inputs to selecting Starting Position of robot
         selectStartingPosition();
@@ -87,13 +125,7 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
         initTfod();
 
         // Wait for the DS start button to be touched.
-        telemetry.addLine("Vision Tensor Flow for White Pixel Detection");
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
-        telemetry.addLine("The starting point of the robot is assumed to be on the starting tile, " +
-                "and along the edge farther from the truss legs. ");
-        telemetry.addLine("You should also have a webcam connected and positioned in a way to see " +
-                "the middle spike mark and the spike mark away from the truss (and ideally nothing else). " +
-                "We assumed the camera to be in the center of the robot. ");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         //waitForStart();
@@ -101,10 +133,9 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addData("Selected Starting Position", startPosition);
 
-            //Run Vuforia Tensor Flow and keep watching for the White Pixel on the spike mark.
+            //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
             runTfodTensorFlow();
-            telemetry.addLine("Vision Tensor Flow for White Pixel Detection");
-            telemetry.addData("Identified Parking Location", identifiedSpikeMarkLocation);
+            telemetry.addData("Vision identified Parking Location", identifiedSpikeMarkLocation);
             telemetry.update();
         }
 
@@ -114,6 +145,21 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
             runAutonoumousMode();
         }
     }   // end runOpMode()
+
+    private void setLiftHeight(double inputLiftHeight) {
+        if (inputLiftHeight < 0.42) {
+            inputLiftHeight = 0.42;
+        }
+        if (inputLiftHeight > 1) {
+            inputLiftHeight = 1;
+        }
+        LiftHeight = inputLiftHeight;
+        leftLift.setPosition(LiftLeftOffset + LiftHeight);
+        rightLift.setPosition(LiftHeight);
+
+    }
+
+
 
     public void runAutonoumousMode() {
         //Initialize Pose2d as desired
@@ -233,7 +279,13 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
-
+        frontIntake.setPower(-1);
+        rearIntake.setPower(-1);
+        sleep(1500);
+        frontIntake.setPower(0);
+        rearIntake.setPower(0);
+        //drive pos \/
+        shoulder.setPosition(0.48);
         //Move robot to midwayPose1
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -271,7 +323,57 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
 
         //TODO : Code to drop Pixel on Backdrop
         safeWaitSeconds(1);
-
+        shoulder.setPosition(0.60);
+        hopper.setPosition(0.02);
+        wrist.setPosition(0.22);
+        setLiftHeight(0.42);
+        sleep(500);
+        wrist.setPosition(0.22);
+        shoulder.setPosition(0.79);
+        hopper.setPosition(0.02);
+        setLiftHeight(0.42);
+        sleep(500);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(0.79);
+        setLiftHeight(0.42);
+        sleep(500);
+        shoulder.setPosition(0.91);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        setLiftHeight(0.42);
+        sleep(500);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(1);
+        hopper.setPosition(0.58);
+        setLiftHeight(0.42);
+        sleep(500);
+        //dump
+        hopper.setPosition(0.2);
+        sleep(1000);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(1);
+        hopper.setPosition(0.58);
+        setLiftHeight(0.42);
+        sleep(200);
+        shoulder.setPosition(0.91);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        setLiftHeight(0.42);
+        sleep(200);
+        hopper.setPosition(0.58);
+        wrist.setPosition(0.6);
+        shoulder.setPosition(0.79);
+        sleep(350);
+        wrist.setPosition(0.22);
+        shoulder.setPosition(0.79);
+        hopper.setPosition(0.02);
+        setLiftHeight(0.42);
+        sleep(500);
+        shoulder.setPosition(0.60);
+        hopper.setPosition(0.02);
+        wrist.setPosition(0.22);
+        setLiftHeight(0.42);
         //Move robot to park in Backstage
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -290,7 +392,6 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
             telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous adopted for Team:",
                     TEAM_NAME, " ", TEAM_NUMBER);
             telemetry.addData("---------------------------------------","");
-            telemetry.addLine("This Auto program uses Vision Tensor Flow for White pixel detection");
             telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
             telemetry.addData("    Blue Left   ", "(X / ▢)");
             telemetry.addData("    Blue Right ", "(Y / Δ)");
@@ -354,7 +455,6 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
 
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         telemetry.addData("# Objects Detected", currentRecognitions.size());
-
         //Camera placed between Left and Right Spike Mark on RED_LEFT and BLUE_LEFT If pixel not visible, assume Right spike Mark
         if (startPosition == START_POSITION.RED_LEFT || startPosition == START_POSITION.BLUE_LEFT) {
             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
@@ -382,7 +482,7 @@ public class FTCWiresAutoVisionTFOD extends LinearOpMode {
                 }
             } else { //RED_RIGHT or BLUE_RIGHT
                 if (recognition.getLabel() == "Pixel") {
-                    if (x < 350) {
+                    if (x < 200) {
                         identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
                     } else {
                         identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;

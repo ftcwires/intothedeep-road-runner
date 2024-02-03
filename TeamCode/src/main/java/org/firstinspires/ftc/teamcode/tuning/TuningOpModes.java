@@ -47,7 +47,7 @@ public final class TuningOpModes {
                 .build();
     }
 
-    @OpModeRegistrar
+    //@OpModeRegistrar
     public static void register(OpModeManager manager) {
         if (DISABLED) return;
 

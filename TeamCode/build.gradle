@@ -35,4 +35,5 @@ dependencies {
 
     implementation "com.acmerobotics.roadrunner:ftc:0.1.10"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.14"
+    implementation "org.openftc:easyopencv:1.5.1"
 }
