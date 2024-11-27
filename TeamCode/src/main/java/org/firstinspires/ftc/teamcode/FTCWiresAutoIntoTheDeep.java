@@ -112,23 +112,9 @@ public class FTCWiresAutoIntoTheDeep extends LinearOpMode {
 
         if (startPosition == START_POSITION.LEFT) {
 
-            //Move robot to submersible to place specimen
+            //Move robot to netZone with preloaded sample ready to drop in basket
             Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeTo(submersibleSpecimen.position)
-                            .build());
-            safeWaitSeconds(1);
-            telemetry.addLine("Move robot to submersible to place specimen on chamber");
-            telemetry.update();
-
-            // Add code for placing specimen on chamber and pick sample from inside submersible
-            safeWaitSeconds(1);
-            telemetry.addLine("Place specimen on chamber and pick sample from inside submersible");
-            telemetry.update();
-
-            //Move robot to netZone
-            Actions.runBlocking(
-                    drive.actionBuilder(submersibleSpecimen)
+                    drive.actionBuilder(initPose)
                             .strafeToLinearHeading(netZone.position, netZone.heading)
                             .build());
             safeWaitSeconds(1);
@@ -206,7 +192,7 @@ public class FTCWiresAutoIntoTheDeep extends LinearOpMode {
             telemetry.update();
         } else { // RIGHT
 
-            //Move robot to submersible to place specimen
+            //Move robot with preloaded specimen to submersible to place specimen
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
                             .strafeTo(submersibleSpecimen.position)
